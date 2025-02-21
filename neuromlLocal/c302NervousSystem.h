@@ -43,10 +43,10 @@ double NeuronState(int i);
 double ChemicalSynapseWeight(int from, int to);
 
 
-void SetCircuitSize(int newsize, int maxchemconns, int maxelecconns) {}
-void SetNeuronOutput(int i, double value) {}
-double ElectricalSynapseWeight(int from, int to) {}
-void SetElectricalSynapseWeight(int n1, int n2, double value) {} 
+void SetCircuitSize(int newsize, int maxchemconns, int maxelecconns) ;
+void SetNeuronOutput(int i, double value);
+double ElectricalSynapseWeight(int from, int to);
+void SetElectricalSynapseWeight(int n1, int n2, double value);
 
 
 ~c302NervousSystem();

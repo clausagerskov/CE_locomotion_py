@@ -192,7 +192,7 @@ class Worm2DNRNSimulation:
             print("Problem setting neuron parameter: %s" % e)
 
     def run(self, skip_to_time=-1):
-        # print_("> Current NEURON time: %s ms" % self.h.t)
+        #print_("> Current NEURON time: %s ms" % self.h.t)
 
         self.ns.advance()
 

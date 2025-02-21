@@ -14,7 +14,7 @@ DEFAULTS = {
     "folderName": None,
     "doEvol": False,
     "overwrite": False,
-    "nervousSystemName" : 'NervousSystem',
+    "nervousSystemName" : 'nmlNervousSystem',
     "nmlOutputFolderName": None,
 }
 
@@ -273,15 +273,15 @@ def run(a=None, **kwargs):
         print("Error:")
         print(result.stderr)
 
-    if folder_name != "":
-        # if args.simsep or args.evolve_folder or args.sim_folder:
-        hf.dir_name = folder_name
-        from load_data import reload_single_run
-        reload_single_run(show_plot=False)
+    
     if nml_folder_name is not None:
         hf.dir_name = nml_folder_name
         from load_data import reload_single_run
         reload_single_run(show_plot=False)    
+    elif folder_name != "":
+        hf.dir_name = folder_name
+        from load_data import reload_single_run
+        reload_single_run(show_plot=False)
 
 
 if __name__ == "__main__":

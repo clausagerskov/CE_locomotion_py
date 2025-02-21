@@ -295,10 +295,16 @@ int main (int argc, const char* argv[])
     long randomseed = static_cast<long>(time(NULL));
     int pop_size = 96;
     string nml_output_dir_name = "";
+    bool do_evol = 1;
+    bool skipOrigSim = 0;
+    output_dir_name = "";
+    nervousSystemNameForSim = "nmlNervousSystem";
+    nervousSystemNameForEvol = "NervousSystem";
+
 
     if (argc==2) randomseed += atoi(argv[1]);
 
-    bool do_evol = 1;
+    
     
 
     if (argc>2){
@@ -313,6 +319,7 @@ int main (int argc, const char* argv[])
     for (int arg = 1; arg<argc; arg+=2)
     { 
     if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
+    if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--folder")==0) {
       output_dir_name = argv[arg+1];
       struct stat sb;
@@ -345,7 +352,6 @@ int main (int argc, const char* argv[])
     InitializeBodyConstants();
 
     if (do_evol){
-
     
     TSearch s(VectSize);
 
@@ -400,7 +406,6 @@ int main (int argc, const char* argv[])
     
     }
     
-
     RandomState rs;
     long seed = static_cast<long>(time(NULL));
     rs.SetRandomSeed(seed);
@@ -408,18 +413,18 @@ int main (int argc, const char* argv[])
     Best.open(rename_file("best.gen.dat"));
     TVector<double> best(1, VectSize);
     Best >> best;
-    save_traces(best, rs);
-    cout << "Finished run, saving data\n" << endl;
 
     if (strcmp(nml_output_dir_name.c_str(), "")!=0){
     nervousSystemName = nervousSystemNameForSim;
     output_dir_name = nml_output_dir_name;
-    save_traces(best, rs);
-    cout << "Finished nml run, saving data\n" << endl;
+    cout << "Performing nml run and saving data\n" << endl;
     }
-   
-
+    else
+    {
+    cout << "Performing c++ run and saving data\n" << endl;
+    }
+    save_traces(best, rs);
     
-
+   
     return 0;
 }

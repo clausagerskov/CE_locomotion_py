@@ -1,9 +1,9 @@
+#pragma once
 #include "Worm.h"
 #include <vector>
 #include <string>
 #include "utils.h"
 
-//#pragma once
 
 using namespace std;
 using wormForJson = Worm;

@@ -7,19 +7,11 @@
 //
 
 #include "Worm.h"
-
+#include "utils.h"
 
 int nn(int neuronNumber, int unitNumber)
 {
   return neuronNumber+((unitNumber-1)*N_neuronsperunit);
-}
-
-string nervousSystemName = "NervousSystem";
-string nervousSystemNameForSim = "nmlNervousSystem";
-string nervousSystemNameForEvol = "NervousSystem";
-
-bool checkNervousSystemForJson(){
-return (strcmp(nervousSystemName.c_str(),"NervousSystem") == 0);
 }
 
 NervousSystemBase* makeNervousSystem()

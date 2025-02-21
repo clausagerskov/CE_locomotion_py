@@ -94,7 +94,10 @@ double c302NervousSystem::ChemicalSynapseWeight(int from, int to)
 
 }
 
-
+void c302NervousSystem::SetCircuitSize(int newsize, int maxchemconns, int maxelecconns) {return;}
+void c302NervousSystem::SetNeuronOutput(int i, double value) {return;}
+double c302NervousSystem::ElectricalSynapseWeight(int from, int to) {return 0;}
+void c302NervousSystem::SetElectricalSynapseWeight(int n1, int n2, double value) {return;} 
 
 c302NervousSystem::~c302NervousSystem()
 {if (simulation!=nullptr) delete simulation;}
