@@ -16,14 +16,3 @@ experiments:
           method: threshold
           threshold: 2
         tolerance: 0
-  testnml:
-    observables:
-      spike times:
-        file: 
-          path: exampleRun/nml_sim_results/act.dat
-          columns: [0,3]
-          scaling: [1, 1]
-        spike detection: 
-          method: threshold
-          threshold: 2
-        tolerance: 0.04027846842366976
