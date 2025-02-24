@@ -12,7 +12,7 @@ DEFAULTS = {
     "popSize": None, #96,
     "duration": None, #24,
     #"simsep": False,
-    "randSeed": None,
+    "RandSeed": None,
     "folderName": None,
     "doEvol": False,
     "overwrite": False,
@@ -38,9 +38,16 @@ def process_args():
         metavar="<folder name>",
         default=DEFAULTS["folderName"],
         help=(
-            "Name of directory for output.\n"
-            "If not supplied, both evolutionary algorithm and simulation of best worm are performed,\n"
-            "and results placed in current directory."
+            "Name of directory for output. This must be supplied."
+            "If the directory does not exist it will be created and"
+            "the evolution and simulation will be performed"
+            "with supplied parameters, or defaults and a random seed if not supplied."
+            "If the directory exists and overwrite is set true its contents will"
+            "be modified. If doEvol is True the evolution and simulation will be"
+            "executed with supplied parameters, or the values  existing in the folder if not supplied."
+            "Simulation results are placed in the simulation subfolder."
+            "If doEvol is False, only the simulation will be performed using the"
+            "supplied parameters, or the values existing in the simulation subfolder if not supplied."
         ),
     )
 
@@ -73,7 +80,11 @@ def process_args():
         "--doNML",
         action="store_true",
         default=DEFAULTS["doNML"],
-        help=("Run the equivalent neuroML simulation too if true."),
+        help=("Run the equivalent neuroML simulation too if true. Results will be"
+              "placed in the nml_simulation subfolder. The simulation will use" 
+              "the parameters supplied or if not those in the folder if it exists, or"
+              "defaults otherwise."
+              ),
     )
 
     parser.add_argument(
@@ -81,7 +92,10 @@ def process_args():
         "--overwrite",
         action="store_true",
         default=DEFAULTS["overwrite"],
-        help=("Overwrite the contents of the specified simulation output directory."),
+        help=("Overwrite the contents of the folder. If doEvol is set True" 
+              "all contents will be overwritten. If doEvol is False"
+              "only the simulation subfolder results will be overwritten."
+              ),
     )
 
     parser.add_argument(
@@ -91,9 +105,12 @@ def process_args():
         default=DEFAULTS["doEvol"],
         help=(
             "If used the evolutionary algorithm is executed, the best worm simulation performed,"
-            "and results are deposited in the directory."
-            "If not used the simulation"
-            "in the directory is executed and results deposited in it."
+            "and the phenotype results are deposited in the folder. If parameters are not supplied"
+            "parameters already existing in the folder will be used, or defaults if not."
+            "Simulation results are placed in a subfolder."
+            "If not used the only the simulation"
+            "in the subfolder is executed and results deposited in it, again using parameters supplied,"
+            "existing in the subfolder, or default if not."
         ),
     )
 
@@ -126,21 +143,21 @@ def process_args():
     )
 
     parser.add_argument(
-        "-r",
-        "--randSeed",
+        "-R",
+        "--RandSeed",
         type=int,
         metavar="<rand seed>",
-        default=DEFAULTS["randSeed"],
+        default=DEFAULTS["RandSeed"],
         help="Seed value for evolution and simulation, or just simulation if doEvol is False." 
-             "If not set the seed in the directory will be used. If there is no such seed"
-             "a random seed will be generated."
-        % DEFAULTS["randSeed"],
+             "If not set the seed in the appropriate evolution or simulation directory will be used." 
+             "If there is no such seed, a random seed will be generated."
+        % DEFAULTS["RandSeed"],
     )
 
     return parser.parse_args()
 
 
-def make_directory(directory_name, overwrite):
+def make_directory(directory_name, overwrite, str1 = 'the contents'):
     try:
         os.mkdir(directory_name)
         print(f"Directory '{directory_name}' created successfully.")
@@ -148,7 +165,7 @@ def make_directory(directory_name, overwrite):
     except FileExistsError:
         if overwrite:
             print(
-                f"Directory '{directory_name}' already exists and contents will be overwritten."
+                f"Directory '{directory_name}' already exists and " + str1 + " will be overwritten."
             )
             return True
         else:
@@ -200,11 +217,25 @@ def run(a=None, **kwargs):
     #do_evol = 1
     #nml_folder_name = None
     #do_nml = True
+    if a.doEvol:
+        do_evol = 1
+    else:
+        do_evol = 0
+    if not os.path.isdir(a.folderName):
+        do_evol = 1
 
+    if do_evol:
+           str1 = 'all the contents'
+    else:
+           str1 = 'the simulation subfolder(s) contents'    
     nml_sim_folder_name = None
-    if a.folderName:
-        if not make_directory(a.folderName, a.overwrite):
-            print(f"Please change phenotype directory name or set overwrite to True.")
+    if a.folderName: 
+        if not make_directory(a.folderName, a.overwrite, str1):
+            print(f"Please change phenotype directory name or set overwrite to True\n"
+                  "and doEvol to True to overwrite the evolution results.\n"
+                  "or set overwrite to True and doEvol to False (the default) if you want\n"
+                   "to just overwrite the simulation."
+                  )
             sys.exit(1)
         sim_folder_name = a.folderName + '/sim_results'
         if not make_directory(sim_folder_name, a.overwrite):
@@ -235,10 +266,10 @@ def run(a=None, **kwargs):
     random_seed = random.randint(1, 1000000)
     
     
-    setDict(sim_data, 'seed', a.randSeed, random_seed)
+    setDict(sim_data, 'seed', a.RandSeed, random_seed)
     setDict(sim_data, 'duration', a.duration, 24)
-    if a.doEvol:
-        setDict(evol_data, 'seed', a.randSeed, random_seed)
+    if do_evol:
+        setDict(evol_data, 'seed', a.RandSeed, random_seed)
         setDict(evol_data, 'popSize', a.popSize, 96)
         setDict(evol_data, 'duration', a.duration, 24)
 
@@ -250,10 +281,7 @@ def run(a=None, **kwargs):
         with open(nml_sim_folder_name + '/pars.json', 'w', encoding='utf-8') as f:
             json.dump(sim_data, f, ensure_ascii=False, indent=4)  
 
-    if a.doEvol:
-        do_evol = 1
-    else:
-        do_evol = 0
+    
     """     if a.doNML:
         do_nml = 1
     else:
