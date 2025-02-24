@@ -194,11 +194,11 @@ double save_traces(TVector<double> &v, RandomState &rs){
     
     
     Worm w(phenotype, 1);
-    {
+   /*  {
     ofstream phenfile(rename_file("phenotype.dat"));
     w.DumpParams(phenfile);
     phenfile.close();
-    }
+    } */
     
     w.InitializeState(rs);
     w.sr.SR_A_gain = 0.0;
@@ -207,14 +207,11 @@ double save_traces(TVector<double> &v, RandomState &rs){
     w.AVB_output =  w.AVB_act;
 
     
-    if (checkNervousSystemForJson()){
-    // save json data
-    // reconstruct nervous system from json file to check validity
-    //#ifdef MAKE_JSON
+    /* if (checkNervousSystemForJson()){
     cout << "making json" << endl;
     writeParsToJson(w, "worm_data.json");
     testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
-    }
+    } */
     
     //#endif
 
@@ -295,9 +292,11 @@ int main (int argc, const char* argv[])
     long randomseed = static_cast<long>(time(NULL));
     int pop_size = 96;
     string nml_output_dir_name = "";
-    bool do_evol = 1;
-    bool skipOrigSim = 0;
+    string sim_output_dir_name = "";
     output_dir_name = "";
+
+    bool do_evol = 1;
+    //bool skipOrigSim = 0;
     nervousSystemNameForSim = "nmlNervousSystem";
     nervousSystemNameForEvol = "NervousSystem";
 
@@ -319,19 +318,29 @@ int main (int argc, const char* argv[])
     for (int arg = 1; arg<argc; arg+=2)
     { 
     if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
+    //if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
+
     if (strcmp(argv[arg],"--folder")==0) {
       output_dir_name = argv[arg+1];
       struct stat sb;
       if (stat(output_dir_name.c_str(), &sb) != 0) 
       {cout << "Directory doesn't exist." << endl;return 0;}
     }
+
     if (strcmp(argv[arg],"--nmlfolder")==0) {
       nml_output_dir_name = argv[arg+1];
       struct stat sb;
       if (stat(nml_output_dir_name.c_str(), &sb) != 0) 
       {cout << "Neuroml results directory doesn't exist." << endl;return 0;}
     }
+
+    if (strcmp(argv[arg],"--simfolder")==0) {
+      sim_output_dir_name = argv[arg+1];
+      struct stat sb;
+      if (stat(sim_output_dir_name.c_str(), &sb) != 0) 
+      {cout << "Simulation directory doesn't exist." << endl;return 0;}
+    }
+
     if (seed_flag){ 
     if (strcmp(argv[arg],"-R")==0) randomseed = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"-r")==0) randomseed += atoi(argv[arg+1]);
@@ -413,17 +422,51 @@ int main (int argc, const char* argv[])
     Best.open(rename_file("best.gen.dat"));
     TVector<double> best(1, VectSize);
     Best >> best;
+    
+
+    {TVector<double> phenotype(1, VectSize);
+    GenPhenMapping(best, phenotype);
+    double sra = phenotype(SR_A);
+    double srb = phenotype(SR_B);
+    
+    
+    Worm w(phenotype, 1);
+    {
+    ofstream phenfile(rename_file("phenotype.dat"));
+    w.DumpParams(phenfile);
+    phenfile.close();
+    }
+    
+    w.InitializeState(rs);
+    w.sr.SR_A_gain = 0.0;
+    w.sr.SR_B_gain = srb;
+    w.AVA_output =  w.AVA_inact;
+    w.AVB_output =  w.AVB_act;
+
+    
+    if (checkNervousSystemForJson()){
+    // save json data
+    // reconstruct nervous system from json file to check validity
+    //#ifdef MAKE_JSON
+    cout << "making json" << endl;
+    writeParsToJson(w, "worm_data.json");
+    testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
+    }
+    }
+
+    
+    if (strcmp(sim_output_dir_name.c_str(), "")!=0){
+    output_dir_name = sim_output_dir_name;
+    }
+    cout << "Performing C++ run and saving data\n" << endl;
+    save_traces(best, rs);
 
     if (strcmp(nml_output_dir_name.c_str(), "")!=0){
     nervousSystemName = nervousSystemNameForSim;
     output_dir_name = nml_output_dir_name;
     cout << "Performing nml run and saving data\n" << endl;
-    }
-    else
-    {
-    cout << "Performing c++ run and saving data\n" << endl;
-    }
     save_traces(best, rs);
+    }
     
    
     return 0;
