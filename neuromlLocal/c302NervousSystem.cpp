@@ -7,8 +7,10 @@ const std::string defaultSimClassName = "Worm2DNRNSimulation";
 c302NervousSystem::c302NervousSystem(const std::string & simFileName):
 simulation(new SignalSimulatorForWorm2D(simFileName,defaultSimClassName,0.005)){}
 
+//c302NervousSystem::c302NervousSystem():
+//simulation(new SignalSimulatorForWorm2D("neuromlLocal.main_sim",defaultSimClassName,0.005)){}
 c302NervousSystem::c302NervousSystem():
-simulation(new SignalSimulatorForWorm2D("neuromlLocal.main_sim",defaultSimClassName,0.005)){}
+simulation(new SignalSimulatorForWorm2D("main_sim",defaultSimClassName,"neuromlLocal",0.005)){}
 
 c302NervousSystem::c302NervousSystem(const std::string & simFileName, 
 const std::string & simDirName):simulation(new SignalSimulatorForWorm2D(simFileName,

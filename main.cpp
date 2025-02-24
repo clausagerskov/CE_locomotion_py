@@ -413,7 +413,6 @@ int main (int argc, const char* argv[])
 
     cout << "Finished, now saving the best fit...\n";
     
-    }
     
     RandomState rs;
     long seed = static_cast<long>(time(NULL));
@@ -424,7 +423,7 @@ int main (int argc, const char* argv[])
     Best >> best;
     
 
-    {TVector<double> phenotype(1, VectSize);
+    TVector<double> phenotype(1, VectSize);
     GenPhenMapping(best, phenotype);
     double sra = phenotype(SR_A);
     double srb = phenotype(SR_B);
@@ -452,7 +451,31 @@ int main (int argc, const char* argv[])
     writeParsToJson(w, "worm_data.json");
     testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
     }
+
     }
+
+    RandomState rs;
+    long seed = static_cast<long>(time(NULL));
+    rs.SetRandomSeed(seed);
+    ifstream Best;
+    Best.open(rename_file("best.gen.dat"));
+    TVector<double> best(1, VectSize);
+    Best >> best;
+    
+
+    TVector<double> phenotype(1, VectSize);
+    GenPhenMapping(best, phenotype);
+    double sra = phenotype(SR_A);
+    double srb = phenotype(SR_B);
+    
+    
+    Worm w(phenotype, 1);
+    w.InitializeState(rs);
+    w.sr.SR_A_gain = 0.0;
+    w.sr.SR_B_gain = srb;
+    w.AVA_output =  w.AVA_inact;
+    w.AVB_output =  w.AVB_act;
+
 
     
     if (strcmp(sim_output_dir_name.c_str(), "")!=0){
