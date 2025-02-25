@@ -12,6 +12,7 @@
 #include "TSearch.h"
 #include "VectorMatrix.h"
 //#include "Worm.h"
+//#include <vector>
 
 #include "jsonUtils.h"
 
@@ -303,9 +304,6 @@ int main (int argc, const char* argv[])
 
     if (argc==2) randomseed += atoi(argv[1]);
 
-    
-    
-
     if (argc>2){
        
     if (((argc-1) % 2) != 0)
@@ -448,7 +446,17 @@ int main (int argc, const char* argv[])
     // reconstruct nervous system from json file to check validity
     //#ifdef MAKE_JSON
     cout << "making json" << endl;
-    writeParsToJson(w, "worm_data.json");
+    vector<doubIntParamsHead> evolutionParams;
+    doubIntParamsHead var1;
+    var1.parInt.head = "Evolutionary Optimization Parameters";
+    var1.parInt.names = {"pop_size", "Duration", "randomseed"};
+    var1.parInt.vals = {pop_size, Duration, randomseed};
+    var1.parInt.messages ={"population size", "optimization simulation duration", "seed"};
+    var1.parInt.messages_inds = {0,1,2};
+    evolutionParams.push_back(var1);
+
+    writeParsToJson(w, "worm_data.json", evolutionParams);
+    //writeParsToJson(w, "worm_data.json");
     testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
     }
 
