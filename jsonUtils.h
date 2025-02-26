@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include "utils.h"
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 using namespace std;
 using wormForJson = Worm;
 
@@ -48,7 +48,7 @@ void setNSFromJsonFile(ifstream & ifs, NervousSystem & n);
 
 void writeWormParams(wormForJson & w);
 void writeParsToJson(wormForJson & w, string file_name, vector<doubIntParamsHead> & parvec);
-void writeParsToJson(json & j, wormForJson & w, string file_name);
+//void writeParsToJson(json & j, wormForJson & w, string file_name);
 void writeParsToJson(wormForJson &, string);
 void writeParsToJson(wormForJson &);
 void testNervousSystemJson(string, NervousSystem &);
