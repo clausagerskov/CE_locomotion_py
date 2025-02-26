@@ -19,10 +19,13 @@ make
 if [ "$quick_test" == 0 ]; then
     rm -rf exampleRun
     rm -rf exampleRun_nml
+    
+    omv test -V neuromlLocal/.test.w2d.nrn.omt
+    omv test -V neuromlLocal/.test.w2d.omt
+    
     omv test -V .test.example.omt
     omv test -V .test.nmlNS.omt
-    omv test -V neuromlLocal/.test.w2d.omt
-    omv test -V neuromlLocal/.test.w2d.nrn.omt
+    
     #omv test -V neuromlLocal/.test.w2d.omt
     #omv test -V .test.example.omt
 
