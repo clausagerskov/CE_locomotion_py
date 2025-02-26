@@ -84,6 +84,7 @@ def process_args():
         "-N",
         "--doNML",
         action="store_true",
+        #metavar="<run NML>",
         default=DEFAULTS["doNML"],
         help=("Run the equivalent neuroML simulation instead of C++ simulation if True."),
     )
@@ -92,6 +93,7 @@ def process_args():
         "-o",
         "--overwrite",
         action="store_true",
+        #metavar="<overwrite>",
         default=DEFAULTS["overwrite"],
         help=("Overwrite the results in the folder. If doEvol is set True\n" 
               "all results will be overwritten. If doEvol is False\n"
@@ -103,6 +105,7 @@ def process_args():
         "-E",
         "--doEvol",
         action="store_true",
+        #metavar="<run optimization>",
         default=DEFAULTS["doEvol"],
         help=(
             "If True both evolution and simulation will be performed. If False (the default)\n"
