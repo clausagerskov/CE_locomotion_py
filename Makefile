@@ -49,7 +49,7 @@ StretchReceptor.o: StretchReceptor.cpp StretchReceptor.h
 Muscles.o: Muscles.cpp Muscles.h VectorMatrix.h random.h
 	g++ -c -O3 -flto Muscles.cpp
 main.o: main.cpp Worm.h WormBody.h StretchReceptor.h Muscles.h TSearch.h
-	g++ -c -O3 -flto $(CXXFLAGS) $(LDFLAGS) main.cpp
+	g++ -c -O3 -std=c++11 -flto $(CXXFLAGS) $(LDFLAGS) main.cpp
 tests.o: tests.cpp NervousSystem.o random.o
 	g++ -c -O3 -flto tests.cpp
 tests: info tests.o 
