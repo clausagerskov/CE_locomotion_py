@@ -38,8 +38,8 @@ def process_args():
         type=str,
         metavar="<input folder name>",
         default=DEFAULTS["inputFolderName"],
-        help=("Name of folder for the evolution and simulation parameters."
-              "Parameters will be replaced by command line parameters in output folder."
+        help=("Optional name of the folder for the default evolution and simulation parameters.\n"
+              "This folder will not be altered.\n"
         ),
     )
 
@@ -51,14 +51,13 @@ def process_args():
         default=DEFAULTS["outputFolderName"],
         help=(
             "Name of directory for output. This must be supplied."
-            "If the directory does not exist it will be created and"
-            "the evolution and simulation will be performed"
-            "with supplied parameters, or defaults and a random seed if not supplied."
-            "If the directory exists and overwrite is set true its contents will"
-            "be modified. If doEvol is True the evolution and simulation will be"
-            "executed with supplied parameters, or the values in the input folder if not supplied."
-            "If doEvol is False, only the simulation will be performed using the"
-            "supplied parameters, or the values existing in the input simulation subfolder if not supplied."
+            "If the directory exists overwrite must be"
+            "set to True and evolution and simulation parameter defaults from it will be used."
+            "If an input folder is supplied, these parameter defaults will be overwritten by the input folder ones."
+            "Any supplied command line arguments will replace their corresponding defaults."
+            "If the directory does not exist and and an input folder is not supplied, initial random seeds and"
+            "initial parameters will be used. If doEvol is false only the simulation will be performed."
+            "If doEvol is true the evolution will also be performed."
         ),
     )
 
@@ -80,10 +79,7 @@ def process_args():
         "--doNML",
         action="store_true",
         default=DEFAULTS["doNML"],
-        help=("Run the equivalent neuroML simulation if true. The simulation will use" 
-              "the parameters supplied or if not those in the input folder if supplied, or"
-              "defaults otherwise."
-              ),
+        help=("Run the equivalent neuroML simulation instead of C++ simulation if True."),
     )
 
     parser.add_argument(
@@ -91,8 +87,8 @@ def process_args():
         "--overwrite",
         action="store_true",
         default=DEFAULTS["overwrite"],
-        help=("Overwrite the contents of the folder. If doEvol is set True" 
-              "all contents will be overwritten. If doEvol is False"
+        help=("Overwrite the results in the folder. If doEvol is set True" 
+              "all results will be overwritten. If doEvol is False"
               "only the simulation results will be overwritten."
               ),
     )
@@ -103,12 +99,8 @@ def process_args():
         action="store_true",
         default=DEFAULTS["doEvol"],
         help=(
-            "If used the evolutionary algorithm is executed, the best worm simulation performed,"
-            "and the phenotype results are deposited in the folder. If parameters are not supplied"
-            "parameters in the input folder will be used, or defaults if not."
-            "If not used the only the simulation"
-            "is executed, again using parameters supplied,"
-            "or existing in the input folder, or default if not."
+            "If True both evolution and simulation will be performed. If False (the default)"
+             "just the simulation will be performed."
         ),
     )
 
@@ -302,7 +294,7 @@ def run(a=None, **kwargs):
         print('Evolution not needed as parameters the same.')
         do_evol = False
 
-
+    
     same_vals = True
     sim_pars = ['doNML', 'seed', 'Duration']
     sim_args = [do_nml, a.RandSeed, a.duration]
@@ -311,14 +303,13 @@ def run(a=None, **kwargs):
             if not setDict(sim_data, par, arg, default): same_vals = False
             
 
-    
-    with open(sim_par_file, 'w', encoding='utf-8') as f:
-        json.dump(sim_data, f, ensure_ascii=False, indent=4)
-
     if not do_evol and same_vals:
         print('Simulation not needed as parameters the same.')
         sys.exit(1)
     
+    with open(sim_par_file, 'w', encoding='utf-8') as f:
+        json.dump(sim_data, f, ensure_ascii=False, indent=4)
+
 
     #cmd = ["./main",]
 
