@@ -11,15 +11,14 @@ import json
 DEFAULTS = {
     "popSize": None, #96,
     "duration": None, #24,
-    #"simsep": False,
     "RandSeed": None,
-    "folderName": None,
+    "outputFolderName": None,
     "doEvol": False,
     "overwrite": False,
     "doNML": False,
-    "crandSeed": 42,
-    #"nervousSystemName" : 'nmlNervousSystem',
-    #"nmlOutputFolderName": None,
+    "crandSeed": None,
+    "inputFolderName": None,
+    "nervousSystemFileName" : 'main_sim',
 }
 
 
@@ -32,12 +31,24 @@ def process_args():
         description=("A script for supplying arguments to execute Worm2D")
     )
 
+
+    parser.add_argument(
+        "-g",
+        "--inputFolderName",
+        type=str,
+        metavar="<input folder name>",
+        default=DEFAULTS["inputFolderName"],
+        help=("Name of folder for the evolution and simulation parameters."
+              "Parameters will be replaced by command line parameters in output folder."
+        ),
+    )
+
     parser.add_argument(
         "-f",
-        "--folderName",
+        "--outputFolderName",
         type=str,
-        metavar="<folder name>",
-        default=DEFAULTS["folderName"],
+        metavar="<output folder name>",
+        default=DEFAULTS["outputFolderName"],
         help=(
             "Name of directory for output. This must be supplied."
             "If the directory does not exist it will be created and"
@@ -45,35 +56,23 @@ def process_args():
             "with supplied parameters, or defaults and a random seed if not supplied."
             "If the directory exists and overwrite is set true its contents will"
             "be modified. If doEvol is True the evolution and simulation will be"
-            "executed with supplied parameters, or the values  existing in the folder if not supplied."
-            "Simulation results are placed in the simulation subfolder."
+            "executed with supplied parameters, or the values in the input folder if not supplied."
             "If doEvol is False, only the simulation will be performed using the"
-            "supplied parameters, or the values existing in the simulation subfolder if not supplied."
+            "supplied parameters, or the values existing in the input simulation subfolder if not supplied."
         ),
     )
 
-    """     parser.add_argument(
-        "-i",
-        "--nmlOutputFolderName",
-        type=str,
-        metavar="<nml outpul folder name>",
-        default=DEFAULTS["nmlOutputFolderName"],
-        help=(
-            "Name of directory for output from neuroml simulation.\n"
-            "If not supplied neuroml simulation will not be peformed."
-        ),
-    )
-
+ 
     parser.add_argument(
         "-n",
-        "--nervousSystemName",
+        "--nervousSystemFileName",
         type=str,
-        metavar="<nervous system name>",
-        default=DEFAULTS["nervousSystemName"],
+        metavar="<nervous system file name>",
+        default=DEFAULTS["nervousSystemFileName"],
         help=(
-            "Name of nervous system for neuroml simulation" 
+            "Name of nervous system file for neuroml simulation." 
         ),
-    ) """
+    ) 
 
 
     parser.add_argument(
@@ -81,9 +80,8 @@ def process_args():
         "--doNML",
         action="store_true",
         default=DEFAULTS["doNML"],
-        help=("Run the equivalent neuroML simulation too if true. Results will be"
-              "placed in the nml_simulation subfolder. The simulation will use" 
-              "the parameters supplied or if not those in the folder if it exists, or"
+        help=("Run the equivalent neuroML simulation if true. The simulation will use" 
+              "the parameters supplied or if not those in the input folder if supplied, or"
               "defaults otherwise."
               ),
     )
@@ -95,7 +93,7 @@ def process_args():
         default=DEFAULTS["overwrite"],
         help=("Overwrite the contents of the folder. If doEvol is set True" 
               "all contents will be overwritten. If doEvol is False"
-              "only the simulation subfolder results will be overwritten."
+              "only the simulation results will be overwritten."
               ),
     )
 
@@ -107,21 +105,13 @@ def process_args():
         help=(
             "If used the evolutionary algorithm is executed, the best worm simulation performed,"
             "and the phenotype results are deposited in the folder. If parameters are not supplied"
-            "parameters already existing in the folder will be used, or defaults if not."
-            "Simulation results are placed in a subfolder."
+            "parameters in the input folder will be used, or defaults if not."
             "If not used the only the simulation"
-            "in the subfolder is executed and results deposited in it, again using parameters supplied,"
-            "existing in the subfolder, or default if not."
+            "is executed, again using parameters supplied,"
+            "or existing in the input folder, or default if not."
         ),
     )
 
-    """     parser.add_argument(
-        "-S",
-        "--simsep",
-        action="store_true",
-        default=DEFAULTS["simsep"],
-        help=("If used, user input of the directory name is interactively requested."),
-    ) """
 
     parser.add_argument(
         "-d",
@@ -150,7 +140,7 @@ def process_args():
         metavar="<rand seed>",
         default=DEFAULTS["RandSeed"],
         help="Seed value for evolution and simulation, or just simulation if doEvol is False." 
-             "If not set the seed in the appropriate evolution or simulation directory will be used." 
+             "If not set the relevant seed in the input directory will be used." 
              "If there is no such seed, a random seed will be generated."
         % DEFAULTS["RandSeed"],
     )
@@ -212,134 +202,140 @@ def build_namespace(DEFAULTS={}, a=None, **kwargs):
     return a
 
 def setDict(dictval, keyval, parval, default_val):
+        init_val = None
+        if keyval in dictval:
+            init_val = dictval[keyval]
         if parval is not None:
             dictval[keyval] = parval
-            return
+            return dictval[keyval]==init_val
         if keyval not in dictval:
             dictval[keyval] = default_val
-        return
+            return False  
+        return True
 
-        
+def getValFromJson(dictval, keyval):
+    return dictval[keyval]["value"]        
+
 
 def run(a=None, **kwargs):
     a = build_namespace(DEFAULTS, a, **kwargs)
-    
-    #folder_name = ""
-    #do_evol = 1
-    #nml_folder_name = None
-    #do_nml = True
+        
     if a.doEvol:
         do_evol = 1
     else:
         do_evol = 0
-    if not os.path.isdir(a.folderName):
+
+      
+    if a.inputFolderName is not None:
+        if not os.path.isdir(a.inputFolderName):
+           print("Input folder does not exist!")
+           sys.exit(1)
+
+    if a.outputFolderName is None:
+        print("You need to supply an output folder name!")
+        sys.exit(1)       
+
+    if not os.path.isdir(a.outputFolderName):
         do_evol = 1
 
     if do_evol:
-           str1 = 'all the contents'
+        str1 = 'all the contents'
     else:
-           str1 = 'the simulation subfolder(s) contents'    
-    nml_sim_folder_name = None
-    if a.folderName: 
-        if not make_directory(a.folderName, a.overwrite, str1):
-            print(f"Please change phenotype directory name or set overwrite to True\n"
-                  "and doEvol to True to overwrite the evolution results.\n"
-                  "or set overwrite to True and doEvol to False (the default) if you want\n"
-                   "to just overwrite the simulation."
-                  )
-            sys.exit(1)
-        sim_folder_name = a.folderName + '/sim_results'
-        if not make_directory(sim_folder_name, a.overwrite):
-                sys.exit(1)
-        if a.doNML:
-            nml_sim_folder_name = a.folderName + '/nml_sim_results'
-            if not make_directory(nml_sim_folder_name, a.overwrite):
-                sys.exit(1)
-    else:
-        print("You need to supply a folder name.")
-        sys.exit(1)
+        str1 = 'the simulation results'
 
-    sim_par_file = sim_folder_name + '/pars.json'
+    if not make_directory(a.outputFolderName, a.overwrite, str1):
+        print(f"Please change output directory name or set overwrite to True\n"
+                "and doEvol to True to overwrite the evolution results,\n"
+                "or set overwrite to True and doEvol to False (the default) if you want\n"
+                "to just overwrite the simulation results."
+                )
+        sys.exit(1)
+    
+
+    if a.inputFolderName is not None and a.inputFolderName!=a.outputFolderName:
+
+        import shutil
+        files = ['fitness.dat', 'simulation_pars.json', 'seed.dat', 'worm_data.json', 
+                 'best.gen.dat','phenotype.dat']
+        for file in files:
+            shutil.copyfile(a.inputFolderName + '/' + file, a.outputFolderName + '/' + file)
+    
+    
+    sim_par_file = a.outputFolderName + '/simulation_pars.json'
     if os.path.isfile(sim_par_file):
         with open(sim_par_file) as f:
             sim_data = json.load(f)
     else:
         sim_data = {}
 
-    evol_par_file = a.folderName + '/pars.json'
-    if os.path.isfile(evol_par_file):
-        with open(evol_par_file) as f:
-            evol_data = json.load(f)
-    else:
-        evol_data = {}    
-   
     random.seed(datetime.now().timestamp())
     random_seed = random.randint(1, 1000000)
-    
-    
-    setDict(sim_data, 'seed', a.RandSeed, random_seed)
-    setDict(sim_data, 'duration', a.duration, 24)
-    if do_evol:
-        setDict(evol_data, 'seed', a.RandSeed, random_seed)
-        setDict(evol_data, 'popSize', a.popSize, 96)
-        setDict(evol_data, 'duration', a.duration, 24)
 
-    with open(evol_par_file, 'w', encoding='utf-8') as f:
-        json.dump(evol_data, f, ensure_ascii=False, indent=4)
-    with open(sim_par_file, 'w', encoding='utf-8') as f:
-        json.dump(sim_data, f, ensure_ascii=False, indent=4)
+
+    evol_data = {}
+    evol_pars = ['Duration', 'pop_size', 'randomseed']
+    evol_args = [a.duration, a.popSize, a.RandSeed]
+    evol_defaults = [24, 96, random_seed]
+
+    evol_par_file = a.outputFolderName + '/worm_data.json'
+    if os.path.isfile(evol_par_file):
+        with open(evol_par_file) as f:
+            worm_data = json.load(f)
+            for key in evol_pars:
+                if key in worm_data["Evolutionary Optimization Parameters"]:
+                   evol_data[key]=worm_data["Evolutionary Optimization Parameters"][key]["value"]
+                else:
+                    print('Parameter not found in worm_data.json')   
+
+
     if a.doNML:
-        with open(nml_sim_folder_name + '/pars.json', 'w', encoding='utf-8') as f:
-            json.dump(sim_data, f, ensure_ascii=False, indent=4)  
-
-    
-    """     if a.doNML:
         do_nml = 1
     else:
-        do_nml = 0 """
+        do_nml = 0
 
 
-    cmd = ["./main",]
+    same_vals = True
+    if do_evol:
+        for (par, arg, default) in zip(evol_pars,evol_args,evol_defaults):
+            if not setDict(evol_data, par, arg, default): same_vals = False
+    if do_evol and same_vals:
+        print('Evolution not needed as parameters the same.')
+        do_evol = False
 
-    if a.RandSeed is not None:
-        cmd = ["./main", "-R", str(a.RandSeed)]
-    else:
+
+    same_vals = True
+    sim_pars = ['doNML', 'seed', 'Duration']
+    sim_args = [do_nml, a.RandSeed, a.duration]
+    sim_defaults = [0, random_seed, 24]
+    for (par, arg, default) in zip(sim_pars,sim_args,sim_defaults):
+            if not setDict(sim_data, par, arg, default): same_vals = False
+            
+
+    
+    with open(sim_par_file, 'w', encoding='utf-8') as f:
+        json.dump(sim_data, f, ensure_ascii=False, indent=4)
+
+    if not do_evol and same_vals:
+        print('Simulation not needed as parameters the same.')
+        sys.exit(1)
+    
+
+    #cmd = ["./main",]
+
+    if a.crandSeed is not None:
         cmd = ["./main", "-r", str(a.crandSeed)]
+    else:    
+        cmd = ["./main", "-R", str(evol_data['randomseed'])]
     
     cmd += ["-sr", str(sim_data['seed'])]
-    cmd += ["-p", str(evol_data['popSize'])]
-    cmd += ["-d", str(evol_data['duration'])]
-    cmd += ["-sd", str(sim_data['duration'])]
-    cmd += ["--doevol", str(do_evol)]
-    if a.doNML:
-        cmd += ["--nmlfolder", str(nml_sim_folder_name)]
-    cmd += ["--simfolder", str(sim_folder_name)]
-    #cmd += ["--donml", str(do_nml)]
-    cmd += ["--folder", str(a.folderName)]
+    cmd += ["-p", str(evol_data['pop_size'])]
+    cmd += ["-d", str(evol_data['Duration'])]
+    cmd += ["-sd", str(sim_data['Duration'])]
+    cmd += ["--doevol", str(do_evol)]  
+   
+    cmd += ["--donml", str(do_nml)]
+    cmd += ["--folder", str(a.outputFolderName)]
 
-    """ if a.RandSeed is not None:
-        cmd = ["./main", "-R", str(a.RandSeed)]
-    else:
-        cmd = ["./main", "-r", str(a.randSeed)]
-
-    cmd += [
-        "-p",
-        str(a.popSize),
-        "-d",
-        str(a.duration),
-        "--doevol",
-        str(do_evol),
-        "--folder",
-        folder_name,
-        "--nervous",
-        a.nervousSystemName,
-    ]
-
-    if nml_folder_name is not None:
-        cmd += [
-        "--nmlfolder",
-        nml_folder_name
-        ] """
 
 
     # Run the C++
@@ -359,14 +355,10 @@ def run(a=None, **kwargs):
         print(result.stderr)
 
     
-    if nml_sim_folder_name is not None:
-        hf.dir_name = nml_sim_folder_name
-        from load_data import reload_single_run
-        reload_single_run(show_plot=False)    
-    if sim_folder_name is not None:
-        hf.dir_name = sim_folder_name
-        from load_data import reload_single_run
-        reload_single_run(show_plot=False)
+    
+    hf.dir_name = a.outputFolderName
+    from load_data import reload_single_run
+    reload_single_run(show_plot=False)
 
 
 if __name__ == "__main__":

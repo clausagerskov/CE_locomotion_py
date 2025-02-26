@@ -300,7 +300,7 @@ int main (int argc, const char* argv[])
     //bool skipOrigSim = 0;
     nervousSystemNameForSim = "nmlNervousSystem";
     nervousSystemNameForEvol = "NervousSystem";
-
+    bool do_nml = 0;
 
     if (argc==2) randomseed += atoi(argv[1]);
 
@@ -317,7 +317,7 @@ int main (int argc, const char* argv[])
     { 
     if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
     //if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
-
+    if (strcmp(argv[arg],"--donml")==0) do_nml = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--folder")==0) {
       output_dir_name = argv[arg+1];
       struct stat sb;
@@ -325,25 +325,12 @@ int main (int argc, const char* argv[])
       {cout << "Directory doesn't exist." << endl;return 0;}
     }
 
-    if (strcmp(argv[arg],"--nmlfolder")==0) {
-      nml_output_dir_name = argv[arg+1];
-      struct stat sb;
-      if (stat(nml_output_dir_name.c_str(), &sb) != 0) 
-      {cout << "Neuroml results directory doesn't exist." << endl;return 0;}
-    }
-
-    if (strcmp(argv[arg],"--simfolder")==0) {
-      sim_output_dir_name = argv[arg+1];
-      struct stat sb;
-      if (stat(sim_output_dir_name.c_str(), &sb) != 0) 
-      {cout << "Simulation directory doesn't exist." << endl;return 0;}
-    }
-
     if (seed_flag){ 
     if (strcmp(argv[arg],"-R")==0) randomseed = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"-r")==0) randomseed += atoi(argv[arg+1]);
     seed_flag = 0;
     }
+
     if (strcmp(argv[arg],"-p")==0) pop_size = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"-d")==0) Duration = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--nervous")==0) 
@@ -471,7 +458,7 @@ int main (int argc, const char* argv[])
     Best >> best;
     
 
-    TVector<double> phenotype(1, VectSize);
+    /* TVector<double> phenotype(1, VectSize);
     GenPhenMapping(best, phenotype);
     double sra = phenotype(SR_A);
     double srb = phenotype(SR_B);
@@ -482,23 +469,33 @@ int main (int argc, const char* argv[])
     w.sr.SR_A_gain = 0.0;
     w.sr.SR_B_gain = srb;
     w.AVA_output =  w.AVA_inact;
-    w.AVB_output =  w.AVB_act;
+    w.AVB_output =  w.AVB_act; */
 
 
     
-    if (strcmp(sim_output_dir_name.c_str(), "")!=0){
+    /* if (strcmp(sim_output_dir_name.c_str(), "")!=0){
     output_dir_name = sim_output_dir_name;
+    } */
+    
+    if (do_nml){
+    nervousSystemName = nervousSystemNameForSim;
+    cout << "Performing nml run and saving data\n" << endl;
+    save_traces(best, rs);
     }
+    else{
     cout << "Performing C++ run and saving data\n" << endl;
     save_traces(best, rs);
+    }
 
-    if (strcmp(nml_output_dir_name.c_str(), "")!=0){
+    /* if (strcmp(nml_output_dir_name.c_str(), "")!=0){
     nervousSystemName = nervousSystemNameForSim;
     output_dir_name = nml_output_dir_name;
     cout << "Performing nml run and saving data\n" << endl;
     save_traces(best, rs);
-    }
+    } */
     
+
+
    
     return 0;
 }
