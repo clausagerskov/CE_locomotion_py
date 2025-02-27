@@ -13,8 +13,10 @@ make tests
 rm -rf test_output/*.dat
 ./tests
 
-
 make
+
+ruff format *.py */*.py
+ruff check *.py */*.py
 
 if [ "$quick_test" == 0 ]; then
 

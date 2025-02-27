@@ -196,7 +196,7 @@ class Worm2DNRNSimulation:
 
         self.ns.advance()
 
-        # print_("< Current NEURON time: %s ms" % self.h.t)
+        print_("< Current NEURON time: %s ms" % self.h.t)
 
         # values = []
         pop_list = [

@@ -11,7 +11,6 @@ import helper_funcs as hf
 
 
 def reload_single_run(show_plot=True, verbose=False):
-
     N_muscles = 24  # Number of muscles alongside the body
     N_units = 10  # Number of neural units in VNC
     N_neuronsperunit = 6  # Number of neurons in a VNC neural unit (6 neurons)
@@ -38,7 +37,7 @@ def reload_single_run(show_plot=True, verbose=False):
             act_data[0], act_data[i], label="SR %i" % (i - offset), linewidth=0.5
         )
         axs[0, 0].xaxis.set_ticklabels([])
-    #plt.legend()
+    # plt.legend()
 
     axs[0, 1].imshow(sr, aspect="auto", interpolation="nearest")
     axs[0, 1].xaxis.set_ticklabels([])
@@ -51,7 +50,7 @@ def reload_single_run(show_plot=True, verbose=False):
             act_data[0], act_data[i], label="Neu %i" % (i - offset), linewidth=0.5
         )
         axs[1, 0].xaxis.set_ticklabels([])
-    #plt.legend()
+    # plt.legend()
 
     neu = act_data[offset : N_neurons + offset]
     axs[1, 1].imshow(neu, aspect="auto", interpolation="nearest")
@@ -65,7 +64,7 @@ def reload_single_run(show_plot=True, verbose=False):
             act_data[0], act_data[i], label="Mu %i" % (i - offset), linewidth=0.5
         )
         axs[2, 0].xaxis.set_ticklabels([])
-    #plt.legend()
+    # plt.legend()
 
     mus = act_data[offset : N_muscles + offset]
     axs[2, 1].imshow(mus, aspect="auto", interpolation="nearest")
