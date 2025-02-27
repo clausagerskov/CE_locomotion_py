@@ -17,13 +17,16 @@ rm -rf test_output/*.dat
 make
 
 if [ "$quick_test" == 0 ]; then
+
     rm -rf exampleRun
     rm -rf exampleRun_nml
     
-    omv test -V neuromlLocal/.test.w2d.nrn.omt
-    omv test -V neuromlLocal/.test.w2d.omt
-    
     omv test -V .test.example.omt
+    
+    cd neuromlLocal
+    ./regenerate.sh # regenerated NML & runs omv all -V
+    cd ..
+    
     omv test -V .test.nmlNS.omt
     
     #omv test -V neuromlLocal/.test.w2d.omt
