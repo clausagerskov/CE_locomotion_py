@@ -1,14 +1,24 @@
+#pragma once
 #include <string>
 #include <vector>
 #include "VectorMatrix.h"
 
+
 using std::string;
 using std::vector;
 
-#pragma once
 
-//string output_dir_name = "";
+
+extern string nervousSystemName; // = "NervousSystem";
+extern string nervousSystemNameForSim; // = "nmlNervousSystem";
+extern string nervousSystemNameForEvol; // = "NervousSystem";
+extern string output_dir_name; // = "";
+
+bool checkNervousSystemForJson();
+
+
 string rename_file(const string & file_name);
+
 
 template<class T>
 vector<T> & append(vector<T> & v1, const vector<T> & v2)

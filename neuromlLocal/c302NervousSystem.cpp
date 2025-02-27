@@ -7,8 +7,10 @@ const std::string defaultSimClassName = "Worm2DNRNSimulation";
 c302NervousSystem::c302NervousSystem(const std::string & simFileName):
 simulation(new SignalSimulatorForWorm2D(simFileName,defaultSimClassName,0.005)){}
 
+//c302NervousSystem::c302NervousSystem():
+//simulation(new SignalSimulatorForWorm2D("neuromlLocal.main_sim",defaultSimClassName,0.005)){}
 c302NervousSystem::c302NervousSystem():
-simulation(new SignalSimulatorForWorm2D("neuromlLocal.main_sim",defaultSimClassName,0.005)){}
+simulation(new SignalSimulatorForWorm2D("main_sim",defaultSimClassName,"neuromlLocal",0.005)){}
 
 c302NervousSystem::c302NervousSystem(const std::string & simFileName, 
 const std::string & simDirName):simulation(new SignalSimulatorForWorm2D(simFileName,
@@ -94,7 +96,10 @@ double c302NervousSystem::ChemicalSynapseWeight(int from, int to)
 
 }
 
-
+void c302NervousSystem::SetCircuitSize(int newsize, int maxchemconns, int maxelecconns) {return;}
+void c302NervousSystem::SetNeuronOutput(int i, double value) {return;}
+double c302NervousSystem::ElectricalSynapseWeight(int from, int to) {return 0;}
+void c302NervousSystem::SetElectricalSynapseWeight(int n1, int n2, double value) {return;} 
 
 c302NervousSystem::~c302NervousSystem()
 {if (simulation!=nullptr) delete simulation;}

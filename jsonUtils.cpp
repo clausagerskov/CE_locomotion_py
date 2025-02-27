@@ -5,7 +5,7 @@
 #include <functional>
 #include <vector>
 #include <nlohmann/json.hpp>
-//#include "utils.h"
+#include "utils.h"
 #include "jsonUtils.h"
 #include "Mainvars.h"
 
@@ -682,10 +682,10 @@ n.InternalSetElectricalSynapseWeight(elec_weights[i].w.from, elec_weights[i].to,
 }
 
 
-void writeParsToJson(wormForJson & w, string file_name)
+
+void writeParsToJson(json & j, wormForJson & w, string file_name)
 {
 
-json j;
 {Params<double> par = getBodyParams(w.b);
 appendToJson<double>(j["Body"],par);}
 
@@ -759,6 +759,27 @@ void writeParsToJson(wormForJson & w)
 {
 writeParsToJson(w, "worm_data.json");
 }
+
+
+void writeParsToJson(wormForJson & w, string file_name)
+{
+json j;
+writeParsToJson(j,w,file_name);
+}
+
+void writeParsToJson(wormForJson & w, string file_name, vector<doubIntParamsHead> & parvec)
+{
+json j;
+
+for (size_t i=0;i<parvec.size(); i++) {
+if (strcmp(parvec[i].parDoub.head.c_str(),"NULL")!=0)
+appendToJson<double>(j[parvec[i].parDoub.head],parvec[i].parDoub);
+if (strcmp(parvec[i].parInt.head.c_str(),"NULL")!=0)
+appendToJson<long>(j[parvec[i].parInt.head],parvec[i].parInt);
+}
+writeParsToJson(j,w,file_name);
+}
+
 
 void readJson(json j, ifstream & ifs)
 {
