@@ -249,7 +249,9 @@ def run(a=None, **kwargs):
         print(f"Please change output directory name, or set overwrite to True\n"
                 "and doEvol to True to overwrite the evolution results,\n"
                 "or set overwrite to True and doEvol to False (the default) if you want\n"
-                "to just overwrite the simulation results."
+                "to just overwrite the simulation results. Alternatively supply this directory"
+                "as the `inputFolderName' parameter (which will not be"
+                 "modified), and provide a different novel name for the output directory."
                 )
         sys.exit(1)
     
