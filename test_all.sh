@@ -31,12 +31,6 @@ if [ "$quick_test" == 0 ]; then
     
     omv test -V .test.nmlNS.omt
     
-    #omv test -V neuromlLocal/.test.w2d.omt
-    #omv test -V .test.example.omt
-
-    #time python run_main.py -R 1233 -p 96 --doEvol --folderName exampleRun
-
-    #time omv all -V 
 fi
 
 make tests2
