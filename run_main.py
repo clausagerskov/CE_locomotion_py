@@ -301,11 +301,13 @@ def run(a=None, **kwargs):
         print('Evolution not needed as evolution parameters are the same as the existing ones.')
         do_evol = False
 
+    do_nml = None
     if a.doNML is not None:
         if a.doNML:
             do_nml = 1
         else:
-            do_nml = 0    
+            do_nml = 0
+             
     
     same_vals = True
     sim_pars = ['doNML', 'seed', 'Duration']
