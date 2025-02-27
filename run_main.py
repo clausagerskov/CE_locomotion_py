@@ -26,6 +26,7 @@ DEFAULTS = {
     "crandSeed": None,
     "inputFolderName": None,
     "nervousSystemFileName" : 'main_sim',
+    "mainProcessName": './main'
 }
 
 
@@ -38,6 +39,14 @@ def process_args():
         description=("A script for supplying arguments to execute Worm2D")
     )
 
+    parser.add_argument(
+        "-M",
+        "--mainProcessName",
+        type=str,
+        metavar="<main process name>",
+        default=DEFAULTS["mainProcessName"],
+        help=("Name of main process, default: %s" %DEFAULTS["mainProcessName"]),
+    )
 
     parser.add_argument(
         "-g",
@@ -328,11 +337,15 @@ def run(a=None, **kwargs):
 
 
     #cmd = ["./main",]
+    
+    main_cmd = a.mainProcessName
+    #main_cmd = "../main"
+    #main_cmd = "/home/adam/uclwork/CE_locomotion/experiments/.main"
 
     if a.crandSeed is not None:
-        cmd = ["./main", "-r", str(a.crandSeed)]
+        cmd = [main_cmd, "-r", str(a.crandSeed)]
     else:    
-        cmd = ["./main", "-R", str(evol_data['randomseed'])]
+        cmd = [main_cmd, "-R", str(evol_data['randomseed'])]
     
     cmd += ["-sr", str(sim_data['seed'])]
     cmd += ["-p", str(evol_data['pop_size'])]
@@ -343,23 +356,20 @@ def run(a=None, **kwargs):
     cmd += ["--donml", str(sim_data['doNML'])]
     cmd += ["--folder", str(a.outputFolderName)]
 
-
-
+    #command_success = execute_command_in_dir_with_realtime_output(cmd, ".",)
+    
+    home_dir = '/home/adam/uclwork/CE_locomotion'
     # Run the C++
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    # result = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    # output, errors = result.communicate()
+    if True:
+        #result = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        #result = subprocess.run(cmd, capture_output=True, text=True, cwd = home_dir)
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.stdout:
+            print(result.stdout)
 
-    # p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    # print(output)
-
-    if result.stdout:
-        print(result.stdout)
-
-    if result.stderr:
-        print("Error:")
-        print(result.stderr)
+        if result.stderr:
+            print("Error:")
+            print(result.stderr)
 
     
     
