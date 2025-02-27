@@ -12,6 +12,7 @@ defaults_base = {
     "popSize": 96,
     "duration": 24,
     "nervousSystemFileName" : 'main_sim',
+    "doNML": 0
     }
 
 DEFAULTS = {
@@ -21,7 +22,7 @@ DEFAULTS = {
     "outputFolderName": None,
     "doEvol": False,
     "overwrite": False,
-    "doNML": False,
+    "doNML": None,
     "crandSeed": None,
     "inputFolderName": None,
     "nervousSystemFileName" : 'main_sim',
@@ -233,7 +234,7 @@ def run(a=None, **kwargs):
            sys.exit(1)
 
     if a.outputFolderName is None:
-        print("You need to supply an output folder name!")
+        print("No output folder name. You need to supply an output folder name, and an optional input folder name.")
         sys.exit(1)       
 
     if not do_evol and not os.path.isdir(a.outputFolderName):
@@ -247,10 +248,10 @@ def run(a=None, **kwargs):
 
     if not make_directory(a.outputFolderName, a.overwrite, str1):
         print(f"Please change output directory name, or set overwrite to True\n"
-                "and doEvol to True to overwrite the evolution results,\n"
+                "and doEvol to True to overwrite the evolution and simulation results,\n"
                 "or set overwrite to True and doEvol to False (the default) if you want\n"
-                "to just overwrite the simulation results. Alternatively supply this directory"
-                "as the `inputFolderName' parameter (which will not be"
+                "to just overwrite the simulation results. Alternatively supply this directory\n"
+                "as the `inputFolderName' parameter (which will not be\n"
                  "modified), and provide a different novel name for the output directory."
                 )
         sys.exit(1)
@@ -279,7 +280,7 @@ def run(a=None, **kwargs):
     evol_data = {}
     evol_pars = ['Duration', 'pop_size', 'randomseed']
     evol_args = [a.duration, a.popSize, a.RandSeed]
-    evol_defaults = [24, 96, random_seed]
+    evol_defaults = [defaults_base['duration'], defaults_base['popSize'], random_seed]
 
     evol_par_file = a.outputFolderName + '/worm_data.json'
     if os.path.isfile(evol_par_file):
@@ -291,13 +292,7 @@ def run(a=None, **kwargs):
                 else:
                     print('Parameter not found in worm_data.json')   
 
-
-    if a.doNML:
-        do_nml = 1
-    else:
-        do_nml = 0
-
-
+ 
     same_vals = True
     if do_evol:
         for (par, arg, default) in zip(evol_pars,evol_args,evol_defaults):
@@ -306,17 +301,24 @@ def run(a=None, **kwargs):
         print('Evolution not needed as evolution parameters are the same as the existing ones.')
         do_evol = False
 
+    if a.doNML is not None:
+        if a.doNML:
+            do_nml = 1
+        else:
+            do_nml = 0    
     
     same_vals = True
     sim_pars = ['doNML', 'seed', 'Duration']
     sim_args = [do_nml, a.RandSeed, a.duration]
-    sim_defaults = [0, random_seed, 24]
+    sim_defaults = [defaults_base['doNML'], random_seed, defaults_base['duration']]
     for (par, arg, default) in zip(sim_pars,sim_args,sim_defaults):
             if not setDict(sim_data, par, arg, default): same_vals = False
             
 
     if not do_evol and same_vals:
-        print('Simulation not needed as simulation parameters are the same as the existing ones.')
+        print('Simulation not needed as simulation parameters are the same as the existing ones.\n'
+              'Please supply new command line arguments.'
+              )
         sys.exit(1)
     
     with open(sim_par_file, 'w', encoding='utf-8') as f:
@@ -336,7 +338,7 @@ def run(a=None, **kwargs):
     cmd += ["-sd", str(sim_data['Duration'])]
     cmd += ["--doevol", str(do_evol)]  
    
-    cmd += ["--donml", str(do_nml)]
+    cmd += ["--donml", str(sim_data['doNML'])]
     cmd += ["--folder", str(a.outputFolderName)]
 
 
