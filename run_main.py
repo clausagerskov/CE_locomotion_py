@@ -160,7 +160,7 @@ def process_args():
     return parser.parse_args()
 
 
-def make_directory(directory_name, overwrite, str1 = 'the contents'):
+def make_directory(directory_name, overwrite = False, str1 = 'the contents'):
     try:
         os.mkdir(directory_name)
         print(f"Directory '{directory_name}' created successfully.")
