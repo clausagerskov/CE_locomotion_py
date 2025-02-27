@@ -28,11 +28,11 @@ jobs:
       run: g++ -v
 
     - name: Install dependencies (Ubuntu)
-      run: sudo apt-get install -y nlohmann-json3-dev
+      run: sudo apt-get install -y nlohmann-json3-dev tree
       if: ${{ contains(matrix.runs-on, 'ubuntu') }}
       
     - name: Install dependencies (macOS)
-      run: brew install nlohmann-json
+      run: brew install nlohmann-json tree
       if: ${{ contains(matrix.runs-on, 'macos') }}
     
     - name: Run C++ tests 
@@ -54,15 +54,6 @@ jobs:
         pip install pyNeuroML
         pip install numpy matplotlib
         pip install ruff
-        
-
-
-    - name: Test NeuroML
-      run: |
-        cd neuromlLocal
-        ./regenerate.sh 
-
-        # make clean all # not yet...
 
     - name: Test directly running main program
       run: |
@@ -79,7 +70,7 @@ jobs:
         export NEURON_HOME=$pythonLocation
         env
         
-        ./test_all.sh 
+        ./test_all.sh # also generated neuroml
 
         git diff exampleRun/phenotype.dat 
 
@@ -87,3 +78,4 @@ jobs:
     - name: list generated files
       run: |
           ls -alth
+          tree
