@@ -53,7 +53,8 @@ jobs:
         pip install OSBModelValidation
         pip install pyNeuroML
         pip install numpy matplotlib
-        pip install ruff
+        pip install ruff 
+        pip install neuron 
 
     - name: Test directly running main program
       run: |

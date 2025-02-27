@@ -28,3 +28,7 @@
 /neuromlLocal/x86_64
 /neuromlLocal/testc302NervousSystem
 /arm64
+/x86_64
+/report.txt
+/exampleRun_nml
+/*.dat
