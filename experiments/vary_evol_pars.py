@@ -8,6 +8,6 @@ outFolderBase = 'varyEvolSeeds'
 popSize = 10
 make_directory(outFolderBase)
 
-for ind in range(5):
+for ind in range(500):
     outputFolderName = outFolderBase + '/run_' + str(ind)
     run(outputFolderName=outputFolderName, popSize=popSize, mainProcessName = '../main')
