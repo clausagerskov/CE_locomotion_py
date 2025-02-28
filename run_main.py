@@ -26,8 +26,8 @@ DEFAULTS = {
     "doNML": None,
     "crandSeed": None,
     "inputFolderName": None,
-    "nervousSystemFileName" : 'main_sim',
-    "mainProcessName": './main'
+    "nervousSystemFileName": "main_sim",
+    "mainProcessName": "./main",
 }
 
 
@@ -46,7 +46,7 @@ def process_args():
         type=str,
         metavar="<main process name>",
         default=DEFAULTS["mainProcessName"],
-        help=("Name of main process, default: %s" %DEFAULTS["mainProcessName"]),
+        help=("Name of main process, default: %s" % DEFAULTS["mainProcessName"]),
     )
 
     parser.add_argument(
@@ -169,7 +169,7 @@ def process_args():
     return parser.parse_args()
 
 
-def make_directory(directory_name, overwrite = False, str1 = 'the contents'):
+def make_directory(directory_name, overwrite=False, str1="the contents"):
     try:
         os.mkdir(directory_name)
         print(f"Directory '{directory_name}' created successfully.")
@@ -352,31 +352,30 @@ def run(a=None, **kwargs):
     with open(sim_par_file, "w", encoding="utf-8") as f:
         json.dump(sim_data, f, ensure_ascii=False, indent=4)
 
+    # cmd = ["./main",]
 
-    #cmd = ["./main",]
-    
     main_cmd = a.mainProcessName
-    #main_cmd = "../main"
-    #main_cmd = "/home/adam/uclwork/CE_locomotion/experiments/.main"
+    # main_cmd = "../main"
+    # main_cmd = "/home/adam/uclwork/CE_locomotion/experiments/.main"
 
     if a.crandSeed is not None:
         cmd = [main_cmd, "-r", str(a.crandSeed)]
-    else:    
-        cmd = [main_cmd, "-R", str(evol_data['randomseed'])]
-    
-    cmd += ["-sr", str(sim_data['seed'])]
-    cmd += ["-p", str(evol_data['pop_size'])]
-    cmd += ["-d", str(evol_data['Duration'])]
-    cmd += ["-sd", str(sim_data['Duration'])]
-    cmd += ["--doevol", str(do_evol)]  
-   
-    cmd += ["--donml", str(sim_data['doNML'])]
+    else:
+        cmd = [main_cmd, "-R", str(evol_data["randomseed"])]
+
+    cmd += ["-sr", str(sim_data["seed"])]
+    cmd += ["-p", str(evol_data["pop_size"])]
+    cmd += ["-d", str(evol_data["Duration"])]
+    cmd += ["-sd", str(sim_data["Duration"])]
+    cmd += ["--doevol", str(do_evol)]
+
+    cmd += ["--donml", str(sim_data["doNML"])]
     cmd += ["--folder", str(a.outputFolderName)]
 
     # Run the C++
     if True:
-        #result = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-        #result = subprocess.run(cmd, capture_output=True, text=True, cwd = home_dir)
+        # result = subprocess.Popen(cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        # result = subprocess.run(cmd, capture_output=True, text=True, cwd = home_dir)
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.stdout:
             print(result.stdout)
@@ -385,8 +384,6 @@ def run(a=None, **kwargs):
             print("Error:")
             print(result.stderr)
 
-    
-    
     hf.dir_name = a.outputFolderName
     from load_data import reload_single_run
 

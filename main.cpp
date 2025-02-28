@@ -480,12 +480,11 @@ int main (int argc, const char* argv[])
     if (do_nml){
     nervousSystemName = nervousSystemNameForSim;
     cout << "Performing nml run and saving data\n" << endl;
-    save_traces(best, rs);
     }
     else{
     cout << "Performing C++ run and saving data\n" << endl;
-    save_traces(best, rs);
     }
+    save_traces(best, rs);
 
     /* if (strcmp(nml_output_dir_name.c_str(), "")!=0){
     nervousSystemName = nervousSystemNameForSim;
