@@ -35,6 +35,23 @@ def getWeight(weights, pre_cell_ind, post_cell_ind):
         if ((weight["from"] == pre_cell_ind) & (weight["to"] == post_cell_ind))
     ][0]
 
+def getParsDict(vals):
+    new_vals = {} 
+    for key, val in vals.items():
+        new_vals[key] = val['value']
+    return new_vals
+
+def getValsDict(vals, cell_names):
+    new_vals = {} 
+    for ind, val in enumerate(vals):
+        kk = cell_names[ind]   
+        if kk in new_vals:
+            if new_vals[kk] != val:
+                print("Vals not equal!")
+                sys.exit(1)
+        else:
+           new_vals[kk] = val
+    return new_vals 
 
 def getWeightsDict(weights, cell_names):
     new_weights = {}
@@ -79,7 +96,10 @@ DA->VD: 15.0622
 
 fitness_keys = ['Best', 'Average', 'Variance']
 weights_list = []
+elec_weights_list = []
 fitness_list = []
+biases_list = []
+worm_vals_list = []
 for dir in path_list:
     json_file = dir + "/worm_data.json"
     with open(json_file, "r") as file:
@@ -87,6 +107,14 @@ for dir in path_list:
     cell_names = getCellNames(worm_data)
     chem_weights = getNervousSystemVal(worm_data, "Chemical weights")
     weights_list.append(getWeightsDict(chem_weights, cell_names))
+    elec_weights = getNervousSystemVal(worm_data, "Electrical weights")
+    elec_weights_list.append(getWeightsDict(elec_weights, cell_names))
+    biases = getNervousSystemVal(worm_data, "biases")
+    biases_list.append(getValsDict(biases, cell_names))
+    worm_vals = getParsDict(worm_data['Worm'])
+    worm_vals['SR_A_gain']=worm_data['Stretch receptor']['SR_A_gain']['value']
+    worm_vals['SR_B_gain']=worm_data['Stretch receptor']['SR_B_gain']['value']
+    worm_vals_list.append(worm_vals)
     ol1 = None
     with open(dir + '/fitness.dat', "r") as file:
         while True:
@@ -112,22 +140,34 @@ sys.exit(1)
 print(weights_list)
 sys.exit(1)
  """
-all_weights = getUniques(weights_list)
+#print(worm_vals_list)
+#sys.exit(1)
+
+#all_weights = getUniques(weights_list)
 all_fitnesses = getUniques(fitness_list)
 
-print(all_weights)
+#print(all_weights)
 print(all_fitnesses)
 
 
 #sys.exit(1)
-make_directory("results")
-fit_level = 0.95
 
-for key, val in all_weights.items():
-    sns.displot(val, bins=10, kde=True)
-    plt.savefig("results/" + key + ".png")
-    plt.close()
-    best_fit = [val1 for val1, fitness in zip(val, all_fitnesses['Best']) if fitness > fit_level]
-    sns.displot(best_fit, bins=10, kde=True)
-    plt.savefig("results/best_fit_" + key + ".png")
-    plt.close()
+if not make_directory("results", overwrite=True):
+    sys.exit(1)
+fit_level = 0.9
+
+results_titles = ['ChemWei', 'ElectWei', 'Bias', 'Worm']
+data_results_list = [weights_list, elec_weights_list, biases_list, worm_vals_list]
+
+for title, data_result in zip(results_titles,data_results_list):
+    res1 = getUniques(data_result)  
+    for key, val in res1.items():
+        sns.displot(val, bins=10, kde=True)
+        title_str =  title + '_' + key + ".png"
+        plt.savefig("results/" + title_str)
+        plt.close()
+        best_fit = [val1 for val1, fitness 
+                    in zip(val, all_fitnesses['Best']) if fitness > fit_level]
+        sns.displot(best_fit, bins=10, kde=True)
+        plt.savefig("results/best_fit_" + title_str)
+        plt.close()
