@@ -7,7 +7,6 @@ through libNeuroML, save it as XML and validate it
 
 import neuroml.writers as writers
 from neuroml import (
-    ExplicitInput,
     Network,
     NeuroMLDocument,
     Population,
@@ -16,13 +15,13 @@ from neuroml import (
     ContinuousProjection,
     ContinuousConnectionInstanceW,
     ElectricalConnectionInstanceW,
-    IncludeType,
     Property,
     Instance,
     Location,
     InputW,
     InputList,
 )
+# from neuroml import IncludeType
 
 import utils
 

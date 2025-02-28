@@ -61,4 +61,4 @@ tests2: tests2.o NervousSystem.o random.o jsonUtils.o utils.o
 	g++ $(CXXFLAGS) $(LDFLAGS) -pthread -o tests2 tests2.o NervousSystem.o random.o utils.o jsonUtils.o $(LIBS)
 
 clean:
-	rm -f *.o main tests tests2
+	rm -f *.o neuromlLocal/*.o main tests tests2
