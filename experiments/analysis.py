@@ -115,21 +115,15 @@ sys.exit(1)
 all_weights = getUniques(weights_list)
 all_fitnesses = getUniques(fitness_list)
 
-""" all_weights = defaultdict(list)
-
-for d in weights_list:
-    for key, value in d.items():
-        all_weights[key].append(value) """
 print(all_weights)
 print(all_fitnesses)
 
 
 #sys.exit(1)
 make_directory("results")
-fit_level = 0.9
+fit_level = 0.95
 
 for key, val in all_weights.items():
-    # plt.hist(all_weights['VDVB'], density=True, bins=30)
     sns.displot(val, bins=10, kde=True)
     plt.savefig("results/" + key + ".png")
     plt.close()
