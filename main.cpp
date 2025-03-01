@@ -207,14 +207,7 @@ double save_traces(TVector<double> &v, RandomState &rs){
     w.AVA_output =  w.AVA_inact;
     w.AVB_output =  w.AVB_act;
 
-    
-    /* if (checkNervousSystemForJson()){
-    cout << "making json" << endl;
-    writeParsToJson(w, "worm_data.json");
-    testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
-    } */
-    
-    //#endif
+  
 
     for (double t = 0.0; t <= Transient + Duration; t += StepSize){
         w.Step(StepSize, 1);
@@ -458,24 +451,6 @@ int main (int argc, const char* argv[])
     Best >> best;
     
 
-    /* TVector<double> phenotype(1, VectSize);
-    GenPhenMapping(best, phenotype);
-    double sra = phenotype(SR_A);
-    double srb = phenotype(SR_B);
-    
-    
-    Worm w(phenotype, 1);
-    w.InitializeState(rs);
-    w.sr.SR_A_gain = 0.0;
-    w.sr.SR_B_gain = srb;
-    w.AVA_output =  w.AVA_inact;
-    w.AVB_output =  w.AVB_act; */
-
-
-    
-    /* if (strcmp(sim_output_dir_name.c_str(), "")!=0){
-    output_dir_name = sim_output_dir_name;
-    } */
     
     if (do_nml){
     nervousSystemName = nervousSystemNameForSim;
@@ -486,12 +461,7 @@ int main (int argc, const char* argv[])
     }
     save_traces(best, rs);
 
-    /* if (strcmp(nml_output_dir_name.c_str(), "")!=0){
-    nervousSystemName = nervousSystemNameForSim;
-    output_dir_name = nml_output_dir_name;
-    cout << "Performing nml run and saving data\n" << endl;
-    save_traces(best, rs);
-    } */
+    
     
 
 

@@ -73,7 +73,7 @@ def getUniques(list1):
     return result1
 
 path_list = []
-outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1"]
+outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1", "varyEvolSeeds2", "varyEvolSeeds3"]
 current = os.path.dirname(os.path.realpath(__file__))  # location of this file!
 for outFolderBase in outFolderBases:
     path = current + "/" + outFolderBase
@@ -102,6 +102,8 @@ biases_list = []
 worm_vals_list = []
 for dir in path_list:
     json_file = dir + "/worm_data.json"
+    if not os.path.isfile(json_file): break
+    if not os.path.isfile(dir + '/fitness.dat'): break
     with open(json_file, "r") as file:
         worm_data = json.load(file)
     cell_names = getCellNames(worm_data)
@@ -154,7 +156,7 @@ print(all_fitnesses)
 
 if not make_directory("results", overwrite=True):
     sys.exit(1)
-fit_level = 0.9
+fit_level = 0.95
 
 results_titles = ['ChemWei', 'ElectWei', 'Bias', 'Worm']
 data_results_list = [weights_list, elec_weights_list, biases_list, worm_vals_list]

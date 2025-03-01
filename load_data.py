@@ -119,7 +119,7 @@ def reload_single_run(show_plot=True, verbose=False):
 
     if show_plot:
         plt.show()
-
+    plt.close()
 
 if __name__ == "__main__":
     import sys
