@@ -11,10 +11,12 @@ import helper_funcs as hf
 
 
 def reload_single_run(show_plot=True, verbose=False):
-    N_muscles = 24  # Number of muscles alongside the body
+    N_muscles_perside = 24  # Number of muscles alongside the body
+    N_muscles = N_muscles_perside * 2
     N_units = 10  # Number of neural units in VNC
     N_neuronsperunit = 6  # Number of neurons in a VNC neural unit (6 neurons)
-    N_stretchrec = 10  # Number of stretch receptors
+    N_stretchrec_units = 10  # Number of stretch receptors
+    N_stretchrec =  N_stretchrec_units * 4 # Number of stretch receptors
 
     N_neurons = N_neuronsperunit * N_units
 
