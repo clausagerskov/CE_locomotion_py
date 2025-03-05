@@ -14,6 +14,7 @@ defaults_base = {
     "duration": 24,
     "nervousSystemFileName": "main_sim",
     "doNML": 0,
+    "doRandInit": 0,
 }
 
 DEFAULTS = {
@@ -24,6 +25,7 @@ DEFAULTS = {
     "doEvol": False,
     "overwrite": False,
     "doNML": None,
+    "doRandInit": None,
     "crandSeed": None,
     "inputFolderName": None,
     "nervousSystemFileName": "main_sim",
@@ -99,6 +101,14 @@ def process_args():
         ),
     )
 
+    parser.add_argument(
+        "-i",
+        "--doRandInit",
+        action="store_true",
+        # metavar="<run NML>",
+        default=DEFAULTS["doRandInit"],
+        help=("Use seed to initialize the simulation initial condition."),
+    )
     parser.add_argument(
         "-o",
         "--overwrite",
@@ -299,10 +309,19 @@ def run(a=None, **kwargs):
     random.seed(datetime.now().timestamp())
     random_seed = random.randint(1, 1000000)
 
+    do_randInit = None
+    if a.doRandInit is not None:
+        if a.doRandInit:
+            do_randInit = 1
+        else:
+            do_randInit = 0
+
+
     evol_data = {}
     evol_pars = ["Duration", "pop_size", "randomseed"]
     evol_args = [a.duration, a.popSize, a.RandSeed]
-    evol_defaults = [defaults_base["duration"], defaults_base["popSize"], random_seed]
+    evol_defaults = [defaults_base["duration"], defaults_base["popSize"], 
+                     random_seed,]
 
     evol_par_file = a.outputFolderName + "/worm_data.json"
     if os.path.isfile(evol_par_file):
@@ -334,10 +353,17 @@ def run(a=None, **kwargs):
         else:
             do_nml = 0
 
+    
+
     same_vals = True
-    sim_pars = ["doNML", "seed", "Duration"]
-    sim_args = [do_nml, a.RandSeed, a.duration]
-    sim_defaults = [defaults_base["doNML"], random_seed, defaults_base["duration"]]
+    sim_pars = ["doNML", "seed", "Duration", "doRandInit"]
+    sim_args = [do_nml, a.RandSeed, a.duration, do_randInit]
+    sim_defaults = [
+        defaults_base["doNML"],
+        random_seed,
+        defaults_base["duration"],
+        defaults_base["doRandInit"],
+    ]
     for par, arg, default in zip(sim_pars, sim_args, sim_defaults):
         if not setDict(sim_data, par, arg, default):
             same_vals = False
@@ -361,14 +387,17 @@ def run(a=None, **kwargs):
     if a.crandSeed is not None:
         cmd = [main_cmd, "-r", str(a.crandSeed)]
     else:
-        cmd = [main_cmd, "-R", str(evol_data["randomseed"])]
-
-    cmd += ["-sr", str(sim_data["seed"])]
+        if do_evol:
+            cmd = [main_cmd, "-R", str(evol_data["randomseed"])]
+        else:
+            cmd = [main_cmd, "-R", str(sim_data["seed"])]
+    #cmd += ["-sr", str(sim_data["seed"])]
     cmd += ["-p", str(evol_data["pop_size"])]
     cmd += ["-d", str(evol_data["Duration"])]
     cmd += ["-sd", str(sim_data["Duration"])]
     cmd += ["--doevol", str(do_evol)]
 
+    cmd += ["--dorandinit", str(sim_data["doRandInit"])]
     cmd += ["--donml", str(sim_data["doNML"])]
     cmd += ["--folder", str(a.outputFolderName)]
 

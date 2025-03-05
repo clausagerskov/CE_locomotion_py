@@ -35,23 +35,26 @@ def getWeight(weights, pre_cell_ind, post_cell_ind):
         if ((weight["from"] == pre_cell_ind) & (weight["to"] == post_cell_ind))
     ][0]
 
+
 def getParsDict(vals):
-    new_vals = {} 
+    new_vals = {}
     for key, val in vals.items():
-        new_vals[key] = val['value']
+        new_vals[key] = val["value"]
     return new_vals
 
+
 def getValsDict(vals, cell_names):
-    new_vals = {} 
+    new_vals = {}
     for ind, val in enumerate(vals):
-        kk = cell_names[ind]   
+        kk = cell_names[ind]
         if kk in new_vals:
             if new_vals[kk] != val:
                 print("Vals not equal!")
                 sys.exit(1)
         else:
-           new_vals[kk] = val
-    return new_vals 
+            new_vals[kk] = val
+    return new_vals
+
 
 def getWeightsDict(weights, cell_names):
     new_weights = {}
@@ -65,12 +68,14 @@ def getWeightsDict(weights, cell_names):
             new_weights[kk] = weight["weight"]
     return new_weights
 
+
 def getUniques(list1):
     result1 = defaultdict(list)
     for d in list1:
         for key, value in d.items():
             result1[key].append(value)
     return result1
+
 
 path_list = []
 outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1", "varyEvolSeeds2", "varyEvolSeeds3"]
@@ -94,7 +99,7 @@ DA->VD: 15.0622
  VB->VD: 0
 ] """
 
-fitness_keys = ['Best', 'Average', 'Variance']
+fitness_keys = ["Best", "Average", "Variance"]
 weights_list = []
 elec_weights_list = []
 fitness_list = []
@@ -102,8 +107,10 @@ biases_list = []
 worm_vals_list = []
 for dir in path_list:
     json_file = dir + "/worm_data.json"
-    if not os.path.isfile(json_file): break
-    if not os.path.isfile(dir + '/fitness.dat'): break
+    if not os.path.isfile(json_file):
+        break
+    if not os.path.isfile(dir + "/fitness.dat"):
+        break
     with open(json_file, "r") as file:
         worm_data = json.load(file)
     cell_names = getCellNames(worm_data)
@@ -113,24 +120,24 @@ for dir in path_list:
     elec_weights_list.append(getWeightsDict(elec_weights, cell_names))
     biases = getNervousSystemVal(worm_data, "biases")
     biases_list.append(getValsDict(biases, cell_names))
-    worm_vals = getParsDict(worm_data['Worm'])
-    worm_vals['SR_A_gain']=worm_data['Stretch receptor']['SR_A_gain']['value']
-    worm_vals['SR_B_gain']=worm_data['Stretch receptor']['SR_B_gain']['value']
+    worm_vals = getParsDict(worm_data["Worm"])
+    worm_vals["SR_A_gain"] = worm_data["Stretch receptor"]["SR_A_gain"]["value"]
+    worm_vals["SR_B_gain"] = worm_data["Stretch receptor"]["SR_B_gain"]["value"]
     worm_vals_list.append(worm_vals)
     ol1 = None
-    with open(dir + '/fitness.dat', "r") as file:
+    with open(dir + "/fitness.dat", "r") as file:
         while True:
-            l1=file.readline()
+            l1 = file.readline()
             if l1:
                 ol1 = l1
-            else:  
+            else:
                 break
-            #print(l1)
+            # print(l1)
         file.close()
     if ol1 is not None:
         d1 = {}
         for key, val in zip(fitness_keys, ol1.split()):
-            d1[key]=float(val)
+            d1[key] = float(val)
         fitness_list.append(d1)
     else:
         print("No fitness")
@@ -142,34 +149,37 @@ sys.exit(1)
 print(weights_list)
 sys.exit(1)
  """
-#print(worm_vals_list)
-#sys.exit(1)
+# print(worm_vals_list)
+# sys.exit(1)
 
-#all_weights = getUniques(weights_list)
+# all_weights = getUniques(weights_list)
 all_fitnesses = getUniques(fitness_list)
 
-#print(all_weights)
+# print(all_weights)
 print(all_fitnesses)
 
 
-#sys.exit(1)
+# sys.exit(1)
 
 if not make_directory("results", overwrite=True):
     sys.exit(1)
 fit_level = 0.95
 
-results_titles = ['ChemWei', 'ElectWei', 'Bias', 'Worm']
+results_titles = ["ChemWei", "ElectWei", "Bias", "Worm"]
 data_results_list = [weights_list, elec_weights_list, biases_list, worm_vals_list]
 
-for title, data_result in zip(results_titles,data_results_list):
-    res1 = getUniques(data_result)  
+for title, data_result in zip(results_titles, data_results_list):
+    res1 = getUniques(data_result)
     for key, val in res1.items():
         sns.displot(val, bins=10, kde=True)
-        title_str =  title + '_' + key + ".png"
+        title_str = title + "_" + key + ".png"
         plt.savefig("results/" + title_str)
         plt.close()
-        best_fit = [val1 for val1, fitness 
-                    in zip(val, all_fitnesses['Best']) if fitness > fit_level]
+        best_fit = [
+            val1
+            for val1, fitness in zip(val, all_fitnesses["Best"])
+            if fitness > fit_level
+        ]
         sns.displot(best_fit, bins=10, kde=True)
         plt.savefig("results/best_fit_" + title_str)
         plt.close()

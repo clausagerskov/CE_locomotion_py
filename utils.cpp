@@ -6,8 +6,8 @@
 string nervousSystemName; // = "NervousSystem";
 string nervousSystemNameForSim; // = "nmlNervousSystem";
 string nervousSystemNameForEvol;
-string output_dir_name; 
-
+string output_dir_name = "";
+bool randomInit = 0;
 
 string rename_file(const string & file_name){
   if (output_dir_name != "") return output_dir_name + "/" + file_name;

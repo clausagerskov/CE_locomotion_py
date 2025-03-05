@@ -287,7 +287,9 @@ int main (int argc, const char* argv[])
     int pop_size = 96;
     string nml_output_dir_name = "";
     string sim_output_dir_name = "";
-    output_dir_name = "";
+    //output_dir_name = "";
+    randomInit = 0;
+    bool simRandomInit = 0;
 
     bool do_evol = 1;
     //bool skipOrigSim = 0;
@@ -309,6 +311,7 @@ int main (int argc, const char* argv[])
     for (int arg = 1; arg<argc; arg+=2)
     { 
     if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
+    if (strcmp(argv[arg],"--dorandinit")==0) simRandomInit = atoi(argv[arg+1]);
     //if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--donml")==0) do_nml = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--folder")==0) {
@@ -442,9 +445,11 @@ int main (int argc, const char* argv[])
 
     }
 
+    randomInit = simRandomInit;
     RandomState rs;
-    long seed = static_cast<long>(time(NULL));
-    rs.SetRandomSeed(seed);
+    //long seed = static_cast<long>(time(NULL));
+    cout << "random seed is " << randomseed << endl;
+    rs.SetRandomSeed(randomseed);
     ifstream Best;
     Best.open(rename_file("best.gen.dat"));
     TVector<double> best(1, VectSize);

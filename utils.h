@@ -13,6 +13,8 @@ extern string nervousSystemName; // = "NervousSystem";
 extern string nervousSystemNameForSim; // = "nmlNervousSystem";
 extern string nervousSystemNameForEvol; // = "NervousSystem";
 extern string output_dir_name; // = "";
+extern bool randomInit; // if true random nervous initial state
+
 
 bool checkNervousSystemForJson();
 
