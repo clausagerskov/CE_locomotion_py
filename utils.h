@@ -8,16 +8,20 @@ using std::string;
 using std::vector;
 
 
-
-extern string nervousSystemName; // = "NervousSystem";
-extern string nervousSystemNameForSim; // = "nmlNervousSystem";
-extern string nervousSystemNameForEvol; // = "NervousSystem";
-extern string output_dir_name; // = "";
+extern string nervousSystemName; 
+extern string nervousSystemNameForSim; 
+extern string nervousSystemNameForEvol; 
+extern string output_dir_name; 
 extern bool randomInit; // if true random nervous initial state
 
+extern int pop_size;
+extern bool simRandomInit;
+extern bool do_evol;
+extern bool do_nml;
+extern int traceDuration;
 
 bool checkNervousSystemForJson();
-
+bool setArgs(int argc, const char* argv[], long & randomseed);
 
 string rename_file(const string & file_name);
 

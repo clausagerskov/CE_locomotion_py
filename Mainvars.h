@@ -2,7 +2,7 @@ extern int skip_steps;
 
 
 // Integration parameters
-extern int Duration;
+extern const int Duration;
 extern const double Transient;
 extern const double StepSize;
 extern const int N_curvs;

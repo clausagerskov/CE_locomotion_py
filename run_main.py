@@ -316,12 +316,14 @@ def run(a=None, **kwargs):
         else:
             do_randInit = 0
 
-
     evol_data = {}
     evol_pars = ["Duration", "pop_size", "randomseed"]
     evol_args = [a.duration, a.popSize, a.RandSeed]
-    evol_defaults = [defaults_base["duration"], defaults_base["popSize"], 
-                     random_seed,]
+    evol_defaults = [
+        defaults_base["duration"],
+        defaults_base["popSize"],
+        random_seed,
+    ]
 
     evol_par_file = a.outputFolderName + "/worm_data.json"
     if os.path.isfile(evol_par_file):
@@ -352,8 +354,6 @@ def run(a=None, **kwargs):
             do_nml = 1
         else:
             do_nml = 0
-
-    
 
     same_vals = True
     sim_pars = ["doNML", "seed", "Duration", "doRandInit"]
@@ -391,7 +391,7 @@ def run(a=None, **kwargs):
             cmd = [main_cmd, "-R", str(evol_data["randomseed"])]
         else:
             cmd = [main_cmd, "-R", str(sim_data["seed"])]
-    #cmd += ["-sr", str(sim_data["seed"])]
+    # cmd += ["-sr", str(sim_data["seed"])]
     cmd += ["-p", str(evol_data["pop_size"])]
     cmd += ["-d", str(evol_data["Duration"])]
     cmd += ["-sd", str(sim_data["Duration"])]

@@ -760,6 +760,24 @@ void writeParsToJson(wormForJson & w)
 writeParsToJson(w, "worm_data.json");
 }
 
+void writeParsToJson(wormForJson & w, long & randomseed)
+{
+    if (checkNervousSystemForJson()){
+  cout << "making json" << endl;
+  vector<doubIntParamsHead> evolutionParams;
+  doubIntParamsHead var1;
+  var1.parInt.head = "Evolutionary Optimization Parameters";
+  var1.parInt.names = {"pop_size", "Duration", "randomseed"};
+  var1.parInt.vals = {pop_size, Duration, randomseed};
+  var1.parInt.messages ={"population size", "optimization simulation duration", "seed"};
+  var1.parInt.messages_inds = {0,1,2};
+  evolutionParams.push_back(var1);
+
+  writeParsToJson(w, "worm_data.json", evolutionParams);
+  //writeParsToJson(w, "worm_data.json");
+  testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
+    }
+}
 
 void writeParsToJson(wormForJson & w, string file_name)
 {

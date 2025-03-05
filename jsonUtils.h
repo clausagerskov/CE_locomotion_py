@@ -49,6 +49,7 @@ void setNSFromJsonFile(ifstream & ifs, NervousSystem & n);
 void writeWormParams(wormForJson & w);
 void writeParsToJson(wormForJson & w, string file_name, vector<doubIntParamsHead> & parvec);
 //void writeParsToJson(json & j, wormForJson & w, string file_name);
+void writeParsToJson(wormForJson & w, long & randomseed);
 void writeParsToJson(wormForJson &, string);
 void writeParsToJson(wormForJson &);
 void testNervousSystemJson(string, NervousSystem &);

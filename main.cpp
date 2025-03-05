@@ -29,7 +29,7 @@ int skip_steps = 10;
 using namespace std;
 
 // Integration parameters
-int Duration = 24;
+const int Duration = 24;
 const double Transient = 8.0;
 const double StepSize = 0.005;
 const int N_curvs = 23;
@@ -209,7 +209,7 @@ double save_traces(TVector<double> &v, RandomState &rs){
 
   
 
-    for (double t = 0.0; t <= Transient + Duration; t += StepSize){
+    for (double t = 0.0; t <= Transient + traceDuration; t += StepSize){
         w.Step(StepSize, 1);
         w.DumpBodyState(bodyfile, skip_steps);
         w.DumpCurvature(curvfile, skip_steps);
@@ -284,65 +284,16 @@ int main (int argc, const char* argv[])
 {
     std::cout << std::setprecision(10);
     long randomseed = static_cast<long>(time(NULL));
-    int pop_size = 96;
-    string nml_output_dir_name = "";
-    string sim_output_dir_name = "";
-    //output_dir_name = "";
-    randomInit = 0;
-    bool simRandomInit = 0;
-
-    bool do_evol = 1;
-    //bool skipOrigSim = 0;
-    nervousSystemNameForSim = "nmlNervousSystem";
-    nervousSystemNameForEvol = "NervousSystem";
-    bool do_nml = 0;
-
+   
     if (argc==2) randomseed += atoi(argv[1]);
 
-    if (argc>2){
-       
-    if (((argc-1) % 2) != 0)
-     {cout << "The arguments are not configured correctly." << endl;return 0;}
-    
-
-    
-    bool seed_flag = 1;
-    
-    for (int arg = 1; arg<argc; arg+=2)
-    { 
-    if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"--dorandinit")==0) simRandomInit = atoi(argv[arg+1]);
-    //if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"--donml")==0) do_nml = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"--folder")==0) {
-      output_dir_name = argv[arg+1];
-      struct stat sb;
-      if (stat(output_dir_name.c_str(), &sb) != 0) 
-      {cout << "Directory doesn't exist." << endl;return 0;}
-    }
-
-    if (seed_flag){ 
-    if (strcmp(argv[arg],"-R")==0) randomseed = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"-r")==0) randomseed += atoi(argv[arg+1]);
-    seed_flag = 0;
-    }
-
-    if (strcmp(argv[arg],"-p")==0) pop_size = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"-d")==0) Duration = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"--nervous")==0) 
-    {
-      nervousSystemNameForSim = argv[arg+1];
-    }
-    }
-
-    }
-
-    nervousSystemName = nervousSystemNameForEvol;
-    
+    if (argc>2) if (!setArgs(argc,argv,randomseed)) return 0;
+ 
     InitializeBodyConstants();
 
     if (do_evol){
-    
+
+    nervousSystemName = nervousSystemNameForEvol;
     TSearch s(VectSize);
 
     // save the seed to a file
@@ -353,7 +304,7 @@ int main (int argc, const char* argv[])
     seedfile.close();
 
     cout << "Run evaluation with seed: " << randomseed << ", pop size: " 
-    << pop_size << ", duration: " << Duration << ", Nervous system name: " << nervousSystemName.c_str() << endl;
+    << pop_size <<  ", Nervous system name: " << nervousSystemName.c_str() << endl;
     //cout.flush()
 
     // configure the search
@@ -423,39 +374,18 @@ int main (int argc, const char* argv[])
     w.AVA_output =  w.AVA_inact;
     w.AVB_output =  w.AVB_act;
 
-    
-    if (checkNervousSystemForJson()){
-    // save json data
-    // reconstruct nervous system from json file to check validity
-    //#ifdef MAKE_JSON
-    cout << "making json" << endl;
-    vector<doubIntParamsHead> evolutionParams;
-    doubIntParamsHead var1;
-    var1.parInt.head = "Evolutionary Optimization Parameters";
-    var1.parInt.names = {"pop_size", "Duration", "randomseed"};
-    var1.parInt.vals = {pop_size, Duration, randomseed};
-    var1.parInt.messages ={"population size", "optimization simulation duration", "seed"};
-    var1.parInt.messages_inds = {0,1,2};
-    evolutionParams.push_back(var1);
-
-    writeParsToJson(w, "worm_data.json", evolutionParams);
-    //writeParsToJson(w, "worm_data.json");
-    testNervousSystemJson("worm_data.json", static_cast<NervousSystem &>(*w.n_ptr)); 
-    }
+    writeParsToJson(w,randomseed);
 
     }
 
     randomInit = simRandomInit;
     RandomState rs;
     //long seed = static_cast<long>(time(NULL));
-    cout << "random seed is " << randomseed << endl;
     rs.SetRandomSeed(randomseed);
     ifstream Best;
     Best.open(rename_file("best.gen.dat"));
     TVector<double> best(1, VectSize);
     Best >> best;
-    
-
     
     if (do_nml){
     nervousSystemName = nervousSystemNameForSim;
@@ -467,9 +397,5 @@ int main (int argc, const char* argv[])
     save_traces(best, rs);
 
     
-    
-
-
-   
     return 0;
 }
