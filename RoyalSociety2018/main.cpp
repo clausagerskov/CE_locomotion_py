@@ -11,6 +11,7 @@
 #include "TSearch.h"
 #include "VectorMatrix.h"
 #include "Worm.h"
+#include "../utils.h"
 
 #define EVOLVE
 #define PRINTTOFILE
@@ -270,6 +271,9 @@ int main (int argc, const char* argv[])
     if (argc == 2)
         randomseed += atoi(argv[1]);
 
+    supArgs1.max_gens = 100;
+    supArgs1.pop_size = 20;
+
     TSearch s(VectSize);
     TVector<double> phenotype(1, VectSize);
 
@@ -285,8 +289,8 @@ int main (int argc, const char* argv[])
     s.SetSearchResultsDisplayFunction(ResultsDisplay);
     s.SetSelectionMode(RANK_BASED);             //{FITNESS_PROPORTIONATE,RANK_BASED}
     s.SetReproductionMode(GENETIC_ALGORITHM);	// {HILL_CLIMBING, GENETIC_ALGORITHM}
-    s.SetPopulationSize(96);
-    s.SetMaxGenerations(1000);
+    s.SetPopulationSize(supArgs1.pop_size); //96
+    s.SetMaxGenerations(supArgs1.max_gens); //1000
     s.SetMutationVariance(0.1);                // For 71 parameters, an estimated avg change of 0.25 for weights (mapped to 15).
     s.SetCrossoverProbability(0.5);
     s.SetCrossoverMode(UNIFORM);              //{UNIFORM, TWO_POINT}

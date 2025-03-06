@@ -5,22 +5,29 @@
 
 import numpy as np
 from matplotlib import pyplot as plt
+import sys
+sys.path.append('..')
 
 # import random
 import helper_funcs as hf
-
+hf.dir_name = './'
 
 def reload_single_run(show_plot=True, verbose=False):
-    N_muscles_perside = 24  # Number of muscles alongside the body
-    N_muscles = N_muscles_perside * 2
-    N_units = 10  # Number of neural units in VNC
-    N_neuronsperunit = 6  # Number of neurons in a VNC neural unit (6 neurons)
-    N_stretchrec_units = 10  # Number of stretch receptors
-    N_stretchrec = N_stretchrec_units * 4  # Number of stretch receptors
+    #N_muscles_perside = 24  # Number of muscles alongside the body
+    #N_muscles = N_muscles_perside * 2
+    #N_units = 10  # Number of neural units in VNC
+    #N_neuronsperunit = 6  # Number of neurons in a VNC neural unit (6 neurons)
+    #N_stretchrec_units = 10  # Number of stretch receptors
+    #N_stretchrec = N_stretchrec_units * 4  # Number of stretch receptors
 
-    N_neurons = N_neuronsperunit * N_units
+    N_stretchrec = 2 + 6*3 # number of streatch receptors
+    N_hneurons = 4
+    N_vneurons = 36
+    N_muscles = 24*2
 
-    fig, axs = plt.subplots(4, 2, figsize=(14, 8))
+    #N_neurons = N_neuronsperunit * N_units
+
+    fig, axs = plt.subplots(5, 2, figsize=(16, 8))
 
     title_font_size = 10
 
@@ -45,40 +52,55 @@ def reload_single_run(show_plot=True, verbose=False):
     axs[0, 1].xaxis.set_ticklabels([])
 
     offset += N_stretchrec
-    axs[1, 0].set_title("Neurons", fontsize=title_font_size)
-    axs[1, 1].set_title("Neurons", fontsize=title_font_size)
-    for i in range(offset, N_neurons + offset):
+    axs[1, 0].set_title("Head Neurons", fontsize=title_font_size)
+    axs[1, 1].set_title("Head Neurons", fontsize=title_font_size)
+    for i in range(offset, N_hneurons + offset):
         axs[1, 0].plot(
             act_data[0], act_data[i], label="Neu %i" % (i - offset), linewidth=0.5
         )
         axs[1, 0].xaxis.set_ticklabels([])
     # plt.legend()
 
-    neu = act_data[offset : N_neurons + offset]
+    neu = act_data[offset : N_hneurons + offset]
     axs[1, 1].imshow(neu, aspect="auto", interpolation="nearest")
     axs[1, 1].xaxis.set_ticklabels([])
 
-    offset += N_neurons
-    axs[2, 0].set_title("Muscles", fontsize=title_font_size)
-    axs[2, 1].set_title("Muscles", fontsize=title_font_size)
-    for i in range(offset, N_muscles + offset):
+    offset += N_hneurons
+    axs[2, 0].set_title("Body Neurons", fontsize=title_font_size)
+    axs[2, 1].set_title("Body Neurons", fontsize=title_font_size)
+    for i in range(offset, N_vneurons + offset):
         axs[2, 0].plot(
-            act_data[0], act_data[i], label="Mu %i" % (i - offset), linewidth=0.5
+            act_data[0], act_data[i], label="Neu %i" % (i - offset), linewidth=0.5
         )
         axs[2, 0].xaxis.set_ticklabels([])
     # plt.legend()
 
-    mus = act_data[offset : N_muscles + offset]
-    axs[2, 1].imshow(mus, aspect="auto", interpolation="nearest")
+    neu = act_data[offset : N_vneurons + offset]
+    axs[2, 1].imshow(neu, aspect="auto", interpolation="nearest")
     axs[2, 1].xaxis.set_ticklabels([])
+
+
+    offset += N_vneurons
+    axs[3, 0].set_title("Muscles", fontsize=title_font_size)
+    axs[3, 1].set_title("Muscles", fontsize=title_font_size)
+    for i in range(offset, N_muscles + offset):
+        axs[3, 0].plot(
+            act_data[0], act_data[i], label="Mu %i" % (i - offset), linewidth=0.5
+        )
+        axs[3, 0].xaxis.set_ticklabels([])
+    # plt.legend()
+
+    mus = act_data[offset : N_muscles + offset]
+    axs[3, 1].imshow(mus, aspect="auto", interpolation="nearest")
+    axs[3, 1].xaxis.set_ticklabels([])
 
     ###  Worm body curvature
 
     curv_data = np.loadtxt(hf.rename_file("curv.dat"))
     curv_data_less_time = curv_data.T[1:, :]
 
-    axs[3, 1].set_title("Body curvature", fontsize=title_font_size)
-    axs[3, 1].imshow(curv_data_less_time, aspect="auto")
+    axs[4, 1].set_title("Body curvature", fontsize=title_font_size)
+    axs[4, 1].imshow(curv_data_less_time, aspect="auto")
 
     ###  Body position
 
@@ -89,7 +111,7 @@ def reload_single_run(show_plot=True, verbose=False):
         tmax = body_data.shape[1]
     num = 60.0
 
-    axs[3, 0].set_title("2D worm motion", fontsize=title_font_size)
+    axs[4, 0].set_title("2D worm motion", fontsize=title_font_size)
 
     for t in range(1, tmax, int(tmax / num)):
         f = float(t) / tmax
@@ -108,12 +130,12 @@ def reload_single_run(show_plot=True, verbose=False):
                     % ("\n" if i == point_start else "", i, t, x, y, color)
                 )
 
-            axs[3, 0].plot([x], [y], ".", color=color, markersize=3 if t == 1 else 0.4)
+            axs[4, 0].plot([x], [y], ".", color=color, markersize=3 if t == 1 else 0.4)
 
             # print("%s - Plotting %i at t=%s (%s,%s), %s"%('\n' if i==point_start else '', i, t,x,y1, color))
             # plt.plot([x],[y1],'.',color=color)
 
-    axs[3, 0].set_aspect("equal")
+    axs[4, 0].set_aspect("equal")
 
     filename = hf.rename_file("ExampleActivity.png")
     plt.savefig(filename, bbox_inches="tight", dpi=300)

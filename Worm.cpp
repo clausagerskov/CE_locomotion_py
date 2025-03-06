@@ -7,7 +7,7 @@
 //
 
 #include "Worm.h"
-#include "utils.h"
+#include "argUtils.h"
 
 int nn(int neuronNumber, int unitNumber)
 {

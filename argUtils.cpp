@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "argUtils.h"
 #include <string.h>
 #include <sys/stat.h>
 
@@ -19,30 +19,38 @@ int traceDuration = 24; */
 
 SuppliedArgs supArgs1;  
 
-string rename_file(const string & file_name){
+/* string rename_file(const string & file_name){
   if (supArgs1.output_dir_name != "") return supArgs1.output_dir_name + "/" + file_name;
   return file_name;
-}
+} */
 
 /* bool checkNervousSystemForJson(){
 return (strcmp(supArgs1.nervousSystemName.c_str(), "NervousSystem") == 0);
 } */
 
-SuppliedArgs::SuppliedArgs(){
+SuppliedArgs::SuppliedArgs(){}
 
-nervousSystemName = "NervousSystem";
-nervousSystemNameForSim = "nmlNervousSystem";
-nervousSystemNameForEvol = "NervousSystem";
-output_dir_name = "";
-randomInit = 0;
-pop_size = 96;
-simRandomInit = 0;
-do_evol = 1;
-do_nml = 0;
-traceDuration = 24;
-doOrigNS = 1;
+void SuppliedArgs::setDefaultArgsForCeloc()
+{
+  nervousSystemNameForSim = "NervousSystem";
+  //nervousSystemNameForEvol = "NervousSystem";
+  output_dir_name = "";
+  randomInit = 0;
+  pop_size = 96;
+  simRandomInit = 0;
+  do_evol = 1;
+  do_nml = 0;
+  traceDuration = 24;
+  doOrigNS = 1;
 
 }
+
+void SuppliedArgs::setDefaultArgsFor2018()
+{
+  pop_size = 96;
+  max_gens = 1000;
+}
+
 
 void SuppliedArgs::setSimRandomInit()
 {
@@ -57,8 +65,7 @@ string SuppliedArgs::rename_file(const string & file_name)
 
 void SuppliedArgs::writeMessage()
 {
-cout << "Run evaluation with seed: " << randomseed << ", pop size: " 
-    << pop_size <<  ", Nervous system name: " << nervousSystemName.c_str() << endl;
+cout << "Run evaluation with seed: " << randomseed << ", pop size: " << pop_size << endl;
 }
 
 bool SuppliedArgs::setArgs(int argc, const char* argv[], const long & randomseed1)

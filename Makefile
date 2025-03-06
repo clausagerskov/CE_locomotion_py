@@ -9,8 +9,8 @@ CXXFLAGS0 := $(shell $(PYTHON_CONFIG) --embed --cflags)
 CXXFLAGS := $(subst $(REMOVE),$(REPLACE),$(CXXFLAGS0))
 
 
-main: info main.o jsonUtils.o utils.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o c302NervousSystem.o owSignalSimulatorForWorm2D.o owSignalSimulator.o
-	g++ $(CXXFLAGS) $(LDFLAGS) -pthread -o main main.o jsonUtils.o utils.o  Worm.o WormBody.o NervousSystem.o c302NervousSystem.o owSignalSimulatorForWorm2D.o owSignalSimulator.o StretchReceptor.o Muscles.o TSearch.o random.o $(LIBS)
+main: info main.o jsonUtils.o argUtils.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o c302NervousSystem.o owSignalSimulatorForWorm2D.o owSignalSimulator.o
+	g++ $(CXXFLAGS) $(LDFLAGS) -pthread -o main main.o jsonUtils.o argUtils.o  Worm.o WormBody.o NervousSystem.o c302NervousSystem.o owSignalSimulatorForWorm2D.o owSignalSimulator.o StretchReceptor.o Muscles.o TSearch.o random.o $(LIBS)
 
 
 info:
@@ -30,8 +30,8 @@ TSearch.o: TSearch.cpp TSearch.h
 jsonUtils.o: jsonUtils.cpp jsonUtils.h
 	g++ -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include  -flto $(CXXFLAGS) $(LDFLAGS) jsonUtils.cpp	
 
-utils.o: utils.cpp utils.h
-	g++ -c -O3 -flto utils.cpp
+argUtils.o: argUtils.cpp argUtils.h
+	g++ -c -O3 -flto argUtils.cpp
 Worm.o: Worm.cpp Worm.h
 	g++ -c -O3 -flto $(CXXFLAGS) $(LDFLAGS) Worm.cpp
 WormBody.o: WormBody.cpp WormBody.h
@@ -55,10 +55,10 @@ tests.o: tests.cpp NervousSystem.o random.o
 tests: info tests.o 
 	g++ -pthread -o tests tests.o 
 
-tests2.o: tests2.cpp NervousSystem.h random.h jsonUtils.h utils.h
+tests2.o: tests2.cpp NervousSystem.h random.h jsonUtils.h argUtils.h
 	g++ -c -O3 -flto $(CXXFLAGS) $(LDFLAGS) tests2.cpp
-tests2: tests2.o NervousSystem.o random.o jsonUtils.o utils.o
-	g++ $(CXXFLAGS) $(LDFLAGS) -pthread -o tests2 tests2.o NervousSystem.o random.o utils.o jsonUtils.o $(LIBS)
+tests2: tests2.o NervousSystem.o random.o jsonUtils.o argUtils.o
+	g++ $(CXXFLAGS) $(LDFLAGS) -pthread -o tests2 tests2.o NervousSystem.o random.o argUtils.o jsonUtils.o $(LIBS)
 
 clean:
 	rm -f *.o neuromlLocal/*.o main tests tests2
