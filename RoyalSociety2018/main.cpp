@@ -11,7 +11,7 @@
 #include "TSearch.h"
 #include "VectorMatrix.h"
 #include "Worm.h"
-#include "../utils.h"
+#include "../argUtils.h"
 
 #define EVOLVE
 #define PRINTTOFILE

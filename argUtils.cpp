@@ -1,7 +1,10 @@
 #include "argUtils.h"
 #include <string.h>
 #include <sys/stat.h>
+//#include <stdio.h>
+#include <iostream>
 
+using namespace std;
 
 //// helper functions
 
@@ -65,7 +68,7 @@ string SuppliedArgs::rename_file(const string & file_name)
 
 void SuppliedArgs::writeMessage()
 {
-cout << "Run evaluation with seed: " << randomseed << ", pop size: " << pop_size << endl;
+  cout << "Run evaluation with seed: " << randomseed << ", pop size: " << pop_size << endl;
 }
 
 bool SuppliedArgs::setArgs(int argc, const char* argv[], const long & randomseed1)

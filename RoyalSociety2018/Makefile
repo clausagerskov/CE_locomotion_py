@@ -1,9 +1,11 @@
-main: main.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o
-	g++ -pthread -o main main.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o
+main: main.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o argUtils.o
+	g++ -pthread -o main main.o Worm.o WormBody.o argUtils.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o 
 random.o: random.cpp random.h VectorMatrix.h
 	g++ -c -O3 -flto random.cpp
 TSearch.o: TSearch.cpp TSearch.h
 	g++ -c -O3 -flto TSearch.cpp
+argUtils.o: ../argUtils.cpp ../argUtils.h
+	g++ -c -O3 -flto ../argUtils.cpp	
 Worm.o: Worm.cpp Worm.h
 	g++ -c -O3 -flto Worm.cpp
 WormBody.o: WormBody.cpp WormBody.h

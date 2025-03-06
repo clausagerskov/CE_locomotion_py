@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
-#include <vector>
-#include "VectorMatrix.h"
+//#include <vector>
+//#include "VectorMatrix.h"
 
 
 using std::string;
-using std::vector;
+//using std::vector;
 
 
 /* extern string nervousSystemName; 
