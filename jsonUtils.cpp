@@ -33,7 +33,7 @@ void writeWormParams(wormForJson & w)
     writeParsToJson(w);
 
     {
-    ofstream nv_file(rename_file("w_verb.dat"));
+    ofstream nv_file(supArgs1.rename_file("w_verb.dat"));
     writeNSysToFile(nv_file, static_cast<NervousSystem&>(*w.n_ptr));
     nv_file << endl;
     writeWSysToFile(nv_file, w);
@@ -750,25 +750,26 @@ appendMuscleInputHubProjection(j["NSToMuscleHub"],w);
 appendHubToMuscleProjection(j["HubToMuscle"]);
 appendMuscleToBodyProjection(j["MuscleToBody"]);
 
-ofstream json_out(rename_file(file_name));
+ofstream json_out(supArgs1.rename_file(file_name));
 json_out << std::setw(4) << j << std::endl;
 json_out.close();
 }
 
-void writeParsToJson(wormForJson & w)
+/* void writeParsToJson(wormForJson & w)
 {
 writeParsToJson(w, "worm_data.json");
-}
+} */
 
-void writeParsToJson(wormForJson & w, long & randomseed)
+
+void writeParsToJson(wormForJson & w)
 {
-    if (checkNervousSystemForJson()){
+    if (supArgs1.doOrigNS){
   cout << "making json" << endl;
   vector<doubIntParamsHead> evolutionParams;
   doubIntParamsHead var1;
   var1.parInt.head = "Evolutionary Optimization Parameters";
   var1.parInt.names = {"pop_size", "Duration", "randomseed"};
-  var1.parInt.vals = {pop_size, Duration, randomseed};
+  var1.parInt.vals = {supArgs1.pop_size, Duration, supArgs1.randomseed};
   var1.parInt.messages ={"population size", "optimization simulation duration", "seed"};
   var1.parInt.messages_inds = {0,1,2};
   evolutionParams.push_back(var1);
@@ -799,6 +800,19 @@ writeParsToJson(j,w,file_name);
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 void readJson(json j, ifstream & ifs)
 {
 ifs >> j;
@@ -806,7 +820,7 @@ ifs >> j;
 
 void testNervousSystemJson(string fileName, NervousSystem & n)
 {
-ifstream NS_ifs(rename_file(fileName));
+ifstream NS_ifs(supArgs1.rename_file(fileName));
 setNSFromJsonFile(NS_ifs, n);
 NS_ifs.close();
 }

@@ -59,7 +59,7 @@ const int Tail = N_segments;
 
 int nn(int neuronNumber, int unitNumber);
 NervousSystemBase* makeNervousSystem();
-bool checkNervousSystemForJson();
+//bool checkNervousSystemForJson();
 
 
 class Worm {

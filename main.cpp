@@ -184,9 +184,9 @@ double EvaluationFunction(TVector<double> &v, RandomState &rs){
 // Plotting
 // ------------------------------------
 double save_traces(TVector<double> &v, RandomState &rs){
-    ofstream curvfile(rename_file("curv.dat"));
-    ofstream bodyfile(rename_file("body.dat"));
-    ofstream actfile(rename_file("act.dat"));
+    ofstream curvfile(supArgs1.rename_file("curv.dat"));
+    ofstream bodyfile(supArgs1.rename_file("body.dat"));
+    ofstream actfile(supArgs1.rename_file("act.dat"));
     // Genotype-Phenotype Mapping
     TVector<double> phenotype(1, VectSize);
     GenPhenMapping(v, phenotype);
@@ -209,7 +209,7 @@ double save_traces(TVector<double> &v, RandomState &rs){
 
   
 
-    for (double t = 0.0; t <= Transient + traceDuration; t += StepSize){
+    for (double t = 0.0; t <= Transient + supArgs1.traceDuration; t += StepSize){
         w.Step(StepSize, 1);
         w.DumpBodyState(bodyfile, skip_steps);
         w.DumpCurvature(curvfile, skip_steps);
@@ -268,7 +268,7 @@ void ResultsDisplay(TSearch &s)
     TVector<double> bestVector;
     ofstream BestIndividualFile;
     bestVector = s.BestIndividual();
-    BestIndividualFile.open(rename_file("best.gen.dat"));
+    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
     BestIndividualFile << setprecision(32);
     BestIndividualFile << bestVector << endl;
     BestIndividualFile.close();
@@ -287,33 +287,33 @@ int main (int argc, const char* argv[])
    
     if (argc==2) randomseed += atoi(argv[1]);
 
-    if (argc>2) if (!setArgs(argc,argv,randomseed)) return 0;
+    if (argc>2) if (!supArgs1.setArgs(argc,argv,randomseed)) return 0;
  
     InitializeBodyConstants();
 
-    if (do_evol){
+    if (supArgs1.do_evol){
 
-    nervousSystemName = nervousSystemNameForEvol;
+    supArgs1.doOrigNS = 1;
+
     TSearch s(VectSize);
 
     // save the seed to a file
 
     ofstream seedfile;
-    seedfile.open (rename_file("seed.dat"));
-    seedfile << randomseed << endl;
+    seedfile.open(supArgs1.rename_file("seed.dat"));
+    seedfile << supArgs1.randomseed << endl;
     seedfile.close();
 
-    cout << "Run evaluation with seed: " << randomseed << ", pop size: " 
-    << pop_size <<  ", Nervous system name: " << nervousSystemName.c_str() << endl;
-    //cout.flush()
+    supArgs1.writeMessage();
+
 
     // configure the search
-    s.SetRandomSeed(randomseed);
+    s.SetRandomSeed(supArgs1.randomseed);
     s.SetPopulationStatisticsDisplayFunction(EvolutionaryRunDisplay);
     s.SetSearchResultsDisplayFunction(ResultsDisplay);
     s.SetSelectionMode(RANK_BASED);               //{FITNESS_PROPORTIONATE,RANK_BASED}
     s.SetReproductionMode(GENETIC_ALGORITHM);	    // {HILL_CLIMBING, GENETIC_ALGORITHM}
-    s.SetPopulationSize(pop_size);
+    s.SetPopulationSize(supArgs1.pop_size);
     s.SetMaxGenerations(10);
     s.SetMutationVariance(0.05);                   // For 71 parameters, an estimated avg change of 0.25 for weights (mapped to 15).
     s.SetCrossoverProbability(0.5);
@@ -327,7 +327,7 @@ int main (int argc, const char* argv[])
      
   #ifdef PRINTTOFILE
       ofstream evolfile;
-      evolfile.open (rename_file("fitness.dat"));
+      evolfile.open (supArgs1.rename_file("fitness.dat"));
       
 
       std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
@@ -348,9 +348,9 @@ int main (int argc, const char* argv[])
     
     RandomState rs;
     long seed = static_cast<long>(time(NULL));
-    rs.SetRandomSeed(seed);
+    rs.SetRandomSeed(supArgs1.randomseed);
     ifstream Best;
-    Best.open(rename_file("best.gen.dat"));
+    Best.open(supArgs1.rename_file("best.gen.dat"));
     TVector<double> best(1, VectSize);
     Best >> best;
     
@@ -363,7 +363,7 @@ int main (int argc, const char* argv[])
     
     Worm w(phenotype, 1);
     {
-    ofstream phenfile(rename_file("phenotype.dat"));
+    ofstream phenfile(supArgs1.rename_file("phenotype.dat"));
     w.DumpParams(phenfile);
     phenfile.close();
     }
@@ -374,24 +374,25 @@ int main (int argc, const char* argv[])
     w.AVA_output =  w.AVA_inact;
     w.AVB_output =  w.AVB_act;
 
-    writeParsToJson(w,randomseed);
+    writeParsToJson(w);
 
     }
 
-    randomInit = simRandomInit;
+    supArgs1.setSimRandomInit();
     RandomState rs;
     //long seed = static_cast<long>(time(NULL));
-    rs.SetRandomSeed(randomseed);
+    rs.SetRandomSeed(supArgs1.randomseed);
     ifstream Best;
-    Best.open(rename_file("best.gen.dat"));
+    Best.open(supArgs1.rename_file("best.gen.dat"));
     TVector<double> best(1, VectSize);
     Best >> best;
     
-    if (do_nml){
-    nervousSystemName = nervousSystemNameForSim;
+    if (supArgs1.do_nml){
+      supArgs1.doOrigNS = 0;
     cout << "Performing nml run and saving data\n" << endl;
     }
     else{
+      supArgs1.doOrigNS = 1;
     cout << "Performing C++ run and saving data\n" << endl;
     }
     save_traces(best, rs);

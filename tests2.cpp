@@ -11,15 +11,12 @@
 #include "NervousSystem.h"
 #include "jsonUtils.h"
 
-extern string output_dir_name;
 
 
 void testNervousSystem()
 {
     NervousSystem n;
-    
-    output_dir_name = "exampleRun"; //fix this for user directory name input
-    ifstream NS_ifs(rename_file("worm_data.json"));
+    ifstream NS_ifs("exampleRun/worm_data.json");
     setNSFromJsonFile(NS_ifs, n);
     NS_ifs.close();  
 

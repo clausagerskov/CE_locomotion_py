@@ -5,7 +5,7 @@
 
 //// helper functions
 
-string nervousSystemName = "NervousSystem";
+/* string nervousSystemName = "NervousSystem";
 string nervousSystemNameForSim = "nmlNervousSystem";
 string nervousSystemNameForEvol = "NervousSystem";
 string output_dir_name = "";
@@ -14,20 +14,54 @@ int pop_size = 96;
 bool simRandomInit = 0;
 bool do_evol = 1;
 bool do_nml = 0;
-int traceDuration = 24;
+int traceDuration = 24; */
 
+
+SuppliedArgs supArgs1;  
 
 string rename_file(const string & file_name){
+  if (supArgs1.output_dir_name != "") return supArgs1.output_dir_name + "/" + file_name;
+  return file_name;
+}
+
+/* bool checkNervousSystemForJson(){
+return (strcmp(supArgs1.nervousSystemName.c_str(), "NervousSystem") == 0);
+} */
+
+SuppliedArgs::SuppliedArgs(){
+
+nervousSystemName = "NervousSystem";
+nervousSystemNameForSim = "nmlNervousSystem";
+nervousSystemNameForEvol = "NervousSystem";
+output_dir_name = "";
+randomInit = 0;
+pop_size = 96;
+simRandomInit = 0;
+do_evol = 1;
+do_nml = 0;
+traceDuration = 24;
+doOrigNS = 1;
+
+}
+
+void SuppliedArgs::setSimRandomInit()
+{
+  randomInit = simRandomInit;
+}
+
+string SuppliedArgs::rename_file(const string & file_name)
+{
   if (output_dir_name != "") return output_dir_name + "/" + file_name;
   return file_name;
 }
 
-bool checkNervousSystemForJson(){
-return (strcmp(nervousSystemName.c_str(), "NervousSystem") == 0);
+void SuppliedArgs::writeMessage()
+{
+cout << "Run evaluation with seed: " << randomseed << ", pop size: " 
+    << pop_size <<  ", Nervous system name: " << nervousSystemName.c_str() << endl;
 }
 
-
-bool setArgs(int argc, const char* argv[], long & randomseed)
+bool SuppliedArgs::setArgs(int argc, const char* argv[], const long & randomseed1)
 {
 
 if (((argc-1) % 2) != 0)
@@ -50,7 +84,7 @@ if (((argc-1) % 2) != 0)
 
     if (seed_flag){ 
     if (strcmp(argv[arg],"-R")==0) randomseed = atoi(argv[arg+1]);
-    if (strcmp(argv[arg],"-r")==0) randomseed += atoi(argv[arg+1]);
+    if (strcmp(argv[arg],"-r")==0) randomseed = randomseed1 + atoi(argv[arg+1]);
     seed_flag = 0;
     }
 
@@ -65,4 +99,3 @@ if (((argc-1) % 2) != 0)
 
   }
 
-  

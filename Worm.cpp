@@ -16,10 +16,12 @@ int nn(int neuronNumber, int unitNumber)
 
 NervousSystemBase* makeNervousSystem()
 {  
-if (checkNervousSystemForJson()) return new NervousSystem();
+if (supArgs1.doOrigNS) return new NervousSystem();
+return new c302NervousSystem();
+/* if (checkNervousSystemForJson()) return new NervousSystem();
 if (strcmp(nervousSystemName.c_str(),"nmlNervousSystem") == 0) return new c302NervousSystem();
 cout << "that nervous system is not implemented" << endl; 
-exit(0);
+exit(0); */
 }
 
 Worm::Worm(TVector<double> &v,double output):n_ptr(makeNervousSystem())
@@ -125,7 +127,7 @@ void Worm::InitializeState(RandomState &rs)
 {
   t = 0.0;
   //n_ptr->RandomizeCircuitState(-1.0, 1.0, rs);
-  if (!randomInit)
+  if (!supArgs1.randomInit)
   { 
   for (int u = 1; u <= N_units; u++)
   {
@@ -140,13 +142,9 @@ void Worm::InitializeState(RandomState &rs)
   }
 }
   else {
-    //cout << "random state set" << endl;
     for (int u = 1; u <= N_units*N_neuronsperunit; u++)
     {
-     double rval =  rs.UniformRandom(0,1);
-     //cout << rval << endl;
-      n_ptr->SetNeuronOutput(u, rval);
-      //n_ptr->SetNeuronOutput(u, UniformRandom(0,1));
+      n_ptr->SetNeuronOutput(u, rs.UniformRandom(0,1));
     }
 
   }
