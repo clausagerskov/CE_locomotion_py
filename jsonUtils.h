@@ -5,6 +5,8 @@
 #include "argUtils.h"
 //#include <nlohmann/json.hpp>
 
+extern SuppliedArgs supArgs1;
+
 //using json = nlohmann::json;
 using namespace std;
 using wormForJson = Worm;

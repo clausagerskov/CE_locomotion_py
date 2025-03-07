@@ -7,9 +7,12 @@
 //
 
 #include "Worm.h"
+#include "../argUtils.h"
 
 #define HEADSR
 #define VNCSR
+
+extern SuppliedArgs2018 supArgs1;
 
 int nn(int neuronNumber, int unitNumber)
 {
@@ -170,6 +173,8 @@ Worm::Worm(TVector<double> &v,double output)
 
 void Worm::InitializeState(RandomState &rs)
 {
+    supArgs1.speedoutput;
+
     t = 0.0;
     n.RandomizeCircuitState(-0.5, 0.5, rs);
     h.RandomizeCircuitState(-0.5, 0.5, rs);

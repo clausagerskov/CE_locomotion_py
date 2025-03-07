@@ -8,6 +8,8 @@
 
 #include "Worm.h"
 #include "argUtils.h"
+extern SuppliedArgs supArgs1;
+
 
 int nn(int neuronNumber, int unitNumber)
 {

@@ -6,26 +6,29 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 # import random
 import helper_funcs as hf
-hf.dir_name = './'
+
+hf.dir_name = "./"
+
 
 def reload_single_run(show_plot=True, verbose=False):
-    #N_muscles_perside = 24  # Number of muscles alongside the body
-    #N_muscles = N_muscles_perside * 2
-    #N_units = 10  # Number of neural units in VNC
-    #N_neuronsperunit = 6  # Number of neurons in a VNC neural unit (6 neurons)
-    #N_stretchrec_units = 10  # Number of stretch receptors
-    #N_stretchrec = N_stretchrec_units * 4  # Number of stretch receptors
+    # N_muscles_perside = 24  # Number of muscles alongside the body
+    # N_muscles = N_muscles_perside * 2
+    # N_units = 10  # Number of neural units in VNC
+    # N_neuronsperunit = 6  # Number of neurons in a VNC neural unit (6 neurons)
+    # N_stretchrec_units = 10  # Number of stretch receptors
+    # N_stretchrec = N_stretchrec_units * 4  # Number of stretch receptors
 
-    N_stretchrec = 2 + 6*3 # number of streatch receptors
+    N_stretchrec = 2 + 6 * 3  # number of streatch receptors
     N_hneurons = 4
     N_vneurons = 36
-    N_muscles = 24*2
+    N_muscles = 24 * 2
 
-    #N_neurons = N_neuronsperunit * N_units
+    # N_neurons = N_neuronsperunit * N_units
 
     fig, axs = plt.subplots(5, 2, figsize=(16, 8))
 
@@ -78,7 +81,6 @@ def reload_single_run(show_plot=True, verbose=False):
     neu = act_data[offset : N_vneurons + offset]
     axs[2, 1].imshow(neu, aspect="auto", interpolation="nearest")
     axs[2, 1].xaxis.set_ticklabels([])
-
 
     offset += N_vneurons
     axs[3, 0].set_title("Muscles", fontsize=title_font_size)

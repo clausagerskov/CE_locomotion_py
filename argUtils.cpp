@@ -20,7 +20,7 @@ bool do_nml = 0;
 int traceDuration = 24; */
 
 
-SuppliedArgs supArgs1;  
+//SuppliedArgs supArgs1;  
 
 /* string rename_file(const string & file_name){
   if (supArgs1.output_dir_name != "") return supArgs1.output_dir_name + "/" + file_name;
@@ -31,9 +31,21 @@ SuppliedArgs supArgs1;
 return (strcmp(supArgs1.nervousSystemName.c_str(), "NervousSystem") == 0);
 } */
 
-SuppliedArgs::SuppliedArgs(){}
+SuppliedArgs::SuppliedArgs()
+{
+  nervousSystemNameForSim = "NervousSystem";
+  //nervousSystemNameForEvol = "NervousSystem";
+  output_dir_name = "";
+  randomInit = 0;
+  pop_size = 96;
+  simRandomInit = 0;
+  do_evol = 1;
+  do_nml = 0;
+  traceDuration = 24;
+  doOrigNS = 1;
+}
 
-void SuppliedArgs::setDefaultArgsForCeloc()
+/* void SuppliedArgs::setDefaultArgs()
 {
   nervousSystemNameForSim = "NervousSystem";
   //nervousSystemNameForEvol = "NervousSystem";
@@ -46,12 +58,17 @@ void SuppliedArgs::setDefaultArgsForCeloc()
   traceDuration = 24;
   doOrigNS = 1;
 
-}
+} */
 
-void SuppliedArgs::setDefaultArgsFor2018()
+SuppliedArgs2018::SuppliedArgs2018():SuppliedArgs()
 {
+  do_evol = 1;
   pop_size = 96;
   max_gens = 1000;
+  printToFile = 1;
+  evo_seed = 0;
+  output = 0;
+  speedoutput = 0;
 }
 
 

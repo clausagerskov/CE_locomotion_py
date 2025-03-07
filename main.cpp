@@ -22,6 +22,7 @@
 //#include <sys/stat.h>
 #include "argUtils.h"
 
+SuppliedArgs supArgs1;
 
 #define PRINTTOFILE
 
