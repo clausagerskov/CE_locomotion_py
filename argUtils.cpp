@@ -43,6 +43,7 @@ SuppliedArgs::SuppliedArgs()
   do_nml = 0;
   traceDuration = 24;
   doOrigNS = 1;
+  max_gens = 10;
 }
 
 /* void SuppliedArgs::setDefaultArgs()
@@ -98,6 +99,7 @@ if (((argc-1) % 2) != 0)
     
     for (int arg = 1; arg<argc; arg+=2)
     { 
+    if (strcmp(argv[arg],"--maxgens")==0) max_gens = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--dorandinit")==0) simRandomInit = atoi(argv[arg+1]);
     //if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);

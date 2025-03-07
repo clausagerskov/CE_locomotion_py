@@ -3,11 +3,14 @@ import argparse
 import os
 import sys
 import helper_funcs as hf
+from importlib import import_module
+
 
 # from pyneuroml.utils.cli import build_namespace
 import random
 from datetime import datetime
 import json
+
 
 defaults_base = {
     "popSize": 96,
@@ -15,6 +18,7 @@ defaults_base = {
     "nervousSystemFileName": "main_sim",
     "doNML": 0,
     "doRandInit": 0,
+    "maxGens": 10,
 }
 
 DEFAULTS = {
@@ -29,7 +33,9 @@ DEFAULTS = {
     "crandSeed": None,
     "inputFolderName": None,
     "nervousSystemFileName": "main_sim",
-    "mainProcessName": "./main",
+    "mainProcessName": "main",
+    "modelFolder": ".",
+    "maxGens": None,
 }
 
 
@@ -49,6 +55,18 @@ def process_args():
         metavar="<main process name>",
         default=DEFAULTS["mainProcessName"],
         help=("Name of main process, default: %s" % DEFAULTS["mainProcessName"]),
+    )
+
+    parser.add_argument(
+        "-T",
+        "--modelFolder",
+        type=str,
+        metavar="<model folder name>",
+        default=DEFAULTS["modelFolder"],
+        help=(
+            "Name of model code folder. Default is the current folder.\n"
+            "Other options include `RoyalSociety2018'.\n"
+        ),
     )
 
     parser.add_argument(
@@ -152,6 +170,16 @@ def process_args():
         default=DEFAULTS["popSize"],
         help="Population size for evolutionary algorithm, reverts to: %s if not provided."
         % defaults_base["popSize"],
+    )
+
+    parser.add_argument(
+        "-G",
+        "--maxGens",
+        type=int,
+        metavar="<max generations>",
+        default=DEFAULTS["maxGens"],
+        help="Maximum number of generations for evolutionary algorithm, reverts to: %s if not provided."
+        % defaults_base["maxGens"],
     )
 
     parser.add_argument(
@@ -316,15 +344,17 @@ def run(a=None, **kwargs):
         else:
             do_randInit = 0
 
-    evol_data = {}
-    evol_pars = ["Duration", "pop_size", "randomseed"]
-    evol_args = [a.duration, a.popSize, a.RandSeed]
+    evol_pars = ["Duration", "pop_size", "randomseed", "max_gens"]
+    evol_args = [a.duration, a.popSize, a.RandSeed, a.maxGens]
     evol_defaults = [
         defaults_base["duration"],
         defaults_base["popSize"],
         random_seed,
+        defaults_base["maxGens"],
     ]
 
+    evol_data = {}
+    evol_par_file_base = a.outputFolderName + "/evolution_pars.json"
     evol_par_file = a.outputFolderName + "/worm_data.json"
     if os.path.isfile(evol_par_file):
         with open(evol_par_file) as f:
@@ -336,6 +366,9 @@ def run(a=None, **kwargs):
                     ]["value"]
                 else:
                     print("Parameter not found in worm_data.json")
+    elif os.path.isfile(evol_par_file_base):
+        with open(evol_par_file_base) as f:
+            evol_data = json.load(f)
 
     same_vals = True
     if do_evol:
@@ -378,9 +411,12 @@ def run(a=None, **kwargs):
     with open(sim_par_file, "w", encoding="utf-8") as f:
         json.dump(sim_data, f, ensure_ascii=False, indent=4)
 
+    with open(evol_par_file_base, "w", encoding="utf-8") as f:
+        json.dump(evol_data, f, ensure_ascii=False, indent=4)
+
     # cmd = ["./main",]
 
-    main_cmd = a.mainProcessName
+    main_cmd = a.modelFolder + "/" + a.mainProcessName
     # main_cmd = "../main"
     # main_cmd = "/home/adam/uclwork/CE_locomotion/experiments/.main"
 
@@ -394,6 +430,7 @@ def run(a=None, **kwargs):
     # cmd += ["-sr", str(sim_data["seed"])]
     cmd += ["-p", str(evol_data["pop_size"])]
     cmd += ["-d", str(evol_data["Duration"])]
+    cmd += ["--maxgens", str(evol_data["max_gens"])]
     cmd += ["-sd", str(sim_data["Duration"])]
     cmd += ["--doevol", str(do_evol)]
 
@@ -414,9 +451,15 @@ def run(a=None, **kwargs):
             print(result.stderr)
 
     hf.dir_name = a.outputFolderName
-    from load_data import reload_single_run
+    if a.modelFolder == ".":
+        module_name = "load_data"
+    else:
+        module_name = a.modelFolder + ".load_data"
+    rsr = import_module(module_name).reload_single_run
+    # from load_data import reload_single_run
+    rsr(show_plot=False)
 
-    reload_single_run(show_plot=False)
+    # reload_single_run(show_plot=False)
 
 
 if __name__ == "__main__":

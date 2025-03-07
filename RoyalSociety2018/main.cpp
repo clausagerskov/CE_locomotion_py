@@ -158,7 +158,6 @@ double EvaluationFunctionB(TVector<double> &v, RandomState &rs)
 
 ofstream bodyfile, actfile, curvfile, voltagefile, paramsfile;
 if (supArgs1.output){
-    ofstream bodyfile, actfile, curvfile, voltagefile;
     bodyfile.open(supArgs1.rename_file("body.dat"));
     actfile.open(supArgs1.rename_file("act.dat"));
     curvfile.open(supArgs1.rename_file("curv.dat"));
@@ -195,6 +194,7 @@ if (supArgs1.output){
         w.Step(StepSize, 1);
         if (supArgs1.output)
 //#ifdef OUTPUT
+if (supArgs1.output)
     {
         w.Curvature(curvature);
         curvfile << curvature << endl;
@@ -315,10 +315,11 @@ int main (int argc, const char* argv[])
     if (argc == 2)
         randomseed += atoi(argv[1]);
     
-    if (argc>2) if (!supArgs1.setArgs(argc,argv,randomseed)) return 0;
+    //supArgs1.max_gens = 40;
+    //supArgs1.pop_size = 56;
 
-    //supArgs1.max_gens = 100;
-    //supArgs1.pop_size = 26;
+    supArgs1.randomseed = randomseed;
+    if (argc>2) if (!supArgs1.setArgs(argc,argv,randomseed)) return 0;
     
     if (supArgs1.do_evol){
 
@@ -337,7 +338,7 @@ int main (int argc, const char* argv[])
     seedfile.close();
 
     // configure the search
-    s.SetRandomSeed(randomseed);
+    s.SetRandomSeed(supArgs1.randomseed);
     s.SetPopulationStatisticsDisplayFunction(EvolutionaryRunDisplay);
     s.SetSearchResultsDisplayFunction(ResultsDisplay);
     s.SetSelectionMode(RANK_BASED);             //{FITNESS_PROPORTIONATE,RANK_BASED}
@@ -356,9 +357,9 @@ int main (int argc, const char* argv[])
     // redirect standard output to a file
 //#ifdef PRINTTOFILE
 ofstream evolfile;
+std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
 if (supArgs1.printToFile)
 {
-   
     evolfile.open (supArgs1.rename_file("fitness.dat"));
     cout.rdbuf(evolfile.rdbuf());
 }
@@ -390,32 +391,37 @@ if (supArgs1.evo_seed)
 
 //#ifdef PRINTTOFILE
 if (supArgs1.printToFile)
+{
+    std::cout.rdbuf(coutbuf); //reset to standard output again
     evolfile.close();
+
+}
 //#endif
 
 
     }
     
+    supArgs1.output = 1;
+    supArgs1.speedoutput = 1;
+    RandomState rs;
+    long seed = static_cast<long>(time(NULL));
+    //rs.SetRandomSeed(seed);
+    rs.SetRandomSeed(supArgs1.randomseed);
 
-        RandomState rs;
-        long seed = static_cast<long>(time(NULL));
-        //rs.SetRandomSeed(seed);
-        rs.SetRandomSeed(supArgs1.randomseed);
+    std::cout << std::setprecision(10);
 
-        std::cout << std::setprecision(10);
+    // Code to run simulation:
+    InitializeBodyConstants();
+
+    ifstream BestIndividualFile;
+    TVector<double> bestVector(1, VectSize);
+    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
+    BestIndividualFile >> bestVector;
+
     
-        // Code to run simulation:
-        InitializeBodyConstants();
-    
-        ifstream BestIndividualFile;
-        TVector<double> bestVector(1, VectSize);
-        BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
-        BestIndividualFile >> bestVector;
-    
-        EvaluationFunctionB(bestVector, rs);
+    EvaluationFunctionB(bestVector, rs);
 
 
-   
 
 
     return 0;

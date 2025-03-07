@@ -12,8 +12,6 @@ sys.path.append("..")
 # import random
 import helper_funcs as hf
 
-hf.dir_name = "./"
-
 
 def reload_single_run(show_plot=True, verbose=False):
     # N_muscles_perside = 24  # Number of muscles alongside the body
