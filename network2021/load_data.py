@@ -23,10 +23,10 @@ def reload_single_run(show_plot=True, verbose=False):
 
     N_neurons = 7
     N_neuronsperunit = 7
-    N_total_neurons = N_neurons*N_neuronsperunit
-    #N_stretchrec = 2 + 6 * 3  # number of streatch receptors
-    #N_hneurons = 4
-    #N_vneurons = 36
+    N_total_neurons = N_neurons * N_neuronsperunit
+    # N_stretchrec = 2 + 6 * 3  # number of streatch receptors
+    # N_hneurons = 4
+    # N_vneurons = 36
     N_muscles = 24 * 2
 
     # N_neurons = N_neuronsperunit * N_units
@@ -66,7 +66,7 @@ def reload_single_run(show_plot=True, verbose=False):
         axs[0, 0].xaxis.set_ticklabels([])
     # plt.legend()
 
-    neu = act_data[offset :  N_total_neurons + offset]
+    neu = act_data[offset : N_total_neurons + offset]
     axs[0, 1].imshow(neu, aspect="auto", interpolation="nearest")
     axs[0, 1].xaxis.set_ticklabels([])
 
@@ -86,7 +86,7 @@ def reload_single_run(show_plot=True, verbose=False):
     axs[2, 1].imshow(neu, aspect="auto", interpolation="nearest")
     axs[2, 1].xaxis.set_ticklabels([])
  """
-    
+
     axs[1, 0].set_title("Muscles", fontsize=title_font_size)
     axs[1, 1].set_title("Muscles", fontsize=title_font_size)
     for i in range(offset, N_muscles + offset):
