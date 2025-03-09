@@ -226,7 +226,8 @@ if (supArgs1.output){
     Worm w(phenotype);
     
     if (supArgs1.output){
-    w.DumpParams(paramsfile);}
+    w.DumpParams(paramsfile);
+    }
 
 /* #ifdef OUTPUT
     w.DumpParams(paramsfile);
@@ -322,6 +323,7 @@ if (supArgs1.output){
 
 //#ifdef OUTPUT
 if (supArgs1.output){
+    cout << "doout" << endl;
         for (double t = 0.0; t <= 60; t += StepSize){
             w.Step(StepSize);
             w.DumpBodyState(bodyfile, skip_steps);
@@ -351,7 +353,7 @@ void ResultsDisplay(TSearch &s){
     ofstream BestIndividualFile;
     
     bestVector = s.BestIndividual();
-    BestIndividualFile.open("best.gen.dat");
+    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
     BestIndividualFile << setprecision(32);
     BestIndividualFile << bestVector << endl;
     BestIndividualFile.close();
@@ -376,7 +378,10 @@ int main (int argc, const char* argv[]){
     #ifdef PRINTTOFILE
     supArgs1.printToFile = 1;
     #endif
-
+    supArgs1.output = 0;
+    #ifdef OUTPUT
+    supArgs1.output = 1;
+    #endif
 
     std::cout << std::setprecision(10);
     

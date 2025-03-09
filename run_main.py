@@ -65,7 +65,7 @@ def process_args():
         default=DEFAULTS["modelFolder"],
         help=(
             "Name of model code folder. Default is the current folder.\n"
-            "Other options include `RoyalSociety2018'.\n"
+            "Other options include `RoyalSociety2018' and 'network2021'.\n"
         ),
     )
 
