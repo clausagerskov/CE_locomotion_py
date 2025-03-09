@@ -11,10 +11,15 @@
 #include "VectorMatrix.h"
 #include "Worm.h"
 #include "Segment.h"
+#include "../argUtils.h"
+
 
 #define EVOLVE
 #define PRINTTOFILE
 //#define OUTPUT
+
+SuppliedArgs2021 supArgs1;
+
 int skip_steps = 10;
 
 using namespace std;
@@ -178,14 +183,22 @@ double EvaluationFunction1(TVector<double> &v, RandomState &rs){
 //////// Stage 2 ////////////
 /////////////////////////////
 double EvaluationFunction2(TVector<double> &v, RandomState &rs){
-#ifdef OUTPUT
+
+/* #ifdef OUTPUT
     ofstream bodyfile, actfile, curvfile, paramsfile;
     bodyfile.open("body.dat");
     actfile.open("act.dat");
     curvfile.open("curv.dat");
     paramsfile.open("params.dat");
-#endif
-    
+#endif */
+
+ofstream bodyfile, actfile, curvfile, paramsfile;
+if (supArgs1.output){
+    bodyfile.open(supArgs1.rename_file("body.dat"));
+    actfile.open(supArgs1.rename_file("act.dat"));
+    curvfile.open(supArgs1.rename_file("curv.dat"));
+    paramsfile.open(supArgs1.rename_file("params.dat"));
+}
     // Fitness
     double fitness_tr = 0.0;
     double bodyorientation, anglediff;
@@ -212,10 +225,12 @@ double EvaluationFunction2(TVector<double> &v, RandomState &rs){
     
     Worm w(phenotype);
     
-    
-#ifdef OUTPUT
+    if (supArgs1.output){
+    w.DumpParams(paramsfile);}
+
+/* #ifdef OUTPUT
     w.DumpParams(paramsfile);
-#endif
+#endif */
     
     w.InitializeState(rs);
     
@@ -305,7 +320,8 @@ double EvaluationFunction2(TVector<double> &v, RandomState &rs){
     // Locomotion evaluation
     fitness_tr = (1 - (fabs(BBCfit-distancetravelled)/BBCfit));
 
-#ifdef OUTPUT
+//#ifdef OUTPUT
+if (supArgs1.output){
         for (double t = 0.0; t <= 60; t += StepSize){
             w.Step(StepSize);
             w.DumpBodyState(bodyfile, skip_steps);
@@ -313,11 +329,13 @@ double EvaluationFunction2(TVector<double> &v, RandomState &rs){
             w.DumpCurvature(curvfile, skip_steps);
         }
 
-        cout << fitness_tr << " " << fitness_ds << endl;
+        cout << fitness_tr << endl;
+        //cout << fitness_tr << " " << fitness_ds << endl; //removed fitness_ds since not defined
         bodyfile.close();
         actfile.close();
         curvfile.close();
-#endif
+    }        
+//#endif
     return fitness_tr * FoDB * FoVB * (1 - FfDB) * (1 - FfVB);
 }
 
@@ -347,32 +365,48 @@ int finish_Bosc(int Generation,double BestPerf,double AvgPerf,double PerfVar){
 // ------------------------------------
 // The main program
 // ------------------------------------
-#ifdef EVOLVE
+//#ifdef EVOLVE
 int main (int argc, const char* argv[]){
+
+    supArgs1.do_evol = 0;
+    #ifdef EVOLVE
+    supArgs1.do_evol = 1;
+    #endif
+    supArgs1.printToFile = 0;
+    #ifdef PRINTTOFILE
+    supArgs1.printToFile = 1;
+    #endif
+
+
     std::cout << std::setprecision(10);
     
     long randomseed = static_cast<long>(time(NULL));
     
     if (argc == 2)
         randomseed += atoi(argv[1]);
-    
+
+    supArgs1.randomseed = randomseed;
+    if (argc>2) if (!supArgs1.setArgs(argc,argv,randomseed)) return 0;
+
+    if (supArgs1.do_evol){
+
     TSearch s(VectSize);
     TVector<double> phenotype(1, VectSize);
     
     // save the seed to a file
     ofstream seedfile;
-    seedfile.open ("seed.dat");
-    seedfile << randomseed << endl;
+    seedfile.open(supArgs1.rename_file("seed.dat"));
+    seedfile << supArgs1.randomseed << endl;
     seedfile.close();
-    
+   
     // configure the search
-    s.SetRandomSeed(randomseed);
+    s.SetRandomSeed(supArgs1.randomseed);
     s.SetPopulationStatisticsDisplayFunction(EvolutionaryRunDisplay);
     s.SetSearchResultsDisplayFunction(ResultsDisplay);
     s.SetSelectionMode(RANK_BASED);             //{FITNESS_PROPORTIONATE,RANK_BASED}
     s.SetReproductionMode(GENETIC_ALGORITHM);	// {HILL_CLIMBING, GENETIC_ALGORITHM}
-    s.SetPopulationSize(100);
-    s.SetMaxGenerations(2000);
+    s.SetPopulationSize(supArgs1.pop_size);
+    s.SetMaxGenerations(supArgs1.max_gens);
     s.SetMutationVariance(0.1);
     s.SetCrossoverProbability(0.5);
     s.SetCrossoverMode(UNIFORM);              //{UNIFORM, TWO_POINT}
@@ -386,11 +420,20 @@ int main (int argc, const char* argv[]){
     s.SetSearchTerminationFunction(finish_Bosc);
     s.SetEvaluationFunction(EvaluationFunction1);
     // redirect standard output to a file
-#ifdef PRINTTOFILE
+    ofstream evolfile;
+    std::streambuf *coutbuf = std::cout.rdbuf(); //save old buf
+    if (supArgs1.printToFile)
+    {
+        evolfile.open (supArgs1.rename_file("fitness.dat"));
+        cout.rdbuf(evolfile.rdbuf());
+    }
+
+/* #ifdef PRINTTOFILE
     ofstream evolfile;
     evolfile.open ("fitness.dat");
     cout.rdbuf(evolfile.rdbuf());
-#endif
+#endif */
+
     s.ExecuteSearch();
 
     // Stage 2 //
@@ -399,27 +442,37 @@ int main (int argc, const char* argv[]){
     InitializeBodyConstants();
     s.ExecuteSearch();
 
-#ifdef PRINTTOFILE
+    if (supArgs1.printToFile)
+    {
+        std::cout.rdbuf(coutbuf); //reset to standard output again
+        evolfile.close();
+    
+    }
+
+    }
+
+/* #ifdef PRINTTOFILE
     evolfile.close();
-#endif
-    return 0;
-}
-#else
-int main (int argc, const char* argv[]){
+#endif */
+
     RandomState rs;
-    long seed = static_cast<long>(time(NULL));
-    rs.SetRandomSeed(seed);
+    //long seed = static_cast<long>(time(NULL));
+    rs.SetRandomSeed(supArgs1.randomseed);
     
     std::cout << std::setprecision(10);
     
     // Code to run simulation:
     InitializeBodyConstants();
-    
+
+    supArgs1.output = 1;
     ifstream BestIndividualFile;
     TVector<double> bestVector(1, VectSize);
-    BestIndividualFile.open("best.gen.dat");
+    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
     BestIndividualFile >> bestVector;
     EvaluationFunction2(bestVector, rs);
+
+
     return 0;
 }
-#endif
+
+//#endif

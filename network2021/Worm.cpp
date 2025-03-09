@@ -7,11 +7,14 @@
 //
 
 #include "Worm.h"
+#include "../argUtils.h"
 
 int nn(int neuronNumber, int unitNumber)
 {
     return neuronNumber+((unitNumber-1)*N_neuronsperunit);
 }
+
+extern SuppliedArgs2021 supArgs1;
 
 // The constructor
 Worm::Worm(TVector<double> &v)

@@ -72,6 +72,16 @@ SuppliedArgs2018::SuppliedArgs2018():SuppliedArgs()
   speedoutput = 0;
 }
 
+SuppliedArgs2021::SuppliedArgs2021():SuppliedArgs()
+{
+  do_evol = 1;
+  pop_size = 100;
+  max_gens = 2000;
+  printToFile = 1;
+  output = 0;
+}
+
+
 
 void SuppliedArgs::setSimRandomInit()
 {

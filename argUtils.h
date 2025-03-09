@@ -54,7 +54,6 @@ class SuppliedArgs2018 : public SuppliedArgs
 
 public:
 SuppliedArgs2018();
-//void setDefaultArgs();
 
 bool printToFile;
 bool evo_seed;
@@ -63,14 +62,17 @@ bool speedoutput;
 
 };
 
+class SuppliedArgs2021 : public SuppliedArgs
+{
+
+public:
+SuppliedArgs2021();
+bool printToFile;
+bool output;
+
+};
 
 
-//extern SuppliedArgs supArgs1;  
-
-//bool checkNervousSystemForJson();
-//bool setArgs(int argc, const char* argv[], long & randomseed);
-
-//string rename_file(const string & file_name);
 
 
 

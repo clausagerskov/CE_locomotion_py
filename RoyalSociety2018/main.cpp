@@ -327,11 +327,6 @@ int main (int argc, const char* argv[])
     TVector<double> phenotype(1, VectSize);
 
     // save the seed to a file
-/*     ofstream seedfile;
-    seedfile.open ("seed.dat");
-    seedfile << randomseed << endl;
-    seedfile.close(); */
-
     ofstream seedfile;
     seedfile.open(supArgs1.rename_file("seed.dat"));
     seedfile << supArgs1.randomseed << endl;
