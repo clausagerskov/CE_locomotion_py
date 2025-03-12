@@ -1,6 +1,6 @@
 {
+    "Duration": 50,
     "pop_size": 56,
     "randomseed": 151750,
-    "Duration": 50,
     "max_gens": 20
 }

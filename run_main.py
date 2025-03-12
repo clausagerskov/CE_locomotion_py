@@ -37,8 +37,6 @@ defaults_base_2021 = {
     "doNML": 0,
     "doRandInit": 0,
     "maxGens": 2000,
-
-
 }
 
 
@@ -179,7 +177,7 @@ def process_args():
         type=float,
         metavar="<duration>",
         default=DEFAULTS["duration"],
-        help="Duration of simulation for evolution and best worm in ms."
+        help="Duration of simulation for evolution and best worm in ms.",
     )
 
     parser.add_argument(
@@ -188,8 +186,7 @@ def process_args():
         type=int,
         metavar="<pop size>",
         default=DEFAULTS["popSize"],
-        help="Population size for evolutionary algorithm."
-        
+        help="Population size for evolutionary algorithm.",
     )
 
     parser.add_argument(
@@ -198,7 +195,7 @@ def process_args():
         type=int,
         metavar="<max generations>",
         default=DEFAULTS["maxGens"],
-        help="Maximum number of generations for evolutionary algorithm."
+        help="Maximum number of generations for evolutionary algorithm.",
     )
 
     parser.add_argument(
@@ -363,11 +360,11 @@ def run(a=None, **kwargs):
         else:
             do_randInit = 0
 
-    if a.modelFolder == '.':
+    if a.modelFolder == ".":
         defaults_base = defaults_base_celoc
-    elif a.modelFolder == 'RoyalSociety2018':
+    elif a.modelFolder == "RoyalSociety2018":
         defaults_base = defaults_base_2018
-    elif a.modelFolder == 'exampleRunNet21':
+    elif a.modelFolder == "exampleRunNet21":
         defaults_base = defaults_base_2021
     else:
         defaults_base = defaults_base_celoc

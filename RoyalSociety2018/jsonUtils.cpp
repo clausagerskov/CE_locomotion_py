@@ -140,22 +140,6 @@ appendNSToJson(j, n);
 
 }
 
-void addNSJson(Worm & w, json & j)
-{
-
-{string nsHead = "Nervous system";
-getNSJson(w.n, j[nsHead]);
-vector<string> cell_names = {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};
-{Params< vector<string> > parvec = getNervousSysCellNames(cell_names, 6);
-appendToJson<vector<string> >(j[nsHead],parvec);}}
-
-{string nsHead = "Head Nervous system";
-getNSJson(w.h, j[nsHead]);
-vector<string> cell_names = {"SMDD", "RMDD", "SMDV", "RMDV"};
-{Params< vector<string> > parvec = getNervousSysCellNames(cell_names, 1);
-appendToJson<vector<string> >(j[nsHead],parvec);}}   
-
-}
 
 Params<double> getStretchReceptorParams(StretchReceptor& s)
 {
@@ -169,13 +153,6 @@ par.messages_inds = {0,1,2}; //must be ordered
 return par;
 }
 
-void addSRJson(Worm & w, json & j)
-{
-    Params<double> par = getStretchReceptorParams(w.sr);
-    appendToJson<double>(j["Stretch receptor"],par);
-}
-
-
 Params<double> getWormParams(Worm & w)
 {
 Params<double> par;
@@ -186,12 +163,6 @@ par.names = {"NMJ_DB", "NMJ_VBa", "NMJ_VBp", "NMJ_DD", "NMJ_VDa", "NMJ_VDp",
 return par;
 }
 
-void addWormJson(Worm & w, json & j)
-{
-    Params<double> par = getWormParams(w);
-    appendToJson<double>(j["Worm"],par);
-   
-}
 
 void writeParsToJson(Worm & w)
 {
@@ -201,13 +172,7 @@ void writeParsToJson(Worm & w)
 
         cout << "making json" << endl;
         vector<doubIntParamsHead> parvec;
-        //doubIntParamsHead var1;
         doubIntParamsHead var1 = supArgs1.getParams();
-        /* var1.parInt.head = "Evolutionary Optimization Parameters";
-        var1.parInt.names = {"pop_size", "randomseed"};
-        var1.parInt.vals = {supArgs1.pop_size, supArgs1.randomseed};
-        var1.parInt.messages ={"population size", "seed"};
-        var1.parInt.messages_inds = {0,1}; */
         parvec.push_back(var1);
 
         for (size_t i=0;i<parvec.size(); i++) {
@@ -217,10 +182,24 @@ void writeParsToJson(Worm & w)
             appendToJson<long>(j[parvec[i].parInt.head],parvec[i].parInt);
             }
 
-       // writeParsToJson(w, "worm_data.json", evolutionParams);
-        addNSJson(w,j);
-        addWormJson(w,j);
-        addSRJson(w,j);
+       
+            {string nsHead = "Nervous system";
+            getNSJson(w.n, j[nsHead]);
+            vector<string> cell_names = {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};
+            {Params< vector<string> > parvec = getNervousSysCellNames(cell_names, 6);
+            appendToJson<vector<string> >(j[nsHead],parvec);}}
+            
+            {string nsHead = "Head Nervous system";
+            getNSJson(w.h, j[nsHead]);
+            vector<string> cell_names = {"SMDD", "RMDD", "SMDV", "RMDV"};
+            {Params< vector<string> > parvec = getNervousSysCellNames(cell_names, 1);
+            appendToJson<vector<string> >(j[nsHead],parvec);}}   
+        
+        {Params<double> par = getWormParams(w);
+        appendToJson<double>(j["Worm"],par);}
+
+        {Params<double> par = getStretchReceptorParams(w.sr);
+        appendToJson<double>(j["Stretch receptor"],par);}
 
         ofstream json_out(supArgs1.rename_file("worm_data.json"));
         json_out << std::setw(4) << j << std::endl;
