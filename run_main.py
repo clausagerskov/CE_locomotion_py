@@ -12,7 +12,7 @@ from datetime import datetime
 import json
 
 
-defaults_base = {
+defaults_base_celoc = {
     "popSize": 96,
     "duration": 24,
     "nervousSystemFileName": "main_sim",
@@ -20,6 +20,27 @@ defaults_base = {
     "doRandInit": 0,
     "maxGens": 10,
 }
+
+defaults_base_2018 = {
+    "popSize": 96,
+    "duration": 50,
+    "nervousSystemFileName": "main_sim",
+    "doNML": 0,
+    "doRandInit": 0,
+    "maxGens": 1000,
+}
+
+defaults_base_2021 = {
+    "popSize": 100,
+    "duration": 40,
+    "nervousSystemFileName": "main_sim",
+    "doNML": 0,
+    "doRandInit": 0,
+    "maxGens": 2000,
+
+
+}
+
 
 DEFAULTS = {
     "popSize": None,  # 96,
@@ -158,8 +179,7 @@ def process_args():
         type=float,
         metavar="<duration>",
         default=DEFAULTS["duration"],
-        help="Duration of simulation for evolution and best worm in ms, reverts to: %sms if not provided."
-        % defaults_base["duration"],
+        help="Duration of simulation for evolution and best worm in ms."
     )
 
     parser.add_argument(
@@ -168,8 +188,8 @@ def process_args():
         type=int,
         metavar="<pop size>",
         default=DEFAULTS["popSize"],
-        help="Population size for evolutionary algorithm, reverts to: %s if not provided."
-        % defaults_base["popSize"],
+        help="Population size for evolutionary algorithm."
+        
     )
 
     parser.add_argument(
@@ -178,8 +198,7 @@ def process_args():
         type=int,
         metavar="<max generations>",
         default=DEFAULTS["maxGens"],
-        help="Maximum number of generations for evolutionary algorithm, reverts to: %s if not provided."
-        % defaults_base["maxGens"],
+        help="Maximum number of generations for evolutionary algorithm."
     )
 
     parser.add_argument(
@@ -343,6 +362,15 @@ def run(a=None, **kwargs):
             do_randInit = 1
         else:
             do_randInit = 0
+
+    if a.modelFolder == '.':
+        defaults_base = defaults_base_celoc
+    elif a.modelFolder == 'RoyalSociety2018':
+        defaults_base = defaults_base_2018
+    elif a.modelFolder == 'exampleRunNet21':
+        defaults_base = defaults_base_2021
+    else:
+        defaults_base = defaults_base_celoc
 
     evol_pars = ["Duration", "pop_size", "randomseed", "max_gens"]
     evol_args = [a.duration, a.popSize, a.RandSeed, a.maxGens]

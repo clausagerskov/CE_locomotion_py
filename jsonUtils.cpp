@@ -5,11 +5,12 @@
 #include <functional>
 #include <vector>
 #include <nlohmann/json.hpp>
-#include "utils.h"
+//#include "utils.h"
 #include "jsonUtils.h"
+#include "argUtils.h"
 #include "Mainvars.h"
 
-
+extern SuppliedArgs supArgs1;
 using json = nlohmann::json;
 
 
@@ -18,6 +19,8 @@ using std::string;
 using std::cout;
 using std::function;
 using std::vector;
+
+
 
 //// write all worm paramters to json and txt file 
 struct toFromWeight{
@@ -766,12 +769,12 @@ void writeParsToJson(wormForJson & w)
     if (supArgs1.doOrigNS){
   cout << "making json" << endl;
   vector<doubIntParamsHead> evolutionParams;
-  doubIntParamsHead var1;
-  var1.parInt.head = "Evolutionary Optimization Parameters";
+  doubIntParamsHead var1 = supArgs1.getParams();
+  /* var1.parInt.head = "Evolutionary Optimization Parameters";
   var1.parInt.names = {"pop_size", "Duration", "randomseed"};
   var1.parInt.vals = {supArgs1.pop_size, Duration, supArgs1.randomseed};
   var1.parInt.messages ={"population size", "optimization simulation duration", "seed"};
-  var1.parInt.messages_inds = {0,1,2};
+  var1.parInt.messages_inds = {0,1,2}; */
   evolutionParams.push_back(var1);
 
   writeParsToJson(w, "worm_data.json", evolutionParams);
@@ -798,17 +801,6 @@ appendToJson<long>(j[parvec[i].parInt.head],parvec[i].parInt);
 }
 writeParsToJson(j,w,file_name);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 

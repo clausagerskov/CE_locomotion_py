@@ -5,7 +5,7 @@
 //  Created by Eduardo Izquierdo on 9/25/15.
 //  Copyright © 2015 Eduardo Izquierdo. All rights reserved.
 //
-
+#pragma once
 #include "VectorMatrix.h"
 #include "random.h"
 #include "WormBody.h"

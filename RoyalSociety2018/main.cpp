@@ -12,6 +12,7 @@
 #include "VectorMatrix.h"
 #include "Worm.h"
 #include "../argUtils.h"
+#include "jsonUtils.h"
 
 #define EVOLVE
 #define PRINTTOFILE
@@ -183,6 +184,7 @@ if (supArgs1.output){
 //#ifdef OUTPUT
 if (supArgs1.output){
     w.DumpParams(paramsfile);
+    writeParsToJson(w);
 }
 //#endif
 
@@ -385,16 +387,18 @@ if (supArgs1.evo_seed)
     s.ExecuteSearch();
 
 //#ifdef PRINTTOFILE
-if (supArgs1.printToFile)
-{
-    std::cout.rdbuf(coutbuf); //reset to standard output again
-    evolfile.close();
+    if (supArgs1.printToFile)
+    {
+        std::cout.rdbuf(coutbuf); //reset to standard output again
+        evolfile.close();
 
-}
+    }
 //#endif
 
 
-    }
+   
+
+}
     
     supArgs1.output = 1;
     supArgs1.speedoutput = 1;

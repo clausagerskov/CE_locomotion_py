@@ -1,37 +1,33 @@
-//#pragma once
+#pragma once
 #include <string>
 #include <vector>
-#include "VectorMatrix.h"
 
 
 using std::string;
 using std::vector;
 
+template <class T>
+struct Params {
+Params(){}    
+vector<string> names;
+vector<T> vals;
+vector<int> messages_inds;
+vector<string> messages;
+};
 
-template<class T>
-vector<T> & append(vector<T> & v1, const vector<T> & v2)
+template <class T>
+struct ParamsHead : Params<T> {
+ParamsHead(string head_val, Params<T> par_val):Params<T>(par_val){head=head_val;}
+ParamsHead():Params<T>(){head = "NULL";}
+string head;
+};
+
+struct doubIntParamsHead
 {
-v1.insert(v1.end(), v2.begin(), v2.end());
-return v1;
-}    
+ParamsHead<double> parDoub;
+ParamsHead<long> parInt;
+};
 
-template<class T> 
-vector<T> getVector(TVector<T> & vec, int size)
-{ 
-vector<T> retvec;    
-for (int i = 1; i <= size; i++)
-        retvec.push_back(vec[i]);   
-return retvec;    
-}
-
-template<class T> 
-TVector<T> getTVector(vector<T> & vec)
-{ 
-TVector<T> retvec;
-retvec.SetBounds(1,vec.size());    
-for (int i = 0; i < vec.size(); i++) retvec[i+1]=vec[i];
-return retvec;    
-}
 
 
 

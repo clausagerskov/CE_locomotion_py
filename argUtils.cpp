@@ -1,35 +1,11 @@
-#include "argUtils.h"
 #include <string.h>
 #include <sys/stat.h>
 //#include <stdio.h>
 #include <iostream>
+#include "argUtils.h"
 
 using namespace std;
 
-//// helper functions
-
-/* string nervousSystemName = "NervousSystem";
-string nervousSystemNameForSim = "nmlNervousSystem";
-string nervousSystemNameForEvol = "NervousSystem";
-string output_dir_name = "";
-bool randomInit = 0;
-int pop_size = 96;
-bool simRandomInit = 0;
-bool do_evol = 1;
-bool do_nml = 0;
-int traceDuration = 24; */
-
-
-//SuppliedArgs supArgs1;  
-
-/* string rename_file(const string & file_name){
-  if (supArgs1.output_dir_name != "") return supArgs1.output_dir_name + "/" + file_name;
-  return file_name;
-} */
-
-/* bool checkNervousSystemForJson(){
-return (strcmp(supArgs1.nervousSystemName.c_str(), "NervousSystem") == 0);
-} */
 
 SuppliedArgs::SuppliedArgs()
 {
@@ -46,20 +22,6 @@ SuppliedArgs::SuppliedArgs()
   max_gens = 10;
 }
 
-/* void SuppliedArgs::setDefaultArgs()
-{
-  nervousSystemNameForSim = "NervousSystem";
-  //nervousSystemNameForEvol = "NervousSystem";
-  output_dir_name = "";
-  randomInit = 0;
-  pop_size = 96;
-  simRandomInit = 0;
-  do_evol = 1;
-  do_nml = 0;
-  traceDuration = 24;
-  doOrigNS = 1;
-
-} */
 
 SuppliedArgs2018::SuppliedArgs2018():SuppliedArgs()
 {
@@ -81,7 +43,17 @@ SuppliedArgs2021::SuppliedArgs2021():SuppliedArgs()
   output = 0;
 }
 
-
+doubIntParamsHead SuppliedArgs::getParams()
+{
+  doubIntParamsHead var1;
+  var1.parInt.head = "Evolutionary Optimization Parameters";
+  var1.parInt.names = {"pop_size", "Duration", "randomseed", "max_gens"};
+  var1.parInt.vals = {pop_size, traceDuration, randomseed, max_gens};
+  var1.parInt.messages ={"population size", 
+    "optimization simulation duration", "seed", "maximum evolution generations"};
+  var1.parInt.messages_inds = {0,1,2,3};
+  return var1;
+}
 
 void SuppliedArgs::setSimRandomInit()
 {

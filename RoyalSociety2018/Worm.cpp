@@ -173,8 +173,6 @@ Worm::Worm(TVector<double> &v,double output)
 
 void Worm::InitializeState(RandomState &rs)
 {
-    supArgs1.speedoutput;
-
     t = 0.0;
     n.RandomizeCircuitState(-0.5, 0.5, rs);
     h.RandomizeCircuitState(-0.5, 0.5, rs);

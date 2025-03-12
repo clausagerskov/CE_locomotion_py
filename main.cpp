@@ -315,7 +315,7 @@ int main (int argc, const char* argv[])
     s.SetSelectionMode(RANK_BASED);               //{FITNESS_PROPORTIONATE,RANK_BASED}
     s.SetReproductionMode(GENETIC_ALGORITHM);	    // {HILL_CLIMBING, GENETIC_ALGORITHM}
     s.SetPopulationSize(supArgs1.pop_size);
-    s.SetMaxGenerations(10);
+    s.SetMaxGenerations(supArgs1.max_gens);
     s.SetMutationVariance(0.05);                   // For 71 parameters, an estimated avg change of 0.25 for weights (mapped to 15).
     s.SetCrossoverProbability(0.5);
     s.SetCrossoverMode(UNIFORM);                  //{UNIFORM, TWO_POINT}
@@ -355,12 +355,10 @@ int main (int argc, const char* argv[])
     TVector<double> best(1, VectSize);
     Best >> best;
     
-
     TVector<double> phenotype(1, VectSize);
     GenPhenMapping(best, phenotype);
     double sra = phenotype(SR_A);
     double srb = phenotype(SR_B);
-    
     
     Worm w(phenotype, 1);
     {

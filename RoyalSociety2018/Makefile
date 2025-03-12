@@ -1,7 +1,9 @@
-main: main.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o argUtils.o
-	g++ -pthread -o main main.o Worm.o WormBody.o argUtils.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o 
+main: main.o Worm.o WormBody.o NervousSystem.o StretchReceptor.o Muscles.o TSearch.o random.o argUtils.o jsonUtils.o
+	g++ -pthread -o main main.o Worm.o WormBody.o argUtils.o NervousSystem.o StretchReceptor.o Muscles.o jsonUtils.o TSearch.o random.o 
 random.o: random.cpp random.h VectorMatrix.h
 	g++ -c -O3 -flto random.cpp
+jsonUtils.o: jsonUtils.cpp jsonUtils.h
+	g++ -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include  -flto jsonUtils.cpp	
 TSearch.o: TSearch.cpp TSearch.h
 	g++ -c -O3 -flto TSearch.cpp
 argUtils.o: ../argUtils.cpp ../argUtils.h
