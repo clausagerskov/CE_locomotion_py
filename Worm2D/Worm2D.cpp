@@ -1,9 +1,20 @@
 #include "Worm2D.h"
+#include "jsonUtils.h"
 
+WormIzq::WormIzq(wormIzqParams par1_):par1(par1_),n_ptr(new NervousSystem)
+{
+    setUp();
+}
 
-WormIzq::WormIzq(wormIzqParams par1_):par1(par1_)
+/* WormIzq::WormIzq(wormIzqParams par1_, const NervousSystemBase & n):par1(par1_),n_ptr(n.clone())
+{
+    setUp();
+} */
+
+void WormIzq::setUp()
 {
     m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
+
 }
 
 int WormIzq::nn(int neuronNumber, int unitNumber)
@@ -113,4 +124,13 @@ void WormIzq::DumpBodyState(ofstream &ofs, int skips)
         }
         ofs << "\n";
     }
+}
+
+void WormIzq::addParsToJson(json & j)
+{
+    appendBodyToJson(j, b);
+    appendMuscleToJson(j,m);
+    string nsHead = "Nervous system";
+    getNSJson(static_cast<NervousSystem&>(*n_ptr), j[nsHead]);
+
 }

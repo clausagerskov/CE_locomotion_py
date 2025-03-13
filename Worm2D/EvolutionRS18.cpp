@@ -1,6 +1,6 @@
 #include "Evolution.h"
 #include <math.h>
-#include "Worm2D.h"
+#include "WormRS18.h"
 
 void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
@@ -110,7 +110,7 @@ if (supArgs1.output){
     TVector<double> phenotype(1, VectSize);
     GenPhenMapping(v, phenotype);
 
-    Worm2D w(phenotype, 0);
+    Worm w(phenotype, 0);
     
 
 

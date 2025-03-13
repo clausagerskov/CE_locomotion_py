@@ -24,8 +24,14 @@ class NervousSystemBase {
         virtual void SetElectricalSynapseWeight(int n1, int n2, double value) = 0;
         virtual void EulerStep(double stepsize) = 0;
  
-        virtual ~NervousSystemBase(){};
+        
+        virtual void RandomizeCircuitState(double lb, double ub) = 0;
+        virtual void RandomizeCircuitState(double lb, double ub, RandomState &rs) = 0;
+        virtual void RandomizeCircuitOutput(double lb, double ub) = 0;
+        virtual void RandomizeCircuitOutput(double lb, double ub, RandomState &rs) = 0;
 
+        virtual ~NervousSystemBase(){};
+        //virtual NervousSystemBase* clone() const = 0;
 };
 
 

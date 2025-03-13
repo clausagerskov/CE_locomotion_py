@@ -19,8 +19,7 @@ return new c302NervousSystem();
 }
  */
 
-WormCE::WormCE(TVector<double> &v,double output)
-:WormIzq({6,24,0.1,10})//,n_ptr(makeNervousSystem())
+Worm::Worm(TVector<double> &v,double output):WormIzq({6,24,0.1,10})//,n_ptr(makeNervousSystem())
 {
 
   // PG: Setting these to zero as they were not initialised before use!
@@ -33,7 +32,7 @@ WormCE::WormCE(TVector<double> &v,double output)
   // Muscles
  
   // Nervous system
-  n_ptr->SetCircuitSize(N_units*N_neuronsperunit, 3, 2);
+  n_ptr->SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 3, 2);
 
   int da, db, dd, vd, vb, va;
   int ddNext, vdNext, vbNext, dbNext;
@@ -41,7 +40,7 @@ WormCE::WormCE(TVector<double> &v,double output)
   // Stretch receptor
   sr.SetStretchReceptorParams(N_segments, N_stretchrec, v(1), v(2));
 
-  for (int u = 1; u <= N_units; u++){
+  for (int u = 1; u <= par1.N_units; u++){
     // Find the numbers that identify each neuron within a certain repeating unit
     da = nn(DA, u);
     db = nn(DB, u);
@@ -65,7 +64,7 @@ WormCE::WormCE(TVector<double> &v,double output)
     n_ptr->SetNeuronBias(vd, v(5));
 
     // Time-constants fixed to 1.0
-    for (int i = 1; i <= N_neuronsperunit; i++){
+    for (int i = 1; i <= par1.N_neuronsperunit; i++){
       n_ptr->SetNeuronTimeConstant(nn(i,u), 1.0);
     }
 
@@ -91,7 +90,7 @@ WormCE::WormCE(TVector<double> &v,double output)
     n_ptr->SetChemicalSynapseWeight(dd, db, v(12));
 
     // Electrical Synapse Intersegment connections
-    if (u < N_units){
+    if (u < par1.N_units){
       n_ptr->SetElectricalSynapseWeight(dd, ddNext, v(13));
       n_ptr->SetElectricalSynapseWeight(vd, vdNext, v(13));
       n_ptr->SetElectricalSynapseWeight(vb, vbNext, v(14));
@@ -113,18 +112,13 @@ WormCE::WormCE(TVector<double> &v,double output)
   AVB_output = 0.0;
 }
 
-
-
-
-
-
 void Worm::InitializeState(RandomState &rs)
 {
   t = 0.0;
   //n_ptr->RandomizeCircuitState(-1.0, 1.0, rs);
   if (!supArgs1.randomInit)
   { 
-  for (int u = 1; u <= N_units; u++)
+  for (int u = 1; u <= par1.N_units; u++)
   {
     // Dorsal neurons
     n_ptr->SetNeuronOutput(nn(DA,u), 0.1);
@@ -137,7 +131,7 @@ void Worm::InitializeState(RandomState &rs)
   }
 }
   else {
-    for (int u = 1; u <= N_units*N_neuronsperunit; u++)
+    for (int u = 1; u <= par1.N_units*par1.N_neuronsperunit; u++)
     {
       n_ptr->SetNeuronOutput(u, rs.UniformRandom(0,1));
     }
@@ -156,8 +150,8 @@ void Worm::Step(double StepSize, double output)
   int mi;
   int mt = 0;
   double ds, vs;
-  TVector<double> dorsalInput(1, N_units);
-  TVector<double> ventralInput(1, N_units);
+  TVector<double> dorsalInput(1, par1.N_units);
+  TVector<double> ventralInput(1, par1.N_units);
 
   // Update Body
   b.StepBody(StepSize);
@@ -193,12 +187,12 @@ void Worm::Step(double StepSize, double output)
 
   // Set input to Nervous System (Ventral Cord) from Stretch Receptors AND Command Interneurons
   ////   To A_class motorneurons
-  for (int i = 1; i <= N_units; i++){
+  for (int i = 1; i <= par1.N_units; i++){
     n_ptr->SetNeuronExternalInput(nn(DA,i), sr.A_D_sr(i) + AVA_output);
     n_ptr->SetNeuronExternalInput(nn(VA,i), sr.A_V_sr(i) + AVA_output);
   }
   ////   To B_class motorneurons
-  for (int i = 1; i <= N_units; i++){
+  for (int i = 1; i <= par1.N_units; i++){
     n_ptr->SetNeuronExternalInput(nn(DB,i), sr.B_D_sr(i) + AVB_output);
     n_ptr->SetNeuronExternalInput(nn(VB,i), sr.B_V_sr(i) + AVB_output);
   }
@@ -209,7 +203,7 @@ void Worm::Step(double StepSize, double output)
   // Set input to Muscles
   //  Each motor neuron innervates four muscles, overlap in muscles 4, 6-19 and 21)
   // Load motorneuron activity
-  for (int i=1; i<=N_units; i++){
+  for (int i=1; i<=par1.N_units; i++){
     dorsalInput(i)  = NMJ_DA*n_ptr->NeuronOutput(nn(DA,i)) + NMJ_DB*n_ptr->NeuronOutput(nn(DB,i)) + NMJ_DD*n_ptr->NeuronOutput(nn(DD,i));
     ventralInput(i) = NMJ_VD*n_ptr->NeuronOutput(nn(VD,i)) + NMJ_VA*n_ptr->NeuronOutput(nn(VA,i)) + NMJ_VB*n_ptr->NeuronOutput(nn(VB,i));
   }
@@ -267,117 +261,15 @@ void Worm::Step(double StepSize, double output)
   }
 
   //  Last two segments receive special treatment because they are only affected by a single muscle
-  b.SetDorsalSegmentActivation(N_segments-1, m.DorsalMuscleOutput(N_muscles)/2);
-  b.SetVentralSegmentActivation(N_segments-1, m.VentralMuscleOutput(N_muscles)/2);
-  b.SetDorsalSegmentActivation(N_segments, m.DorsalMuscleOutput(N_muscles)/2);
-  b.SetVentralSegmentActivation(N_segments, m.VentralMuscleOutput(N_muscles)/2);
+  b.SetDorsalSegmentActivation(N_segments-1, m.DorsalMuscleOutput(par1.N_muscles)/2);
+  b.SetVentralSegmentActivation(N_segments-1, m.VentralMuscleOutput(par1.N_muscles)/2);
+  b.SetDorsalSegmentActivation(N_segments, m.DorsalMuscleOutput(par1.N_muscles)/2);
+  b.SetVentralSegmentActivation(N_segments, m.VentralMuscleOutput(par1.N_muscles)/2);
 
   // Time
   t += StepSize;
 }
 
-
-double Worm::CoMx()
-{
-  double temp = 0.0;
-  for (int i = 1; i <= N_rods; i++) {
-    temp += b.X(i);
-  }
-  return temp/N_rods;
-}
-
-
-double Worm::CoMy()
-{
-  double temp = 0.0;
-  for (int i = 1; i <= N_rods; i++) {
-    temp += b.Y(i);
-  }
-  return temp/N_rods;
-}
-
-
-void Worm::Curvature(TVector<double> &c)
-{
-  double dx1,dy1,dx2,dy2,a,a1,a2,seg;
-  int k=1;
-
-  for (int i = 3; i < N_segments-1; i+=2)
-  {
-    dx1 = b.X(i) - b.X(i-2);
-    dy1 = b.Y(i) - b.Y(i-2);
-    dx2 = b.X(i+2) - b.X(i);
-    dy2 = b.Y(i+2) - b.Y(i);
-
-    a1 = atan2(dy1,dx1);
-    a2 = atan2(dy2,dx2);
-
-    if (a1 > PI/2 and a2 < -PI/2)
-    a = (a1 - 2*PI) - a2;
-    else
-    if (a1 < -PI/2 and a2 > PI/2)
-    a = a1 - (a2 - 2*PI);
-    else
-    a = a1-a2;
-
-    seg = sqrt(pow(b.X(i-2)-b.X(i+2),2) + pow(b.Y(i-2)-b.Y(i+2),2));
-    c(k) = (2*sin(a)/seg)/1000;
-    k++;
-  }
-}
-
-
-void Worm::AngleCurvature(TVector<double> &c)
-{
-  double dx1,dy1,dx2,dy2,a,a1,a2,seg;
-  int k=1;
-
-  for (int i = 3; i < N_segments-1; i+=2)
-  {
-    dx1 = b.X(i) - b.X(i-2);
-    dy1 = b.Y(i) - b.Y(i-2);
-    dx2 = b.X(i+2) - b.X(i);
-    dy2 = b.Y(i+2) - b.Y(i);
-
-    a1 = atan2(dy1,dx1);
-    a2 = atan2(dy2,dx2);
-
-    if (a1 > PI/2 and a2 < -PI/2)
-    a = (a1 - 2*PI) - a2;
-    else
-    if (a1 < -PI/2 and a2 > PI/2)
-    a = a1 - (a2 - 2*PI);
-    else
-    a = a1-a2;
-    c(k) = a;
-    k++;
-  }
-}
-
-
-double Worm::Orientation()
-{
-  return atan2(b.Y(Head)-b.Y(Tail),b.X(Head)-b.X(Tail));
-}
-
-// Dump the state to OFS if SKIPS steps have been performed
-
-void Worm::DumpBodyState(ofstream &ofs, int skips)
-{
-  static int tt = skips;
-
-  if (++tt >= skips) {
-    tt = 0;
-
-    ofs << t;
-    // Body
-    for (int i = 1; i <= N_rods; i++)
-    {
-      ofs <<  " " << b.X(i) << " " << b.Y(i) << " " << b.Phi(i);
-    }
-    ofs << "\n";
-  }
-}
 
 void Worm::DumpActState(ofstream &ofs, int skips)
 {
@@ -394,14 +286,14 @@ void Worm::DumpActState(ofstream &ofs, int skips)
     }
     // Ventral Cord Motor Neurons
     //ofs << "\nV: ";
-    for (int i = 1; i <= N_units; i++) {
-      for (int j = 1; j <= N_neuronsperunit; j++) {
+    for (int i = 1; i <= par1.N_units; i++) {
+      for (int j = 1; j <= par1.N_neuronsperunit; j++) {
         ofs <<  " " << n_ptr->NeuronOutput(nn(j,i));
       }
     }
     // Muscles
     //ofs << "\nM: ";
-    for (int i = 1; i <= N_muscles; i++) {
+    for (int i = 1; i <= par1.N_muscles; i++) {
       ofs <<  " " << m.DorsalMuscleOutput(i) << " " << m.VentralMuscleOutput(i);
     }
     ofs << "\n";
@@ -455,8 +347,8 @@ void Worm::DumpVoltage(ofstream &ofs, int skips)
 
     ofs << t;
     // Ventral Cord Motor Neurons
-    for (int i = 1; i <= N_units; i++) {
-      for (int j = 1; j <= N_neuronsperunit; j++) {
+    for (int i = 1; i <= par1.N_units; i++) {
+      for (int j = 1; j <= par1.N_neuronsperunit; j++) {
         ofs <<  " " << n_ptr->NeuronState(nn(j,i));
       }
     }
@@ -506,9 +398,9 @@ void Worm::DumpParams(ofstream &ofs) {
   "\n VB->DD: " << n_ptr->ChemicalSynapseWeight(VB, DD) <<
   "\n VB->VD: " << n_ptr->ChemicalSynapseWeight(VB, VD) <<  endl;
 
-  ofs << "Gap Juncs: \n DD-DD+1: " << n_ptr->ElectricalSynapseWeight(DD, DD+N_neuronsperunit) <<
-  "\n VB-VB+1: " << n_ptr->ElectricalSynapseWeight(VB, VB+N_neuronsperunit) <<
-  "\n VD-VD+1: " << n_ptr->ElectricalSynapseWeight(VD, VD+N_neuronsperunit) << endl;
+  ofs << "Gap Juncs: \n DD-DD+1: " << n_ptr->ElectricalSynapseWeight(DD, DD+par1.N_neuronsperunit) <<
+  "\n VB-VB+1: " << n_ptr->ElectricalSynapseWeight(VB, VB+par1.N_neuronsperunit) <<
+  "\n VD-VD+1: " << n_ptr->ElectricalSynapseWeight(VD, VD+par1.N_neuronsperunit) << endl;
 
   ofs << "Stretch Receptors Gains: \n A-class SR: " << sr.SR_A_gain <<
   "\n B-class SR: " << sr.SR_B_gain <<  endl;

@@ -13,13 +13,13 @@
 extern SuppliedArgs2021 supArgs1;
 
 // The constructor
-Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
+Worm::Worm(TVector<double> &v):WormIzq({7,24,0.1,7})
 {
     // Muscles
     //m.SetMuscleParams(N_muscles, T_muscle);
     
     // Nervous system // Ventral cord
-    n.SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 9, 6);
+    n_ptr->SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 9, 6);
     
     int as, da, db, dd, vd, vb, va;
     int asNext, dbNext, ddNext, vdNext, vbNext, vaNext ;
@@ -41,63 +41,63 @@ Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
         vaNext = nn(VA, u+1);
         
         // Bias, Time Constant and Self Connections
-        n.SetNeuronBias(as, v(1));
-        n.SetNeuronBias(da, v(2));
-        n.SetNeuronBias(db, v(3));
-        n.SetNeuronBias(dd, v(4));
-        n.SetNeuronBias(vd, v(5));
-        n.SetNeuronBias(vb, v(6));
-        n.SetNeuronBias(va, v(7));
+        n_ptr->SetNeuronBias(as, v(1));
+        n_ptr->SetNeuronBias(da, v(2));
+        n_ptr->SetNeuronBias(db, v(3));
+        n_ptr->SetNeuronBias(dd, v(4));
+        n_ptr->SetNeuronBias(vd, v(5));
+        n_ptr->SetNeuronBias(vb, v(6));
+        n_ptr->SetNeuronBias(va, v(7));
 
-        n.SetNeuronTimeConstant(as, v(8));
-        n.SetNeuronTimeConstant(da, v(9));
-        n.SetNeuronTimeConstant(db, v(10));
-        n.SetNeuronTimeConstant(dd, v(11));
-        n.SetNeuronTimeConstant(vd, v(12));
-        n.SetNeuronTimeConstant(vb, v(13));
-        n.SetNeuronTimeConstant(va, v(14));
+        n_ptr->SetNeuronTimeConstant(as, v(8));
+        n_ptr->SetNeuronTimeConstant(da, v(9));
+        n_ptr->SetNeuronTimeConstant(db, v(10));
+        n_ptr->SetNeuronTimeConstant(dd, v(11));
+        n_ptr->SetNeuronTimeConstant(vd, v(12));
+        n_ptr->SetNeuronTimeConstant(vb, v(13));
+        n_ptr->SetNeuronTimeConstant(va, v(14));
         
-        n.SetChemicalSynapseWeight(as, as, v(15));
-        n.SetChemicalSynapseWeight(da, da, v(16));
-        n.SetChemicalSynapseWeight(db, db, v(17));
-        n.SetChemicalSynapseWeight(dd, dd, v(18));
-        n.SetChemicalSynapseWeight(vd, vd, v(19));
-        n.SetChemicalSynapseWeight(vb, vb, v(20));
-        n.SetChemicalSynapseWeight(va, va, v(21));
+        n_ptr->SetChemicalSynapseWeight(as, as, v(15));
+        n_ptr->SetChemicalSynapseWeight(da, da, v(16));
+        n_ptr->SetChemicalSynapseWeight(db, db, v(17));
+        n_ptr->SetChemicalSynapseWeight(dd, dd, v(18));
+        n_ptr->SetChemicalSynapseWeight(vd, vd, v(19));
+        n_ptr->SetChemicalSynapseWeight(vb, vb, v(20));
+        n_ptr->SetChemicalSynapseWeight(va, va, v(21));
         
         // --------
         // Chemical Synapses minimal network
-        n.SetChemicalSynapseWeight(as, da, v(22));
-        n.SetChemicalSynapseWeight(as, vd, v(23));
-        n.SetChemicalSynapseWeight(da, db, v(24));
-        n.SetChemicalSynapseWeight(db, as, v(25));
-        n.SetChemicalSynapseWeight(vd, va, v(26));
-        n.SetChemicalSynapseWeight(vd, vb, v(27));
+        n_ptr->SetChemicalSynapseWeight(as, da, v(22));
+        n_ptr->SetChemicalSynapseWeight(as, vd, v(23));
+        n_ptr->SetChemicalSynapseWeight(da, db, v(24));
+        n_ptr->SetChemicalSynapseWeight(db, as, v(25));
+        n_ptr->SetChemicalSynapseWeight(vd, va, v(26));
+        n_ptr->SetChemicalSynapseWeight(vd, vb, v(27));
 
-        n.SetChemicalSynapseWeight(da, dd, v(28));
-        n.SetChemicalSynapseWeight(vb, dd, v(29));
-        n.SetChemicalSynapseWeight(va, dd, v(30));
+        n_ptr->SetChemicalSynapseWeight(da, dd, v(28));
+        n_ptr->SetChemicalSynapseWeight(vb, dd, v(29));
+        n_ptr->SetChemicalSynapseWeight(va, dd, v(30));
 
         // Electrical Synapse minimal network
-        n.SetElectricalSynapseWeight(vd, dd, v(31));
+        n_ptr->SetElectricalSynapseWeight(vd, dd, v(31));
 
 //        // Intersegment connections
 //        // Chemicals
         if (u < par1.N_units){
-            n.SetChemicalSynapseWeight(db, ddNext, v(40));
-            n.SetChemicalSynapseWeight(vaNext, dd, v(41));
+            n_ptr->SetChemicalSynapseWeight(db, ddNext, v(40));
+            n_ptr->SetChemicalSynapseWeight(vaNext, dd, v(41));
         }
 //        // Electricals
         if (u < par1.N_units){
 //        // Interclasses
-            n.SetElectricalSynapseWeight(as, vaNext, v(42));
-            n.SetElectricalSynapseWeight(da, asNext, v(43));
-            n.SetElectricalSynapseWeight(vb, dbNext, v(44));
+            n_ptr->SetElectricalSynapseWeight(as, vaNext, v(42));
+            n_ptr->SetElectricalSynapseWeight(da, asNext, v(43));
+            n_ptr->SetElectricalSynapseWeight(vb, dbNext, v(44));
         // Intraclasses
-//            n.SetElectricalSynapseWeight(db, dbNext, v(32));
-//            n.SetElectricalSynapseWeight(vb, vbNext, v(32));
-//            n.SetElectricalSynapseWeight(vd, vdNext, v(32));
-//            n.SetElectricalSynapseWeight(dd, ddNext, v(32));
+//            n_ptr->SetElectricalSynapseWeight(db, dbNext, v(32));
+//            n_ptr->SetElectricalSynapseWeight(vb, vbNext, v(32));
+//            n_ptr->SetElectricalSynapseWeight(vd, vdNext, v(32));
+//            n_ptr->SetElectricalSynapseWeight(dd, ddNext, v(32));
         }
     }
     
@@ -127,14 +127,14 @@ Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
     }
 }
 
-void Worm21::InitializeState(RandomState &rs)
+void Worm::InitializeState(RandomState &rs)
 {    
     WormIzq::InitializeState(rs);
-    n.RandomizeCircuitOutput(0.5, 0.5, rs); //fix this error!! adam (should be -0.5?)
+    n_ptr->RandomizeCircuitOutput(0.5, 0.5, rs); //fix this error!! adam (should be -0.5?)
     
 }
 
-void Worm21::Step(double StepSize)
+void Worm::Step(double StepSize)
 {
     int mi;
     double dorsalInput, ventralInput;
@@ -144,21 +144,21 @@ void Worm21::Step(double StepSize)
     
     
     // Update Nervous System
-    n.EulerStep(StepSize);
+    n_ptr->EulerStep(StepSize);
     
     // Interneuron input  //////////////////////
     for (int i = 1; i <= par1.N_units; i++){
-        n.SetNeuronExternalInput(nn(DB, i), wAVB_DB * AVB);
-        n.SetNeuronExternalInput(nn(VB, i), wAVB_VB * AVB);
-        n.SetNeuronExternalInput(nn(DA, i), wAVA_DA * AVA);
-        n.SetNeuronExternalInput(nn(VA, i), wAVA_VA * AVA);
+        n_ptr->SetNeuronExternalInput(nn(DB, i), wAVB_DB * AVB);
+        n_ptr->SetNeuronExternalInput(nn(VB, i), wAVB_VB * AVB);
+        n_ptr->SetNeuronExternalInput(nn(DA, i), wAVA_DA * AVA);
+        n_ptr->SetNeuronExternalInput(nn(VA, i), wAVA_VA * AVA);
     }
     
     // Set input to Muscles
     // Head: 4 muscles one neural unit  //////////////////////
     mi = 1;
-    dorsalInput  = NMJ_AS*n.NeuronOutput(nn(AS,mi)) + NMJ_DA*n.NeuronOutput(nn(DA,mi)) + NMJ_DB*n.NeuronOutput(nn(DB,mi)) + NMJ_DD*n.NeuronOutput(nn(DD,mi));
-    ventralInput = NMJ_VD*n.NeuronOutput(nn(VD,mi)) + NMJ_VA*n.NeuronOutput(nn(VA,mi)) + NMJ_VB*n.NeuronOutput(nn(VB,mi));
+    dorsalInput  = NMJ_AS*n_ptr->NeuronOutput(nn(AS,mi)) + NMJ_DA*n_ptr->NeuronOutput(nn(DA,mi)) + NMJ_DB*n_ptr->NeuronOutput(nn(DB,mi)) + NMJ_DD*n_ptr->NeuronOutput(nn(DD,mi));
+    ventralInput = NMJ_VD*n_ptr->NeuronOutput(nn(VD,mi)) + NMJ_VA*n_ptr->NeuronOutput(nn(VA,mi)) + NMJ_VB*n_ptr->NeuronOutput(nn(VB,mi));
     for (int i = 1; i < 5; i++){
                 m.SetVentralMuscleInput(i, NMJ_Gain(i)*ventralInput);
                 m.SetDorsalMuscleInput(i, NMJ_Gain(i)*dorsalInput);
@@ -166,8 +166,8 @@ void Worm21::Step(double StepSize)
     
     //  Body Anterior: 4 segments, 3 muscles each  //////////////////////
     for (int mi = 2; mi <= 5; mi++){
-        dorsalInput  = NMJ_AS*n.NeuronOutput(nn(AS,mi)) + NMJ_DA*n.NeuronOutput(nn(DA,mi)) + NMJ_DB*n.NeuronOutput(nn(DB,mi)) + NMJ_DD*n.NeuronOutput(nn(DD,mi));
-        ventralInput = NMJ_VD*n.NeuronOutput(nn(VD,mi)) + NMJ_VA*n.NeuronOutput(nn(VA,mi)) + NMJ_VB*n.NeuronOutput(nn(VB,mi));
+        dorsalInput  = NMJ_AS*n_ptr->NeuronOutput(nn(AS,mi)) + NMJ_DA*n_ptr->NeuronOutput(nn(DA,mi)) + NMJ_DB*n_ptr->NeuronOutput(nn(DB,mi)) + NMJ_DD*n_ptr->NeuronOutput(nn(DD,mi));
+        ventralInput = NMJ_VD*n_ptr->NeuronOutput(nn(VD,mi)) + NMJ_VA*n_ptr->NeuronOutput(nn(VA,mi)) + NMJ_VB*n_ptr->NeuronOutput(nn(VB,mi));
         for (int i = 5 + 3*(mi-2); i < 5 + 3*(mi-1); i++){
             m.SetVentralMuscleInput(i, NMJ_Gain(i)*ventralInput);
             m.SetDorsalMuscleInput(i, NMJ_Gain(i)*dorsalInput);
@@ -176,8 +176,8 @@ void Worm21::Step(double StepSize)
     
     //  Posterior Body: 2 segments, 4 muscles each  //////////////////////
     for (int mi = 6; mi <= 7; mi++){
-        dorsalInput  = NMJ_AS*n.NeuronOutput(nn(AS,mi)) + NMJ_DA*n.NeuronOutput(nn(DA,mi)) + NMJ_DB*n.NeuronOutput(nn(DB,mi)) + NMJ_DD*n.NeuronOutput(nn(DD,mi));
-        ventralInput = NMJ_VD*n.NeuronOutput(nn(VD,mi)) + NMJ_VA*n.NeuronOutput(nn(VA,mi)) + NMJ_VB*n.NeuronOutput(nn(VB,mi));
+        dorsalInput  = NMJ_AS*n_ptr->NeuronOutput(nn(AS,mi)) + NMJ_DA*n_ptr->NeuronOutput(nn(DA,mi)) + NMJ_DB*n_ptr->NeuronOutput(nn(DB,mi)) + NMJ_DD*n_ptr->NeuronOutput(nn(DD,mi));
+        ventralInput = NMJ_VD*n_ptr->NeuronOutput(nn(VD,mi)) + NMJ_VA*n_ptr->NeuronOutput(nn(VA,mi)) + NMJ_VB*n_ptr->NeuronOutput(nn(VB,mi));
         for (int i = 17 + 4*(mi-6); i < 17 + 4*(mi-5); i++){
             m.SetVentralMuscleInput(i, NMJ_Gain(i)*ventralInput);
             m.SetDorsalMuscleInput(i, NMJ_Gain(i)*dorsalInput);
@@ -213,7 +213,7 @@ void Worm21::Step(double StepSize)
 }
 
 
-void Worm21::DumpActState(ofstream &ofs, int skips)
+void Worm::DumpActState(ofstream &ofs, int skips)
 {
     static int tt = skips;
     
@@ -226,7 +226,7 @@ void Worm21::DumpActState(ofstream &ofs, int skips)
         //ofs << "\nV: ";
         for (int i = 1; i <= par1.N_units; i++) {
             for (int j = 1; j <= par1.N_neuronsperunit; j++) {
-                ofs <<  " " << n.NeuronOutput(nn(j,i));
+                ofs <<  " " << n_ptr->NeuronOutput(nn(j,i));
             }
         }
         // Muscles
@@ -238,7 +238,7 @@ void Worm21::DumpActState(ofstream &ofs, int skips)
     }
 }
 
-void Worm21::DumpCurvature(ofstream &ofs, int skips)
+void Worm::DumpCurvature(ofstream &ofs, int skips)
 {
     
     double dx1,dy1,dx2,dy2,a,a1,a2,seg;
@@ -275,6 +275,6 @@ void Worm21::DumpCurvature(ofstream &ofs, int skips)
 }
 
 
-void Worm21::DumpParams(ofstream &ofs)
-{ofs << "Biases: \n DB: " << n.NeuronBias(DB) << "\n VB/P: " << n.NeuronBias(VB) << " / " << n.NeuronBias(VB)  << "\n VDA/P: " << n.NeuronBias(VD) <<  " / " << n.NeuronBias(VD) << endl;
+void Worm::DumpParams(ofstream &ofs)
+{ofs << "Biases: \n DB: " << n_ptr->NeuronBias(DB) << "\n VB/P: " << n_ptr->NeuronBias(VB) << " / " << n_ptr->NeuronBias(VB)  << "\n VDA/P: " << n_ptr->NeuronBias(VD) <<  " / " << n_ptr->NeuronBias(VD) << endl;
 }

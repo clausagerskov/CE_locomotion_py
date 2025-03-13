@@ -9,6 +9,7 @@
 #include "random.h"
 #include <iostream>
 #include <math.h>
+#include "../neuromlLocal/NervousSystemBase.h"
 
 #pragma once
 
@@ -36,7 +37,8 @@ inline double InverseSigmoid(double y)
 
 // The NervousSystem class declaration
 
-class NervousSystem {
+class NervousSystem : public NervousSystemBase {
+//class NervousSystem : public NervousSystemInt<NervousSystem> {
     public:
         // The constructor
         NervousSystem(int size = 0, int maxchemconns = -1, int maxelecconns = -1);
@@ -63,6 +65,9 @@ class NervousSystem {
         double ElectricalSynapseWeight(int from, int to);
         void InternalSetElectricalSynapseWeight(int from, int to, double value);
         void SetElectricalSynapseWeight(int n1, int n2, double value);
+
+
+        //virtual NervousSystem* clone() const {return new NervousSystem(*this);}
 
         // Input and output
         friend ostream& operator<<(ostream& os, NervousSystem& c);

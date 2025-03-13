@@ -1,6 +1,5 @@
 #include "Worm.h"
-#include <nlohmann/json.hpp>
-#include <vector>
+
 #include "jsonUtils.h"
 #include <iomanip>
 #include "../argUtils.h"
@@ -303,6 +302,24 @@ parvec.push_back(par);}
 
 return parvec;
 } */
+
+void appendBodyToJson(json & j, WormBody& b)
+{
+{Params<double> par = getBodyParams(b);
+    appendToJson<double>(j["Body"],par);}
+
+{Params<int> par = getBodyParamsInts(b);
+    appendToJson<int>(j["Body"],par);}
+} 
+
+void appendMuscleToJson(json & j, Muscles & m)
+{
+{Params<double> par = getMusclesParamsDouble(m);
+appendToJson<double>(j["Muscle"],par);}
+{Params<int> par = getMusclesParamsInt(m);
+appendToJson<int>(j["Muscle"],par);}
+}
+
 
 
 

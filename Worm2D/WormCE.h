@@ -12,7 +12,7 @@
 //#include "../neuromlLocal/c302NervousSystem.h"
 //#include "NervousSystem.h"
 //#include "Muscles.h"
-#include "StretchReceptor.h"
+#include "StretchReceptorCE.h"
 //#include "NervousSystemBase.h"
 
 #include "Worm2D.h"
@@ -59,10 +59,10 @@ using namespace std;
 //bool checkNervousSystemForJson();
 
 
-class WormCE : public WormIzq {
+class Worm : public WormIzq {
 public:
 
-    WormCE(TVector<double> &v, double output);
+    Worm(TVector<double> &v, double output);
 
     //Worm::Worm(TVector<double> &v,double output);
 
@@ -76,7 +76,7 @@ public:
     void DumpParams(ofstream &ofs);
     void DumpCurvature(ofstream &ofs, int skips);
     
-    ~Worm(){if (n_ptr!=nullptr) delete n_ptr;}
+    
     
     //double CoMx();
     //double CoMy();
@@ -88,6 +88,7 @@ public:
 
     //NervousSystemBase *n_ptr;
     StretchReceptor sr;
+   
 
     //    double t; // Time
 
@@ -107,6 +108,9 @@ public:
     const int VD = 4;
     const int VA = 5;
     const int VB = 6;
+
+    //const int Head = 1;
+    //const int Tail = N_segments;
 };
 
 //class wormForJson : public Worm<NervousSystem> {};

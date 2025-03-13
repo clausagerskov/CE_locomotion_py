@@ -8,7 +8,7 @@
 
 //#include "VectorMatrix.h"
 //#include "random.h"
-//#include "WormBody.h"
+//#include "WormBody21.h"
 //#include "NervousSystem.h"
 //#include "Muscles.h"
 #include "Worm2D.h"
@@ -32,10 +32,10 @@ using namespace std;
 //const int Head = 1;
 //const int Tail = N_segments;
 
-class Worm21 : public WormIzq {
+class Worm : public WormIzq {
 public:
     
-    Worm21(TVector<double> &v);
+    Worm(TVector<double> &v);
     
     void InitializeState(RandomState &rs);
     void Step(double StepSize);
@@ -49,6 +49,8 @@ public:
     void SetAVB(double value) {AVB = value;};
     
     private:
+    
+    
 
     // Neuromuscular junctions
     double NMJ_AS, NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD;
@@ -76,5 +78,6 @@ public:
     const int VB = 6;
     const int VA = 7;
 
-
+    //const int Head = 1;
+    //const int Tail = N_segments;
 };

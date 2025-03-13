@@ -25,10 +25,10 @@ bool headsr;
 bool vncsr;
 };
 
-class WormRS18 : public WormIzq {
+class Worm : public WormIzq {
 public:
     
-    WormRS18(TVector<double> &v, double output);
+    Worm(TVector<double> &v, double output);
    
     void InitializeState(RandomState &rs);
     void HeadStep(double StepSize, double output);
@@ -88,6 +88,8 @@ public:
     const int SMDV = 3;
     const int RMDV = 4;
 
+    //const int Head = 1;
+    //const int Tail = N_segments;
 
     const RS18Macros rS18Macros;
     RS18Macros setMacros();
