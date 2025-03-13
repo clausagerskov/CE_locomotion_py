@@ -770,11 +770,6 @@ void writeParsToJson(wormForJson & w)
   cout << "making json" << endl;
   vector<doubIntParamsHead> evolutionParams;
   doubIntParamsHead var1 = supArgs1.getParams();
-  /* var1.parInt.head = "Evolutionary Optimization Parameters";
-  var1.parInt.names = {"pop_size", "Duration", "randomseed"};
-  var1.parInt.vals = {supArgs1.pop_size, Duration, supArgs1.randomseed};
-  var1.parInt.messages ={"population size", "optimization simulation duration", "seed"};
-  var1.parInt.messages_inds = {0,1,2}; */
   evolutionParams.push_back(var1);
 
   writeParsToJson(w, "worm_data.json", evolutionParams);
