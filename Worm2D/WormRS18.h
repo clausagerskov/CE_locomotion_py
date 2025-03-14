@@ -40,8 +40,11 @@ public:
     
     
     private:
+    
+    void addExtraParsToJson(json & j);
+    const vector<string> & getCellNames() {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};}
+    Params<double> getWormParams();
 
-  
     //WormBody b;
     //Muscles m;
     //NervousSystem n;

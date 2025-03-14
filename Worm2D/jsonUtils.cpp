@@ -1,4 +1,4 @@
-#include "Worm.h"
+//#include "Worm.h"
 
 #include "jsonUtils.h"
 #include <iomanip>
@@ -90,12 +90,12 @@ return par;
 
 
 
-Params< vector<string> > getNervousSysCellNames(vector<string> & cell_names, int neurons_per_unit)
+Params< vector<string> > getNervousSysCellNames(const vector<string> & cell_names, int n_units)
 {
 Params< vector<string> > par;
 par.names = {"Cell name"};
 vector<string> cell_names_all;
-for (int i=0;i<neurons_per_unit;i++) cell_names_all.insert(cell_names_all.end(),cell_names.begin(),cell_names.end());
+for (int i=0;i<n_units;i++) cell_names_all.insert(cell_names_all.end(),cell_names.begin(),cell_names.end());
 par.vals = {cell_names_all};
 return par;
 }
@@ -307,7 +307,6 @@ void appendBodyToJson(json & j, WormBody& b)
 {
 {Params<double> par = getBodyParams(b);
     appendToJson<double>(j["Body"],par);}
-
 {Params<int> par = getBodyParamsInts(b);
     appendToJson<int>(j["Body"],par);}
 } 
@@ -320,7 +319,11 @@ appendToJson<double>(j["Muscle"],par);}
 appendToJson<int>(j["Muscle"],par);}
 }
 
-
+void appendCellNamesToJson(json & j, const vector<string> & cell_names, const int & num_reps)
+{
+    Params< vector<string> > parvec = getNervousSysCellNames(cell_names, num_reps);
+    appendToJson<vector<string> >(j,parvec);
+}
 
 
 void writeParsToJson(Worm & w)

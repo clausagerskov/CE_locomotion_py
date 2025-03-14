@@ -304,7 +304,25 @@ if (rS18Macros.vncsr)
     t += StepSize;
 }
 
+void Worm18::addExtraParsToJson(json & j)
+{
+    string nsHead = "Head Nervous system";
+    getNSJson(h, j[nsHead]);
+    vector<string> cell_names = {"SMDD", "RMDD", "SMDV", "RMDV"};
+    appendCellNamesToJson(j[nsHead], cell_names, par1.N_units);
+    Params<double> par = getStretchReceptorParams(sr);
+    appendToJson<double>(j["Stretch receptor"], par);
+}
 
+Params<double> Worm18::getWormParams()
+{
+Params<double> par;
+par.vals = {NMJ_DB, NMJ_VBa, NMJ_VBp, NMJ_DD, NMJ_VDa, NMJ_VDp, 
+    NMJ_SMDD, NMJ_SMDV, NMJ_RMDD, NMJ_RMDV, NMJ_Gain_Map};
+par.names = {"NMJ_DB", "NMJ_VBa", "NMJ_VBp", "NMJ_DD", "NMJ_VDa", "NMJ_VDp",
+    "NMJ_SMDD", "NMJ_SMDV", "NMJ_RMDD", "NMJ_RMDV", "NMJ Gain"};
+return par;
+}
 
 // Dump the state to OFS if SKIPS steps have been performed
 
@@ -366,6 +384,8 @@ void Worm18::DumpVoltage(ofstream &ofs, int skips)
         ofs << "\n";
     }
 }
+
+
 
 void Worm18::DumpParams(ofstream &ofs)
 {

@@ -1,5 +1,5 @@
 #include "Worm2D.h"
-#include "jsonUtils.h"
+
 
 WormIzq::WormIzq(wormIzqParams par1_):par1(par1_),n_ptr(new NervousSystem)
 {
@@ -132,5 +132,9 @@ void WormIzq::addParsToJson(json & j)
     appendMuscleToJson(j,m);
     string nsHead = "Nervous system";
     getNSJson(static_cast<NervousSystem&>(*n_ptr), j[nsHead]);
-
+    appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
+    Params<double> par = getWormParams();
+    appendToJson<double>(j["Worm"],par);
+    
+    addExtraParsToJson(j);
 }

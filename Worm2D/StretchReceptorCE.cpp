@@ -9,12 +9,12 @@
 
 #include "StretchReceptorCE.h"
 
-StretchReceptor::StretchReceptor(int nSegs, int nSR, double ASRgain, double BSRgain)
+StretchReceptorCE::StretchReceptorCE(int nSegs, int nSR, double ASRgain, double BSRgain)
 {
     SetStretchReceptorParams(nSegs, nSR, ASRgain, BSRgain);
 }
 
-void StretchReceptor::SetStretchReceptorParams(int nSegs, int nSR, double ASRgain, double BSRgain)
+void StretchReceptorCE::SetStretchReceptorParams(int nSegs, int nSR, double ASRgain, double BSRgain)
 {
     NSEGS = nSegs;                  // Number of segments
     NSR = nSR;                      // Number of stretch receptors
@@ -30,7 +30,7 @@ void StretchReceptor::SetStretchReceptorParams(int nSegs, int nSR, double ASRgai
     B_V_sr.SetBounds(1, NSR);
 }
 
-void StretchReceptor::Update()
+void StretchReceptorCE::Update()
 {
     double d, v;    
     //////////////////////////////

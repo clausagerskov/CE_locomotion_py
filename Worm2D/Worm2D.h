@@ -4,7 +4,7 @@
 #include "WormBody.h"
 #include "NervousSystem.h"
 #include <nlohmann/json.hpp>
-
+#include "jsonUtils.h"
 
 
 using json = nlohmann::json;
@@ -34,6 +34,7 @@ public:
     virtual void InitializeState(RandomState &rs) = 0;
     virtual void Step(double StepSize, double output) = 0;
     void addParsToJson(json & j);
+    
 
     double CoMx();
     double CoMy();
@@ -48,6 +49,7 @@ public:
     ~WormIzq(){if (n_ptr) delete n_ptr;}
 
     protected:
+    
 
     double t; // Time
 
@@ -59,7 +61,11 @@ public:
     // Body segment name conventions
     const int Head = 1;
     const int Tail = N_segments;
+    private:
 
-    void setUp();
+    virtual void setUp();
     int nn(int neuronNumber, int unitNumber);
+    virtual const vector<string> & getCellNames() = 0;
+    virtual void addExtraParsToJson(json & j) = 0;
+    virtual Params<double> getWormParams() = 0;
 };

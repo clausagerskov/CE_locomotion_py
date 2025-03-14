@@ -6,14 +6,14 @@
 //  Copyright © 2015 Eduardo Izquierdo. All rights reserved.
 //
 
-#include "StretchReceptor.h"
+#include "StretchReceptor18.h"
 
-StretchReceptor::StretchReceptor(int nSegs, int nSR, double srvncgain, double srheadgain)
+StretchReceptor18::StretchReceptor18(int nSegs, int nSR, double srvncgain, double srheadgain)
 {
     SetStretchReceptorParams(nSegs, nSR, srvncgain, srheadgain);
 }
 
-void StretchReceptor::SetStretchReceptorParams(int nSegs, int nSR, double srvncgain, double srheadgain)
+void StretchReceptor18::SetStretchReceptorParams(int nSegs, int nSR, double srvncgain, double srheadgain)
 {
     NSEGS = nSegs;                  // Number of segments
     NSR = nSR;                      // Number of stretch receptors
@@ -32,7 +32,7 @@ void StretchReceptor::SetStretchReceptorParams(int nSegs, int nSR, double srvncg
     VP_sr.SetBounds(1, NSR);
 }
 
-void StretchReceptor::Update()
+void StretchReceptor18::Update()
 {
     double d, v;
 
