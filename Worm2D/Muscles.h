@@ -3,7 +3,7 @@
 //
 //  Copyright (c) 2015 Eduardo Izquierdo. All rights reserved.
 //
-
+#pragma once
 #include "VectorMatrix.h"
 #include "random.h"
 #include <cmath>

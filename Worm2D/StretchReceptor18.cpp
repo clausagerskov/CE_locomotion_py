@@ -32,6 +32,19 @@ void StretchReceptor18::SetStretchReceptorParams(int nSegs, int nSR, double srvn
     VP_sr.SetBounds(1, NSR);
 }
 
+Params<double> StretchReceptor18::getStretchReceptorParams()
+{
+Params<double> par;
+par.names = {"NSR", "NSEGS", "NSEGSSR", "VNC_gain", "Head_gain", 
+    "NSEGSHEADSTART", "NSEGSHEAD", "NSEGSVNCSTART"};
+par.vals = {NSR, NSEGS, NSEGSSR, SRvncgain, SRheadgain, NSEGSHEADSTART, NSEGSHEAD, NSEGSVNCSTART};
+par.messages = {"Number of stretch receptor",
+                "Number of segments in the body",
+                "Number of segments sensed by each stretch receptor"};
+par.messages_inds = {0,1,2}; //must be ordered
+return par;
+}
+
 void StretchReceptor18::Update()
 {
     double d, v;

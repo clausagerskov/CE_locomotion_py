@@ -20,7 +20,9 @@ public:
     void SetStretchReceptorParams(int nSegs, int nSR, double SRVNCgain, double SRHeadgain);
     
     void Update();
-    
+    Params<double> getStretchReceptorParams();
+
+
     void SetDorsalInput(int seg, double normlen){normSegLenD(seg) = normlen;};
     void SetVentralInput(int seg, double normlen){normSegLenV(seg) = normlen;};
     

@@ -86,8 +86,12 @@ public:
 
     private:
 
+    const vector<string> & getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
+    void addExtraParsToJson(json & j);
+    //Params<double> getWormParams();
+    vector<doubIntParamsHead> getWormParams();
     //NervousSystemBase *n_ptr;
-    StretchReceptor sr;
+    StretchReceptorCE sr;
    
 
     //    double t; // Time
@@ -101,6 +105,7 @@ public:
 
     const int NmusclePerNU = 4;             // All the way down to 24, in groups of 3 per unit
 
+   
     // Motoneuron name conventions
     const int DA = 1;
     const int DB = 2;

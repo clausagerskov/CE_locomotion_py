@@ -21,6 +21,7 @@ public:
     void SetStretchReceptorParams(int nSegs, int nSR, double A_SR_gain, double B_SR_gain);
     
     void Update();
+    Params<double> getStretchReceptorParams();
     
     // Load segment deformation information
     void SetDorsalInput(int seg, double normlen){normSegLenD(seg) = normlen;};

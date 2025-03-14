@@ -127,14 +127,25 @@ void WormIzq::DumpBodyState(ofstream &ofs, int skips)
 }
 
 void WormIzq::addParsToJson(json & j)
-{
+{  
+     // addwormIzqParams
+    doubIntParamsHead par1pars = par1.getParams();
+    appendToJson<double>(j[par1pars.parDoub.head],par1pars.parDoub);
+    appendToJson<long>(j[par1pars.parInt.head],par1pars.parInt);
+
     appendBodyToJson(j, b);
     appendMuscleToJson(j,m);
     string nsHead = "Nervous system";
-    getNSJson(static_cast<NervousSystem&>(*n_ptr), j[nsHead]);
+    appendAllNSJson(j[nsHead], static_cast<NervousSystem&>(*n_ptr));
     appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
-    Params<double> par = getWormParams();
-    appendToJson<double>(j["Worm"],par);
-    
+
+    vector<doubIntParamsHead> parvec = getWormParams();
+    for (size_t i=0;i<parvec.size(); i++) {
+        if (strcmp(parvec[i].parDoub.head.c_str(),"NULL")!=0)
+        appendToJson<double>(j[parvec[i].parDoub.head],parvec[i].parDoub);
+        if (strcmp(parvec[i].parInt.head.c_str(),"NULL")!=0)
+        appendToJson<long>(j[parvec[i].parInt.head],parvec[i].parInt);
+        }
+
     addExtraParsToJson(j);
 }

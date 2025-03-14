@@ -49,8 +49,10 @@ public:
     void SetAVB(double value) {AVB = value;};
     
     private:
-    
-    
+
+    const vector<string> & getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
+    void addExtraParsToJson(json & j){}
+    vector<doubIntParamsHead> getWormParams();
 
     // Neuromuscular junctions
     double NMJ_AS, NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD;
@@ -69,6 +71,7 @@ public:
     const int startingMuscleB = 13;       // XXX
     const int NmusclePerNUB = 4;
     
+    
     // Neuron name conventions
     const int AS = 1;
     const int DA = 2;
@@ -78,6 +81,7 @@ public:
     const int VB = 6;
     const int VA = 7;
 
+    
     //const int Head = 1;
     //const int Tail = N_segments;
 };

@@ -11,7 +11,7 @@
 //#include "WormBody.h"
 //#include "NervousSystem.h"
 //#include "Muscles.h"
-#include "StretchReceptor.h"
+#include "StretchReceptor18.h"
 #include "Worm2D.h"
 
 #include <cmath>
@@ -40,15 +40,17 @@ public:
     
     
     private:
-    
-    void addExtraParsToJson(json & j);
-    const vector<string> & getCellNames() {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};}
-    Params<double> getWormParams();
 
+    void addExtraParsToJson(json & j);
+    const vector<string> getCellNames() {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};}
+    //Params<double> getWormParams();
+
+    vector<doubIntParamsHead> getWormParams();
+    
     //WormBody b;
     //Muscles m;
     //NervousSystem n;
-    StretchReceptor sr;
+    StretchReceptor18 sr;
     NervousSystem h;
     
     
@@ -76,6 +78,8 @@ public:
     const int HeadMotorNeuronMuscles = 6;  // Head motorneurons innervate first 8 muscles (temporarily first 6)
     const int VNCMuscleStart = 7;           // VNC motorneurons innervate starting from 7th muscle
     const int NmusclePerNU = 3;             // All the way down to 24, in groups of 3 per unit
+
+    
 
     // Neuron name conventions
     const int DB = 1;

@@ -17,7 +17,7 @@
 // Copyright (c) 2014 Randall Beer. All rights reserved.
 //
 // Revision History
-
+#pragma once
 #include <iostream>
 #include <stdlib.h> 
 #include <cmath>

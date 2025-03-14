@@ -20,10 +20,24 @@ class Worm2D {
 
 struct wormIzqParams
 {
+    
     int N_neuronsperunit;
     int N_muscles;
     double T_muscle;
     int N_units;
+
+    const doubIntParamsHead getParams() const
+    {
+        doubIntParamsHead var1;
+        var1.parDoub.head = "Worm";
+        var1.parInt.head = "Worm";
+        var1.parDoub.names = {"T_muscle"};
+        var1.parDoub.vals = {T_muscle};
+        var1.parInt.names = {"N_neuronsperunit", "N_muscles", "N_units"};
+        var1.parInt.vals = {N_neuronsperunit, N_muscles, N_units};
+        return var1;
+    }
+
 };
 
 class WormIzq: public Worm2D
@@ -50,7 +64,7 @@ public:
 
     protected:
     
-
+    int nn(int neuronNumber, int unitNumber);
     double t; // Time
 
     Muscles m;
@@ -64,8 +78,9 @@ public:
     private:
 
     virtual void setUp();
-    int nn(int neuronNumber, int unitNumber);
-    virtual const vector<string> & getCellNames() = 0;
+    
+    virtual const vector<string> getCellNames() = 0;
     virtual void addExtraParsToJson(json & j) = 0;
-    virtual Params<double> getWormParams() = 0;
+    //virtual Params<double> getWormParams() = 0;
+    virtual vector<doubIntParamsHead> getWormParams() = 0;
 };

@@ -30,6 +30,19 @@ void StretchReceptorCE::SetStretchReceptorParams(int nSegs, int nSR, double ASRg
     B_V_sr.SetBounds(1, NSR);
 }
 
+Params<double> StretchReceptorCE::getStretchReceptorParams()
+{
+Params<double> par;
+par.names = {"NSR", "NSEGS", "NSEGSSR", "SR_A_gain", "SR_B_gain"};
+par.vals = {NSR,NSEGS,NSEGSSR,SR_A_gain,SR_B_gain};
+par.messages = {"Number of stretch receptor in DA, DB, VA and VB, equal to number of units",
+                                "Number of segments in the body",
+                                "Number of segments sensed by each stretch receptor"};
+par.messages_inds = {0,1,2}; //must be ordered
+return par;
+}
+
+
 void StretchReceptorCE::Update()
 {
     double d, v;    

@@ -212,6 +212,31 @@ void Worm21::Step(double StepSize)
     t += StepSize;
 }
 
+vector<doubIntParamsHead> Worm21::getWormParams(){
+
+    vector<doubIntParamsHead> parvec;
+    doubIntParamsHead var1;
+    
+    var1.parDoub.head = "Worm";
+    var1.parDoub.names = {"NMJ_AS", "NMJ_DA", "NMJ_DB", "NMJ_VD", "NMJ_VB", "NMJ_VA", "NMJ_DD"};
+    var1.parDoub.vals = {NMJ_AS, NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD};
+
+    append<string>(var1.parDoub.names,{"wAVA_DA", "wAVA_VA", "wAVB_DB", "wAVB_VB", "AVA, AVB"});
+    append<double>(var1.parDoub.vals, {wAVA_DA, wAVA_VA, wAVB_DB, wAVB_VB, AVA, AVB});
+   
+  
+    var1.parInt.head = "Worm";
+    var1.parInt.vals = {startingMuscleA,NmusclePerNUA, startingMuscleB,NmusclePerNUB};
+    var1.parInt.names = {"startingMuscleA","NmusclePerNUA", "startingMuscleB","NmusclePerNUB"};
+    
+  
+    parvec.push_back(var1);
+    return parvec;
+  
+}
+
+
+
 
 void Worm21::DumpActState(ofstream &ofs, int skips)
 {

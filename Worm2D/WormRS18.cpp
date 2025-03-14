@@ -307,14 +307,41 @@ if (rS18Macros.vncsr)
 void Worm18::addExtraParsToJson(json & j)
 {
     string nsHead = "Head Nervous system";
-    getNSJson(h, j[nsHead]);
+    appendAllNSJson(j[nsHead], h);
     vector<string> cell_names = {"SMDD", "RMDD", "SMDV", "RMDV"};
     appendCellNamesToJson(j[nsHead], cell_names, par1.N_units);
-    Params<double> par = getStretchReceptorParams(sr);
+    Params<double> par = sr.getStretchReceptorParams();
     appendToJson<double>(j["Stretch receptor"], par);
 }
 
-Params<double> Worm18::getWormParams()
+
+vector<doubIntParamsHead> Worm18::getWormParams(){
+
+    vector<doubIntParamsHead> parvec;
+    doubIntParamsHead var1;
+
+    var1.parDoub.head = "Worm";
+    var1.parDoub.names = {"NMJ_DB", "NMJ_VBa", "NMJ_VBp", "NMJ_DD", "NMJ_VDa", "NMJ_VDp",
+    "NMJ_SMDD", "NMJ_SMDV", "NMJ_RMDD", "NMJ_RMDV", "NMJ Gain"};
+    var1.parDoub.vals = {NMJ_DB, NMJ_VBa, NMJ_VBp, NMJ_DD, NMJ_VDa, NMJ_VDp, 
+    NMJ_SMDD, NMJ_SMDV, NMJ_RMDD, NMJ_RMDV, NMJ_Gain_Map};
+
+    var1.parInt.head = "Worm";
+    var1.parInt.names = {"N_stretchrec", "HeadMotorNeuronMuscles", "VNCMuscleStart", "NmusclePerNU"};
+    var1.parInt.vals = {N_stretchrec, HeadMotorNeuronMuscles, VNCMuscleStart, NmusclePerNU};
+    var1.parInt.messages = {"Number of stretch receptors", 
+        "Head motorneurons innervate first 8 muscles (temporarily first 6)",
+        "VNC motorneurons innervate starting from 7th muscle",
+        "All the way down to 24, in groups of 3 per unit"};
+    var1.parInt.messages_inds = {0,1,2,3};
+    
+    parvec.push_back(var1);
+    return parvec;
+
+}
+
+
+/* Params<double> Worm18::getWormParams()
 {
 Params<double> par;
 par.vals = {NMJ_DB, NMJ_VBa, NMJ_VBp, NMJ_DD, NMJ_VDa, NMJ_VDp, 
@@ -323,7 +350,7 @@ par.names = {"NMJ_DB", "NMJ_VBa", "NMJ_VBp", "NMJ_DD", "NMJ_VDa", "NMJ_VDp",
     "NMJ_SMDD", "NMJ_SMDV", "NMJ_RMDD", "NMJ_RMDV", "NMJ Gain"};
 return par;
 }
-
+ */
 // Dump the state to OFS if SKIPS steps have been performed
 
 
