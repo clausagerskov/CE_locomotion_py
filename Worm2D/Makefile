@@ -9,9 +9,9 @@ TSearch.o: TSearch.cpp TSearch.h
 argUtils.o: ../argUtils.cpp ../argUtils.h
 	g++ -c -O3 -flto ../argUtils.cpp
 Worm2D.o: Worm2D.cpp Worm2D.h
-	g++ -c -O3 -flto Worm2D.cpp
+	g++ -c -O3 -std=c++11 -flto Worm2D.cpp
 WormRS18.o: WormRS18.cpp WormRS18.h
-	g++ -c -O3 -flto WormRS18.cpp
+	g++ -c -O3 -std=c++11 -flto WormRS18.cpp
 WormBody.o: WormBody.cpp WormBody.h
 	g++ -c -O3 -flto WormBody.cpp
 NervousSystem.o: NervousSystem.cpp NervousSystem.h VectorMatrix.h random.h

@@ -1,5 +1,5 @@
 #include "Worm2D.h"
-
+#include <iomanip>
 
 WormIzq::WormIzq(wormIzqParams par1_):par1(par1_),n_ptr(new NervousSystem)
 {
@@ -14,7 +14,6 @@ WormIzq::WormIzq(wormIzqParams par1_):par1(par1_),n_ptr(new NervousSystem)
 void WormIzq::setUp()
 {
     m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
-
 }
 
 int WormIzq::nn(int neuronNumber, int unitNumber)
@@ -124,6 +123,18 @@ void WormIzq::DumpBodyState(ofstream &ofs, int skips)
         }
         ofs << "\n";
     }
+}
+
+void WormIzq::writeJsonFile()
+{
+
+    json j;
+    addParsToJson(j);
+    //ofstream json_out(supArgs1.rename_file("worm_data.json"));
+    ofstream json_out("worm_data.json");
+    json_out << std::setw(4) << j << std::endl;
+    json_out.close();
+
 }
 
 void WormIzq::addParsToJson(json & j)

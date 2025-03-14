@@ -3,11 +3,11 @@
 #include "Muscles.h"
 #include "WormBody.h"
 #include "NervousSystem.h"
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 #include "jsonUtils.h"
 
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 #define PI 3.14159265
 
@@ -48,7 +48,7 @@ public:
     virtual void InitializeState(RandomState &rs) = 0;
     virtual void Step(double StepSize, double output) = 0;
     void addParsToJson(json & j);
-    
+    void writeJsonFile();
 
     double CoMx();
     double CoMy();

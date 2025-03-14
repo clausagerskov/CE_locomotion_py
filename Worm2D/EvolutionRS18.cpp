@@ -1,4 +1,4 @@
-#include "Evolution.h"
+#include "EvolutionRS18.h"
 #include <math.h>
 #include "WormRS18.h"
 
@@ -81,6 +81,8 @@ double EvolutionRS18::EvaluationFunction(TVector<double> &v, RandomState &rs)
 {
     double fitness;
     ofstream fitfile;
+  
+
     if (supArgs1.speedoutput)
     {
 
@@ -116,17 +118,19 @@ if (supArgs1.output){
 
 if (supArgs1.output){
     w.DumpParams(paramsfile);
-    writeParsToJson(w);
+    //writeParsToJson(w);
 }
 
 
     w.InitializeState(rs);
 
+
+
     // Transient
     for (double t = 0.0; t <= Transient; t += StepSize)
     {
         w.Step(StepSize, 1);
-        if (supArgs1.output)
+       
 
 if (supArgs1.output)
     {
