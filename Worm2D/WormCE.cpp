@@ -1,5 +1,5 @@
 //
-//  Worm.cpp
+//  WormCE.cpp
 //  one
 //
 //  Created by Eduardo Izquierdo on 9/25/15.
@@ -19,7 +19,7 @@ return new c302NervousSystem();
 }
  */
 
-Worm::Worm(TVector<double> &v,double output):WormIzq({6,24,0.1,10})//,n_ptr(makeNervousSystem())
+WormCE::WormCE(TVector<double> &v,double output):WormIzq({6,24,0.1,10})//,n_ptr(makeNervousSystem())
 {
 
   // PG: Setting these to zero as they were not initialised before use!
@@ -112,9 +112,11 @@ Worm::Worm(TVector<double> &v,double output):WormIzq({6,24,0.1,10})//,n_ptr(make
   AVB_output = 0.0;
 }
 
-void Worm::InitializeState(RandomState &rs)
+void WormCE::InitializeState(RandomState &rs)
 {
-  t = 0.0;
+  
+
+  WormIzq::InitializeState(rs);
   //n_ptr->RandomizeCircuitState(-1.0, 1.0, rs);
   if (!supArgs1.randomInit)
   { 
@@ -140,12 +142,10 @@ void Worm::InitializeState(RandomState &rs)
 
 
 
-  b.InitializeBodyState();
-  m.InitializeMuscleState();
 }
 
 
-void Worm::Step(double StepSize, double output)
+void WormCE::Step(double StepSize, double output)
 {
   int mi;
   int mt = 0;
@@ -271,7 +271,7 @@ void Worm::Step(double StepSize, double output)
 }
 
 
-void Worm::DumpActState(ofstream &ofs, int skips)
+void WormCE::DumpActState(ofstream &ofs, int skips)
 {
   static int tt = skips;
 
@@ -301,7 +301,7 @@ void Worm::DumpActState(ofstream &ofs, int skips)
 }
 
 
-void Worm::DumpCurvature(ofstream &ofs, int skips)
+void WormCE::DumpCurvature(ofstream &ofs, int skips)
 {
 
   double dx1,dy1,dx2,dy2,a,a1,a2,seg;
@@ -338,7 +338,7 @@ void Worm::DumpCurvature(ofstream &ofs, int skips)
 }
 
 
-void Worm::DumpVoltage(ofstream &ofs, int skips)
+void WormCE::DumpVoltage(ofstream &ofs, int skips)
 {
   static int tt = skips;
 
@@ -358,7 +358,7 @@ void Worm::DumpVoltage(ofstream &ofs, int skips)
 
 
 
-void Worm::DumpParams(ofstream &ofs) {
+void WormCE::DumpParams(ofstream &ofs) {
   ofs << "Time-constants: \n" <<
   "\n DA: " << n_ptr->NeuronTimeConstant(DA) <<
   "\n DB: " << n_ptr->NeuronTimeConstant(DB) <<

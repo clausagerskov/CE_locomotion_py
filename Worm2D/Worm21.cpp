@@ -1,5 +1,5 @@
 //
-//  Worm.cpp
+//  Worm21.cpp
 //  one
 //
 //  Created by Eduardo Izquierdo on 9/25/15.
@@ -13,7 +13,7 @@
 extern SuppliedArgs2021 supArgs1;
 
 // The constructor
-Worm::Worm(TVector<double> &v):WormIzq({7,24,0.1,7})
+Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
 {
     // Muscles
     //m.SetMuscleParams(N_muscles, T_muscle);
@@ -127,14 +127,14 @@ Worm::Worm(TVector<double> &v):WormIzq({7,24,0.1,7})
     }
 }
 
-void Worm::InitializeState(RandomState &rs)
+void Worm21::InitializeState(RandomState &rs)
 {    
     WormIzq::InitializeState(rs);
     n_ptr->RandomizeCircuitOutput(0.5, 0.5, rs); //fix this error!! adam (should be -0.5?)
     
 }
 
-void Worm::Step(double StepSize)
+void Worm21::Step(double StepSize)
 {
     int mi;
     double dorsalInput, ventralInput;
@@ -213,7 +213,7 @@ void Worm::Step(double StepSize)
 }
 
 
-void Worm::DumpActState(ofstream &ofs, int skips)
+void Worm21::DumpActState(ofstream &ofs, int skips)
 {
     static int tt = skips;
     
@@ -238,7 +238,7 @@ void Worm::DumpActState(ofstream &ofs, int skips)
     }
 }
 
-void Worm::DumpCurvature(ofstream &ofs, int skips)
+void Worm21::DumpCurvature(ofstream &ofs, int skips)
 {
     
     double dx1,dy1,dx2,dy2,a,a1,a2,seg;
@@ -275,6 +275,6 @@ void Worm::DumpCurvature(ofstream &ofs, int skips)
 }
 
 
-void Worm::DumpParams(ofstream &ofs)
+void Worm21::DumpParams(ofstream &ofs)
 {ofs << "Biases: \n DB: " << n_ptr->NeuronBias(DB) << "\n VB/P: " << n_ptr->NeuronBias(VB) << " / " << n_ptr->NeuronBias(VB)  << "\n VDA/P: " << n_ptr->NeuronBias(VD) <<  " / " << n_ptr->NeuronBias(VD) << endl;
 }

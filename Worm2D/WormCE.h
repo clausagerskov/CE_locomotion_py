@@ -59,10 +59,10 @@ using namespace std;
 //bool checkNervousSystemForJson();
 
 
-class Worm : public WormIzq {
+class WormCE : public WormIzq {
 public:
 
-    Worm(TVector<double> &v, double output);
+    WormCE(TVector<double> &v, double output);
 
     //Worm::Worm(TVector<double> &v,double output);
 

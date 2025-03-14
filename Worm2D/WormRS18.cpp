@@ -1,5 +1,5 @@
 //
-//  Worm.cpp
+//  Worm18.cpp
 //  one
 //
 //  Created by Eduardo Izquierdo on 9/25/15.
@@ -14,7 +14,7 @@
 
 //extern SuppliedArgs2018 supArgs1;
 
-RS18Macros Worm::setMacros()
+RS18Macros Worm18::setMacros()
 {
 bool headsr = 0;
 #ifdef HEADSR
@@ -28,7 +28,7 @@ return {headsr,vncsr};
 }
 
 // The constructor
-Worm::Worm(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),rS18Macros(setMacros())
+Worm18::Worm18(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),rS18Macros(setMacros())
 {
     
     // Nervous system // Ventral cord
@@ -177,7 +177,7 @@ Worm::Worm(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),rS18Macros(se
     }
 }
 
-void Worm::InitializeState(RandomState &rs)
+void Worm18::InitializeState(RandomState &rs)
 {
     WormIzq::InitializeState(rs);
 
@@ -186,7 +186,7 @@ void Worm::InitializeState(RandomState &rs)
     
 }
 
-void Worm::HeadStep(double StepSize, double output)
+void Worm18::HeadStep(double StepSize, double output)
 {
     // Update Nervous System
     h.EulerStep(StepSize);
@@ -195,7 +195,7 @@ void Worm::HeadStep(double StepSize, double output)
     t += StepSize;
 }
 
-void Worm::Step(double StepSize, double output)
+void Worm18::Step(double StepSize, double output)
 {
     int mi;
     int mt;
@@ -310,7 +310,7 @@ if (rS18Macros.vncsr)
 
 
 
-void Worm::DumpActState(ofstream &ofs, int skips)
+void Worm18::DumpActState(ofstream &ofs, int skips)
 {
     static int tt = skips;
 
@@ -345,7 +345,7 @@ void Worm::DumpActState(ofstream &ofs, int skips)
     }
 }
 
-void Worm::DumpVoltage(ofstream &ofs, int skips)
+void Worm18::DumpVoltage(ofstream &ofs, int skips)
 {
     static int tt = skips;
 
@@ -367,7 +367,7 @@ void Worm::DumpVoltage(ofstream &ofs, int skips)
     }
 }
 
-void Worm::DumpParams(ofstream &ofs)
+void Worm18::DumpParams(ofstream &ofs)
 {
     ofs << "Time-constants: \n DB: " << n_ptr->NeuronTimeConstant(DB) << "\n VBA/P: " << n_ptr->NeuronTimeConstant(VBA) << " / " << n_ptr->NeuronTimeConstant(VBP) << "\n DD: " << n_ptr->NeuronTimeConstant(DD) << "\n VDA/P: " << n_ptr->NeuronTimeConstant(VDA) << " / " << n_ptr->NeuronTimeConstant(VDP) << endl;
     ofs << "Biases: \n DB: " << n_ptr->NeuronBias(DB) << "\n VBA/P: " << n_ptr->NeuronBias(VBA) << " / " << n_ptr->NeuronBias(VBP)  <<  "\n DD: " << n_ptr->NeuronBias(DD) << "\n VDA/P: " << n_ptr->NeuronBias(VDA) <<  " / " << n_ptr->NeuronBias(VDP) << endl;

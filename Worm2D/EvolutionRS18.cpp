@@ -110,7 +110,7 @@ if (supArgs1.output){
     TVector<double> phenotype(1, VectSize);
     GenPhenMapping(v, phenotype);
 
-    Worm w(phenotype, 0);
+    Worm18 w(phenotype, 0);
     
 
 

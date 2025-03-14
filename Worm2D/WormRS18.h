@@ -25,10 +25,10 @@ bool headsr;
 bool vncsr;
 };
 
-class Worm : public WormIzq {
+class Worm18 : public WormIzq {
 public:
     
-    Worm(TVector<double> &v, double output);
+    Worm18(TVector<double> &v, double output);
    
     void InitializeState(RandomState &rs);
     void HeadStep(double StepSize, double output);

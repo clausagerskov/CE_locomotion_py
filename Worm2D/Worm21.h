@@ -32,10 +32,10 @@ using namespace std;
 //const int Head = 1;
 //const int Tail = N_segments;
 
-class Worm : public WormIzq {
+class Worm21 : public WormIzq {
 public:
     
-    Worm(TVector<double> &v);
+    Worm21(TVector<double> &v);
     
     void InitializeState(RandomState &rs);
     void Step(double StepSize);
