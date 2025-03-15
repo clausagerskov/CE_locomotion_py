@@ -370,7 +370,7 @@ if (supArgs1.evo_seed)
 {
     ifstream BestIndividualFile;
     TVector<double> bestVector(1, VectSize);
-    BestIndividualFile.open("best.gen.dat");
+    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
     BestIndividualFile >> bestVector;
     s.InitializeSearch();
     for (int i = 1; i <= s.PopulationSize(); i++){

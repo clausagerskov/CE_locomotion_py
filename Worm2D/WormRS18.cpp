@@ -12,7 +12,7 @@
 #define HEADSR
 #define VNCSR
 
-extern SuppliedArgs2018 supArgs1;
+//extern SuppliedArgs2018 supArgs1;
 
 
 RS18Macros Worm18::setMacros()
@@ -31,7 +31,7 @@ return {headsr,vncsr};
 // The constructor
 Worm18::Worm18(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),rS18Macros(setMacros())
 {
-    supArgs1.writeMessage();
+    //supArgs1.writeMessage();
     // Nervous system // Ventral cord
     n_ptr->SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 4, 4);
 

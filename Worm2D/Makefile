@@ -1,5 +1,5 @@
-main: main.o WormRS18.o Worm2D.o WormBody.o NervousSystem.o StretchReceptor18.o Muscles.o TSearch.o random.o argUtils.o jsonUtils.o
-	g++ -pthread -o main main.o WormRS18.o Worm2D.o WormBody.o argUtils.o NervousSystem.o StretchReceptor18.o Muscles.o jsonUtils.o TSearch.o random.o 
+main: main.o WormRS18.o Worm2D.o WormBody.o Evolution.o EvolutionRS18.o NervousSystem.o StretchReceptor18.o Muscles.o TSearch.o random.o argUtils.o jsonUtils.o
+	g++ -pthread -o main main.o WormRS18.o Evolution.o EvolutionRS18.o Worm2D.o WormBody.o argUtils.o NervousSystem.o StretchReceptor18.o Muscles.o jsonUtils.o TSearch.o random.o 
 random.o: random.cpp random.h VectorMatrix.h
 	g++ -c -O3 -flto random.cpp
 jsonUtils.o: jsonUtils.cpp jsonUtils.h
@@ -10,6 +10,10 @@ argUtils.o: ../argUtils.cpp ../argUtils.h
 	g++ -c -O3 -flto ../argUtils.cpp
 Worm2D.o: Worm2D.cpp Worm2D.h
 	g++ -c -O3 -std=c++11 -flto Worm2D.cpp
+EvolutionRS18.o: EvolutionRS18.cpp EvolutionRS18.h
+	g++ -c -O3 -std=c++11 -flto EvolutionRS18.cpp
+Evolution.o: Evolution.cpp Evolution.h
+	g++ -c -O3 -std=c++11 -flto Evolution.cpp
 WormRS18.o: WormRS18.cpp WormRS18.h
 	g++ -c -O3 -std=c++11 -flto WormRS18.cpp
 WormBody.o: WormBody.cpp WormBody.h

@@ -193,3 +193,24 @@ if (supArgs1.speedoutput){
 
     return fitness;
 }
+
+void EvolutionRS18::configure()
+{
+    configure_p1();
+    if (supArgs1.evo_seed)
+    {
+        ifstream BestIndividualFile;
+        TVector<double> bestVector(1, VectSize);
+        BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
+        BestIndividualFile >> bestVector;
+        s->InitializeSearch();
+        for (int i = 1; i <= s->PopulationSize(); i++){
+            for (int j = 1; j <= VectSize; j++)
+            {
+                s->Individual(i)[j] = bestVector[j];
+            }
+        }
+    }
+    configure_p2();
+
+}
