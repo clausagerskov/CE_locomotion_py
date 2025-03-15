@@ -42,7 +42,7 @@ owSignalSimulatorForWorm2D.o: neuromlLocal/owSignalSimulatorForWorm2D.cpp neurom
 	$(CC) -c -O3 $(CXXFLAGS) $(LDFLAGS) $(EXTRA_FLAGS) neuromlLocal/owSignalSimulatorForWorm2D.cpp
 owSignalSimulator.o: neuromlLocal/owSignalSimulator.cpp neuromlLocal/owSignalSimulator.h #neuromlLocal/owINeuronSimulator.h
 	$(CC) -c -O3 $(CXXFLAGS) $(LDFLAGS) neuromlLocal/owSignalSimulator.cpp
-c302NervousSystem.o: neuromlLocal/c302NervousSystem.cpp neuromlLocal/owSignalSimulatorForWorm2D.h #neuromlLocal/NervousSystemBase.h
+c302NervousSystem.o: neuromlLocal/c302NervousSystem.cpp neuromlLocal/owSignalSimulatorForWorm2D.h random.h #neuromlLocal/NervousSystemBase.h
 	$(CC) -c -O3 $(CXXFLAGS) $(LDFLAGS) $(EXTRA_FLAGS) neuromlLocal/c302NervousSystem.cpp 	
 StretchReceptor.o: StretchReceptor.cpp StretchReceptor.h
 	g++ -c -O3 -flto StretchReceptor.cpp
@@ -50,9 +50,9 @@ Muscles.o: Muscles.cpp Muscles.h VectorMatrix.h random.h
 	g++ -c -O3 -flto Muscles.cpp
 main.o: main.cpp Worm.h WormBody.h StretchReceptor.h Muscles.h TSearch.h
 	g++ -c -O3 -std=c++11 -flto $(CXXFLAGS) $(LDFLAGS) main.cpp
-tests.o: tests.cpp NervousSystem.o random.o
+tests.o: tests.cpp NervousSystem.h random.h
 	g++ -c -O3 -flto tests.cpp
-tests: info tests.o 
+tests: info tests.o NervousSystem.o random.o
 	g++ -pthread -o tests tests.o 
 
 tests2.o: tests2.cpp NervousSystem.h random.h jsonUtils.h argUtils.h

@@ -27,7 +27,7 @@ class Evolution
     virtual void GenPhenMapping(TVector<double> &gen, TVector<double> &phen) = 0;
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
     void ResultsDisplay(TSearch &s);
-    static void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
+    void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void configure_p1();
     void configure_p2();
     virtual void configure();
@@ -47,6 +47,9 @@ class Evolution
     SuppliedArgs* const supArgs1_ptr;
     TSearch* const s; //(VectSize);
     //TVector<double> * phenotype; // (1, VectSize);
+
+    private:
+    ofstream evolfile;
 
 };
 

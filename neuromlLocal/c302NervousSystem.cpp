@@ -95,6 +95,10 @@ double c302NervousSystem::ChemicalSynapseWeight(int from, int to)
     return simulation->getTwoValFunc("get_synaptic_weight", from-1, to-1);
 
 }
+/* void c302NervousSystem::RandomizeCircuitState(double lb, double ub) {return;}
+void c302NervousSystem::RandomizeCircuitState(double lb, double ub, RandomState &rs) {return;}
+void c302NervousSystem::RandomizeCircuitOutput(double lb, double ub) {return;}
+void c302NervousSystem::RandomizeCircuitOutput(double lb, double ub, RandomState &rs) {return;} */
 
 void c302NervousSystem::SetCircuitSize(int newsize, int maxchemconns, int maxelecconns) {return;}
 void c302NervousSystem::SetNeuronOutput(int i, double value) {return;}

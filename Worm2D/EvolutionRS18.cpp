@@ -75,9 +75,74 @@ void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
     phen(30) = MapSearchParameter(gen(30), 0.0, NMJmax);    // RMDD, RMDV
 }
 
-
-
 double EvolutionRS18::EvaluationFunction(TVector<double> &v, RandomState &rs)
+{return EvaluationFunctionNoOut(v,rs);}
+
+double EvolutionRS18::EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs)
+{
+    double fitness;
+    ofstream fitfile;
+  
+
+    // Fitness
+    fitness = 0.0;
+    double bodyorientation, anglediff;
+    double movementorientation, distancetravelled = 0, temp;
+    TVector<double> curvature(1, N_curvs);
+    TVector<double> antpostcurv(1, 2);
+    antpostcurv.FillContents(0.0);
+
+    // Genotype-Phenotype Mapping
+    TVector<double> phenotype(1, VectSize);
+    GenPhenMapping(v, phenotype);
+
+    Worm18 w(phenotype, 0);
+    w.InitializeState(rs);
+
+
+
+    // Transient
+    for (double t = 0.0; t <= Transient; t += StepSize)
+    {
+        w.Step(StepSize, 1);
+
+    }
+
+    double xt = w.CoMx(), xtp;
+    double yt = w.CoMy(), ytp;
+
+    // Time loop
+    for (double t = 0.0; t <= Duration; t += StepSize) {
+
+        w.Step(StepSize, 1);
+
+        // Current and past centroid position
+        xtp = xt; ytp = yt;
+        xt = w.CoMx(); yt = w.CoMy();
+
+        // Integration error check
+        if (isnan(xt) || isnan(yt) || sqrt(pow(xt-xtp,2)+pow(yt-ytp,2)) > 100*AvgSpeed*StepSize)
+        {
+            return 0.0;
+        }
+
+        // Fitness
+        bodyorientation = w.Orientation();                  // Orientation of the body position
+        movementorientation = atan2(yt-ytp,xt-xtp);         // Orientation of the movement
+        anglediff = movementorientation - bodyorientation;  // Check how orientations align
+        temp = cos(anglediff) > 0.0 ? 1.0 : -1.0;           // Add to fitness only movement forward
+        distancetravelled += temp * sqrt(pow(xt-xtp,2)+pow(yt-ytp,2));
+
+
+
+    }
+    fitness = 1 - (fabs(BBCfit-distancetravelled)/BBCfit);
+
+
+    return fitness;
+}
+
+double EvolutionRS18::EvaluationFunctionOrig(TVector<double> &v, RandomState &rs)
 {
     double fitness;
     ofstream fitfile;

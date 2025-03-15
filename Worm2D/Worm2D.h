@@ -48,7 +48,7 @@ public:
     virtual void InitializeState(RandomState &rs) = 0;
     virtual void Step(double StepSize, double output) = 0;
     void addParsToJson(json & j);
-    void writeJsonFile();
+    void writeJsonFile(ofstream & json_out);
 
     double CoMx();
     double CoMy();

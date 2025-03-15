@@ -10,12 +10,16 @@ class EvolutionRS18:public Evolution
     {cout << "const called " << s->VectorSize() << endl;}
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
+    double EvaluationFunctionOrig(TVector<double> &v, RandomState &rs);
+    double EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs);
     void configure();
     //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
     //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
     //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
 
     SuppliedArgs2018& supArgs1;
+
+    const int VectSize = 30;
     private:
 
     double Duration = 50.0;           // Seconds
@@ -47,6 +51,6 @@ class EvolutionRS18:public Evolution
     double    BBCfit = AvgSpeed*Duration;
 
 // Size of genotype (VC)
-    const int VectSize = 30;
+    
 
 };

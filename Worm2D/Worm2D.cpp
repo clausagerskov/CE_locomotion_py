@@ -125,15 +125,15 @@ void WormIzq::DumpBodyState(ofstream &ofs, int skips)
     }
 }
 
-void WormIzq::writeJsonFile()
+void WormIzq::writeJsonFile(ofstream & json_out)
 {
 
     json j;
     addParsToJson(j);
     //ofstream json_out(supArgs1.rename_file("worm_data.json"));
-    ofstream json_out("worm_data.json");
+    //ofstream json_out("worm_data.json");
     json_out << std::setw(4) << j << std::endl;
-    json_out.close();
+    //json_out.close();
 
 }
 

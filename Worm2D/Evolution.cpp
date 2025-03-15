@@ -3,7 +3,7 @@
 
 void Evolution::EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar)
 {
-    cout << Generation << " " << BestPerf << " " << AvgPerf << " " << PerfVar << endl;
+    evolfile << Generation << " " << BestPerf << " " << AvgPerf << " " << PerfVar << endl;
 }
 
 //void (Evolution::*RD)(TSearch &s) = &Evolution::ResultsDisplay;
@@ -28,8 +28,16 @@ void Evolution::ResultsDisplay(TSearch &s)
 
 void Evolution::configure_p1()
 {
+    evolfile.open(supArgs1_ptr->rename_file("fitness.dat"));
     s->SetRandomSeed(supArgs1_ptr->randomseed);
-    s->SetPopulationStatisticsDisplayFunction(EvolutionaryRunDisplay);
+
+    {typedef void (*callback_t)(int, double, double, double);
+    Callback<void(int, double, double, double)>::func 
+    = std::bind(&Evolution::EvolutionaryRunDisplay, this, 
+        std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+    callback_t func = static_cast<callback_t>(Callback<void(int, double, double, double)>::callback); 
+    s->SetPopulationStatisticsDisplayFunction(func);
+    }
 
     {typedef void (*callback_t)(TSearch&);
     Callback<void(TSearch&)>::func = std::bind(&Evolution::ResultsDisplay, this, std::placeholders::_1);
@@ -69,7 +77,7 @@ void Evolution::configure_p2()
     //s->SetEvaluationFunction(EvaluationFunction);
     //s->SetEvaluationFunction(func);
     s->ExecuteSearch();
-
+    evolfile.close();
 }
 
 void Evolution::configure()

@@ -28,7 +28,38 @@ int main (int argc, const char* argv[])
     InitializeBodyConstants();
     
     er18.configure();
-    return 0;
+
+    supArgs1.output = 1;
+    supArgs1.speedoutput = 1;
+    RandomState rs;
+    //long seed = static_cast<long>(time(NULL));
+    //rs.SetRandomSeed(seed);
+    rs.SetRandomSeed(supArgs1.randomseed);
+
+    std::cout << std::setprecision(10);
+
+    // Code to run simulation:
+    InitializeBodyConstants();
+
+    ifstream BestIndividualFile;
+    TVector<double> bestVector(1, er18.VectSize);
+    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
+    BestIndividualFile >> bestVector;
+    BestIndividualFile.close();
+    
+    er18.EvaluationFunctionOrig(bestVector, rs);
+
+    TVector<double> phenotype(1, er18.VectSize);
+    er18.GenPhenMapping(bestVector, phenotype);
+
+    Worm18 w(phenotype, 0);
+    w.InitializeState(rs);
+    ofstream json_out(supArgs1.rename_file("worm_data.json"));
+    w.writeJsonFile(json_out);
+    json_out.close();
+    
+
+    
     //supArgs1.writeMessage();
     //int	VectSize = 30;
     //TVector<double> phenotype(1, VectSize);
