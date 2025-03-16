@@ -21,7 +21,8 @@ return new c302NervousSystem();
 }
  */
 
-WormCE::WormCE(TVector<double> &v,double output):WormIzq({6,24,0.1,10})//,n_ptr(makeNervousSystem())
+WormCE::WormCE(TVector<double> &v,double output)
+:WormIzq({6,24,0.1,10}, new NervousSystem)//,n_ptr(makeNervousSystem())
 {
 
   // PG: Setting these to zero as they were not initialised before use!

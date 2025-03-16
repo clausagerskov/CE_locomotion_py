@@ -7,7 +7,14 @@ class EvolutionRS18:public Evolution
     public:
     EvolutionRS18():Evolution(new SuppliedArgs2018(),new TSearch(30)),
     supArgs1(static_cast<SuppliedArgs2018&>(*supArgs1_ptr))
-    {cout << "const called " << s->VectorSize() << endl;}
+    {
+        evoPars1 = {supArgs1.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
+            supArgs1.pop_size, supArgs1.max_gens, 0.1, 0.5, UNIFORM, 
+            1.1, 0.04, 1, 0, 1};
+
+        cout << "const called " << s->VectorSize() << endl;
+    
+    }
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunctionOrig(TVector<double> &v, RandomState &rs);

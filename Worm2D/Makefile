@@ -7,7 +7,7 @@ jsonUtils.o: jsonUtils.cpp jsonUtils.h
 TSearch.o: TSearch.cpp TSearch.h
 	g++ -c -O3 -flto TSearch.cpp
 argUtils.o: ../argUtils.cpp ../argUtils.h
-	g++ -c -O3 -flto ../argUtils.cpp
+	g++ -c -O3 -std=c++11 -flto ../argUtils.cpp
 Worm2D.o: Worm2D.cpp Worm2D.h
 	g++ -c -O3 -std=c++11 -flto Worm2D.cpp
 EvolutionRS18.o: EvolutionRS18.cpp EvolutionRS18.h

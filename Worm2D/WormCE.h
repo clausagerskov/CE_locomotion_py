@@ -84,9 +84,10 @@ public:
     //void AngleCurvature(TVector<double> &c);
     //double Orientation();
 
+    double AVA_output, AVB_output;
     private:
 
-    const vector<string> & getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
+    const vector<string> getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
     void addExtraParsToJson(json & j);
     //Params<double> getWormParams();
     vector<doubIntParamsHead> getWormParams();
@@ -99,7 +100,7 @@ public:
     // Neuromuscular junctions
     double NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD; //EEE
     double AVA_act, AVA_inact, AVB_act, AVB_inact;
-    double AVA_output, AVB_output;
+    
 
     const int N_stretchrec = 10;            // N_units // Number of stretch receptors
 
