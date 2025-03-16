@@ -1,6 +1,6 @@
 main: main.o WormRS18.o Worm2D.o WormBody.o Evolution.o EvolutionRS18.o NervousSystem.o StretchReceptor18.o Muscles.o TSearch.o random.o argUtils.o jsonUtils.o
 	g++ -pthread -o main main.o WormRS18.o Evolution.o EvolutionRS18.o Worm2D.o WormBody.o argUtils.o NervousSystem.o StretchReceptor18.o Muscles.o jsonUtils.o TSearch.o random.o 
-random.o: random.cpp random.h VectorMatrix.h
+random.o: random.cpp random.h #VectorMatrix.h
 	g++ -c -O3 -flto random.cpp
 jsonUtils.o: jsonUtils.cpp jsonUtils.h
 	g++ -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include  -flto jsonUtils.cpp	
@@ -18,13 +18,13 @@ WormRS18.o: WormRS18.cpp WormRS18.h
 	g++ -c -O3 -std=c++11 -flto WormRS18.cpp
 WormBody.o: WormBody.cpp WormBody.h
 	g++ -c -O3 -flto WormBody.cpp
-NervousSystem.o: NervousSystem.cpp NervousSystem.h VectorMatrix.h random.h ../neuromlLocal/NervousSystemBase.h
+NervousSystem.o: NervousSystem.cpp NervousSystem.h #VectorMatrix.h random.h ../neuromlLocal/NervousSystemBase.h
 	g++ -c -O3 -flto NervousSystem.cpp
 StretchReceptor18.o: StretchReceptor18.cpp StretchReceptor18.h
 	g++ -c -O3 -flto StretchReceptor18.cpp
-Muscles.o: Muscles.cpp Muscles.h VectorMatrix.h random.h
+Muscles.o: Muscles.cpp Muscles.h #VectorMatrix.h random.h
 	g++ -c -O3 -flto Muscles.cpp
-main.o: main.cpp WormRS18.h Worm2D.h WormBody.h StretchReceptor18.h Muscles.h TSearch.h
+main.o: main.cpp #WormRS18.h Worm2D.h WormBody.h StretchReceptor18.h Muscles.h TSearch.h
 	g++ -c -O3 -flto main.cpp
 clean:
 	rm -f *.o main

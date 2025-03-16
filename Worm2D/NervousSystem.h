@@ -6,10 +6,10 @@
 // ************************************************************
 
 #include "VectorMatrix.h"
-#include "random.h"
+//#include "random.h"
 #include <iostream>
 #include <math.h>
-#include "../neuromlLocal/NervousSystemBase.h"
+#include "NervousSystemBase.h"
 
 #pragma once
 
