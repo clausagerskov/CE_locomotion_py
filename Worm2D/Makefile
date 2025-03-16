@@ -18,7 +18,7 @@ WormRS18.o: WormRS18.cpp WormRS18.h
 	g++ -c -O3 -std=c++11 -flto WormRS18.cpp
 WormBody.o: WormBody.cpp WormBody.h
 	g++ -c -O3 -flto WormBody.cpp
-NervousSystem.o: NervousSystem.cpp NervousSystem.h VectorMatrix.h random.h
+NervousSystem.o: NervousSystem.cpp NervousSystem.h VectorMatrix.h random.h ../neuromlLocal/NervousSystemBase.h
 	g++ -c -O3 -flto NervousSystem.cpp
 StretchReceptor18.o: StretchReceptor18.cpp StretchReceptor18.h
 	g++ -c -O3 -flto StretchReceptor18.cpp

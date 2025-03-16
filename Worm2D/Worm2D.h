@@ -15,8 +15,14 @@ class Worm2D {
     
     public:
     virtual void addParsToJson(json & j) = 0;
+    ~Worm2D(){if (n_ptr) delete n_ptr;}
 
-    };
+    protected:
+    NervousSystemBase * const n_ptr;
+   
+    Worm2D(NervousSystemBase * n_ptr_);
+    
+};
 
 struct wormIzqParams
 {
@@ -40,10 +46,10 @@ struct wormIzqParams
 
 };
 
-class WormIzq: public Worm2D
+class WormIzq
 {
 public:
-    WormIzq(wormIzqParams par1_);
+    //WormIzq(wormIzqParams par1_);
     //WormIzq(wormIzqParams par1_, const NervousSystemBase & n);
     virtual void InitializeState(RandomState &rs) = 0;
     virtual void Step(double StepSize, double output) = 0;
@@ -63,13 +69,13 @@ public:
     ~WormIzq(){if (n_ptr) delete n_ptr;}
 
     protected:
-    
+    WormIzq(wormIzqParams par1_, NervousSystemBase * n_ptr_);
     int nn(int neuronNumber, int unitNumber);
     double t; // Time
 
     Muscles m;
     WormBody b;
-    NervousSystemBase * n_ptr;
+    NervousSystemBase * const n_ptr;
     const wormIzqParams par1;
 
     // Body segment name conventions

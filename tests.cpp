@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <cassert>
 #include "TSearch.h"
-#include "NervousSystem.cpp"
+#include "NervousSystem.h"
 
 void testNervousSystem()
 {

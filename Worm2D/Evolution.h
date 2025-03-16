@@ -26,10 +26,7 @@ class Evolution
     //Evolution():supArgs1_ptr(makeArgsPtr()),s(makeTSearchPtr()){}
     virtual void GenPhenMapping(TVector<double> &gen, TVector<double> &phen) = 0;
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
-    void ResultsDisplay(TSearch &s);
-    void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
-    void configure_p1();
-    void configure_p2();
+    
     virtual void configure();
     //virtual SuppliedArgs* const makeArgsPtr(){return NULL;}
     //virtual TSearch* const makeTSearchPtr(){return NULL;}
@@ -37,19 +34,26 @@ class Evolution
 
     virtual ~Evolution()
     {
+      //evolfile.close();
     if (supArgs1_ptr) delete supArgs1_ptr; 
     if (s) delete s;
     //if (phenotype) delete phenotype;
     }
 
     protected:
+    void configure_p1();
+    void configure_p2();
+    void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
+    void ResultsDisplay(TSearch &s);
     Evolution(SuppliedArgs* sa, TSearch* t):supArgs1_ptr(sa),s(t){}
+    
     SuppliedArgs* const supArgs1_ptr;
     TSearch* const s; //(VectSize);
     //TVector<double> * phenotype; // (1, VectSize);
 
     private:
     ofstream evolfile;
+    //string bestfilename; 
 
 };
 

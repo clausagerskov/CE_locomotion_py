@@ -1,7 +1,10 @@
 #include "Worm2D.h"
 #include <iomanip>
 
-WormIzq::WormIzq(wormIzqParams par1_):par1(par1_),n_ptr(new NervousSystem)
+Worm2D::Worm2D(NervousSystemBase * n_ptr_):n_ptr(n_ptr_){}
+
+
+WormIzq::WormIzq(wormIzqParams par1_, NervousSystemBase * n_ptr_):n_ptr(n_ptr_),par1(par1_)
 {
     setUp();
 }

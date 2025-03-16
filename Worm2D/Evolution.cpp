@@ -21,6 +21,7 @@ void Evolution::ResultsDisplay(TSearch &s)
 
     bestVector = s.BestIndividual();
     BestIndividualFile.open(supArgs1_ptr->rename_file("best.gen.dat"));
+    //BestIndividualFile.open(bestfilename);
     BestIndividualFile << setprecision(32);
     BestIndividualFile << bestVector << endl;
     BestIndividualFile.close();

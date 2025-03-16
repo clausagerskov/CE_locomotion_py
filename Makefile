@@ -50,10 +50,10 @@ Muscles.o: Muscles.cpp Muscles.h VectorMatrix.h random.h
 	g++ -c -O3 -flto Muscles.cpp
 main.o: main.cpp Worm.h WormBody.h StretchReceptor.h Muscles.h TSearch.h
 	g++ -c -O3 -std=c++11 -flto $(CXXFLAGS) $(LDFLAGS) main.cpp
-tests.o: tests.cpp NervousSystem.h random.h
+tests.o: tests.cpp NervousSystem.h 
 	g++ -c -O3 -flto tests.cpp
 tests: info tests.o NervousSystem.o random.o
-	g++ -pthread -o tests tests.o 
+	g++ -pthread -o tests tests.o NervousSystem.o random.o
 
 tests2.o: tests2.cpp NervousSystem.h random.h jsonUtils.h argUtils.h
 	g++ -c -O3 -flto $(CXXFLAGS) $(LDFLAGS) tests2.cpp

@@ -2,7 +2,7 @@
 //#include "../NervousSystem.h"
 #include "owSignalSimulatorForWorm2D.h"
 #include "neuroml_utils.h"
-#include "../random.h"
+//#include "../random.h"
 
 class c302NervousSystem : public NervousSystemBase
 {
@@ -59,11 +59,11 @@ void SetElectricalSynapseWeight(int n1, int n2, double value);
  //void SetChemicalSynapseWeight(int from, int to, double value) {}
 // void InternalSetElectricalSynapseWeight(int from, int to, double value) {}
 
-/* void RandomizeCircuitState(double lb, double ub);
-void RandomizeCircuitState(double lb, double ub, RandomState &rs);
-void RandomizeCircuitOutput(double lb, double ub);
-void RandomizeCircuitOutput(double lb, double ub, RandomState &rs);
- */
+    void RandomizeCircuitState(double lb, double ub);
+    void RandomizeCircuitState(double lb, double ub, RandomState &rs);
+    void RandomizeCircuitOutput(double lb, double ub);
+    void RandomizeCircuitOutput(double lb, double ub, RandomState &rs);
+ 
 
  const std::vector<float> & getOutputValues() const {return output_value;}
  ostream & writeOutputValues(ostream & os) {return writeVector(os,output_value);}
