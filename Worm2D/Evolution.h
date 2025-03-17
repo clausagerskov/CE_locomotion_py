@@ -18,24 +18,7 @@ struct Callback<Ret(Params...)> {
 template <typename Ret, typename... Params>
 std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
 
-struct evoPars{
-   long randomseed;
-   int SelectionMode = RANK_BASED;
-   int ReproductionMode = GENETIC_ALGORITHM;
-   int PopulationSize;
-   int MaxGenerations;
-   double MutationVariance;
-   double CrossoverProbability;
-   int CrossoverMode = UNIFORM;
-   double MaxExpectedOffspring;
-   double ElitistFraction;
-   int SearchConstraint;
-   double CheckpointInterval;
-   bool ReEvaluationFlag;
-};
-
-
-
+struct evoPars;
 
 class Evolution
 {
@@ -67,7 +50,7 @@ class Evolution
     SuppliedArgs* const supArgs1_ptr;
     TSearch* const s; //(VectSize);
     //TVector<double> * phenotype; // (1, VectSize);
-    
+
    evoPars evoPars1;
     private:
 

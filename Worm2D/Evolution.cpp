@@ -1,6 +1,23 @@
 #include "Evolution.h"
 #include <iomanip> 
 
+struct evoPars{
+    long randomseed;
+    int SelectionMode = RANK_BASED;
+    int ReproductionMode = GENETIC_ALGORITHM;
+    int PopulationSize;
+    int MaxGenerations;
+    double MutationVariance;
+    double CrossoverProbability;
+    int CrossoverMode = UNIFORM;
+    double MaxExpectedOffspring;
+    double ElitistFraction;
+    int SearchConstraint;
+    int CheckpointInterval;
+    bool ReEvaluationFlag;
+ };
+
+
 void Evolution::EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar)
 {
     evolfile << Generation << " " << BestPerf << " " << AvgPerf << " " << PerfVar << endl;
