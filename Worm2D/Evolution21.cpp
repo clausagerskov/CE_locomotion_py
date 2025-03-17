@@ -1,121 +1,332 @@
-#include "EvolutionCE.h"
+#include "Evolution21.h"
 #include <math.h>
-#include "WormCE.h"
+#include "Worm21.h"
+#include "Segment21.h"
 
-void EvolutionCE::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
+void Evolution21::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
-     // Parameters for the Stretch Receptors
-  phen(SR_A) = MapSearchParameter(gen(SR_A), 0.0, SRmax);
-  phen(SR_B) = MapSearchParameter(gen(SR_B), 0.0, SRmax);
-
   // Bias
-  int k=3;
-  for (int i = 1; i <= 3; i++){
-    phen(k) = MapSearchParameter(gen(k), -BiasRange, BiasRange);k++;
-  }
-  // Self connections
-  for (int i = 1; i <= 3; i++){
-    phen(k) = MapSearchParameter(gen(k), -SCRange, SCRange);k++;
-  }
-  // DA, DB, VA, VB Chemical synapses (excitatory)
-  for (int i = 1; i <= 2; i++){
-    phen(k) = MapSearchParameter(gen(k), 0.0, CSRange);k++;
-  }
-  // VD Chemical synapses (Inhibitory)
-  for (int i = 1; i <= 2; i++){
-    phen(k) = MapSearchParameter(gen(k), -CSRange, 0.0);k++;
-  }
-  // Interunits Gap junctions
-  for (int i = 1; i <= 2; i++){
-    phen(k) = MapSearchParameter(gen(k), 0.0, ESRange);k++;
-  }
-  // Excitatory NMJ Weight
-  for (int i = 1; i <= 2; i++){
-    phen(k) = MapSearchParameter(gen(k), NMJmin, NMJmax);k++;
-  }
-  // Inhibitory NMJ Weight
-  for (int i = 1; i <= 1; i++){
-    phen(k) = MapSearchParameter(gen(k), -NMJmax, -NMJmin);k++;
-  }
+  for (int i = 1; i <= 7; i++){
+    phen(i) = MapSearchParameter(gen(i), -BiasRange, BiasRange);
+}
+// Time Constant
+for (int i = 8; i <= 14; i++){
+    phen(i) = MapSearchParameter(gen(i), TauMin, TauMax);
+}
+// Self connections
+for (int i = 15; i <= 21; i++){
+    phen(i) = MapSearchParameter(gen(i), -SCRange, SCRange);
+}
+// Chemical synapses
+for (int i = 22; i <=30; i++){
+    phen(i) = MapSearchParameter(gen(i), -CSRange, CSRange);
+}
 
+// Gap junctions
+phen(31) = MapSearchParameter(gen(31), 0.0, ESRange);
+
+// Intersegment synapse tested
+phen(40) = MapSearchParameter(gen(40), -CSRange, CSRange);  // DB to DDnext
+phen(41) = MapSearchParameter(gen(41), -CSRange, CSRange);  // VAnext to DD
+phen(42) = MapSearchParameter(gen(42), 0.0, ESRange);       // AS -- VAnext
+phen(43) = MapSearchParameter(gen(43), 0.0, ESRange);       // DA -- ASnext
+phen(44) = MapSearchParameter(gen(44), 0.0, ESRange);       // VB -- DBnext
+
+// NMJ Weight
+phen(32) = MapSearchParameter(gen(32), 0.0, NMJmax);       // AS
+phen(33) = MapSearchParameter(gen(33), 0.0, NMJmax);       // DA
+phen(34) = MapSearchParameter(gen(34), NMJmax, NMJmax);       // DB
+phen(35) = MapSearchParameter(gen(35), -NMJmax, 0.0);      // DD
+phen(36) = MapSearchParameter(gen(36), -NMJmax, 0.0);      // VD
+phen(37) = MapSearchParameter(gen(37), NMJmax, NMJmax);      // VB
+phen(38) = MapSearchParameter(gen(38), 0.0, NMJmax);      // VA
+
+phen(39) = MapSearchParameter(gen(39), 0.2, 1.0);       // Used to be 0.4/0.6 XXX NMJ_Gain Mapping
 
 }
 
-double EvolutionCE::EvaluationFunction(TVector<double> &v, RandomState &rs)
-{return EvaluationFunctionNoOut(v,rs);}
+double Evolution21::EvaluationFunction(TVector<double> &v, RandomState &rs)
+{return EvaluationFunction2(v,rs);}
 
-double EvolutionCE::EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs)
-{
-    double sra = v(SR_A);
-    double srb = v(SR_B);
-    double fitnessForward, fitnessBackward;
-    v(SR_A)= -1.0;
-    v(SR_B)= srb;
-    fitnessForward = Evaluation(v, rs, 1);
-    //  v(SR_A)= sra;
-    //  v(SR_B)= -1.0;
-    //  fitnessBackward = Evaluation(v, rs, -1);
-    //  return (fitnessForward + fitnessBackward)/2;
-    return fitnessForward;
-    // return fitnessBackward;
+
+int Evolution21::finish_Bosc(int Generation,double BestPerf,double AvgPerf,double PerfVar){
+    if (BestPerf > 0.99) return 1;
+    else return 0;
 }
 
-double EvolutionCE::Evaluation(TVector<double> &v, RandomState &rs, int direction){
-    double fitA,fitB;
-    double bodyorientation, anglediff;
-    double movementorientation, distancetravelled = 0, temp;
-    double distance;
-    double xt, xtp, oxt, fxt;
-    double yt, ytp, oyt, fyt;
+//////// Stage 1 ////////////
+/////////////////////////////
+double Evolution21::EvaluationFunction1(TVector<double> &v, RandomState &rs){
+    // Fitness variables
+    double DBp, VBp, dDB, dVB;
+    double oscDB = 0, oscVB = 0;
+    double FoDB, FoVB, FfDB, FfVB;
 
+    double freqDB=0, freqVB=0;
+    int pDB = 0, pVB = 0, signtagDB, signtagVB, signDB, signVB;
+    TVector<double> peaksDB(1, 2*Duration);
+    TVector<double> peaksVB(1, 2*Duration);// longer vector if you want frequencies higer than 2 Hz.
+    
     // Genotype-Phenotype Mapping
     TVector<double> phenotype(1, VectSize);
     GenPhenMapping(v, phenotype);
-    WormCE w(phenotype, 1);
-    w.InitializeState(rs);
+    
+    Segment s(phenotype);
+    s.InitializeState(rs);
 
-    if (direction == 1){
-        w.AVA_output =  0.0;
-        w.AVB_output =  1.0;
+    for (double t = 0.0; t <= 10; t += StepSize){
+        s.Step(StepSize);
     }
-    else{
-        w.AVA_output =  1.0;
-        w.AVB_output =  0.0; // Command Interneuron Activation Backward
-    }
+    DBp = s.n.NeuronOutput(3);
+    VBp = s.n.NeuronOutput(6);
 
-    // Transient
-    for (double t = 0.0; t <= Transient; t += StepSize){
-        w.Step(StepSize, 1);
-    }
-    xt = w.CoMx(); yt = w.CoMy();
-    oxt = w.CoMx(); oyt = w.CoMy();
-    // Run
+    s.Step(StepSize); // determine sign of derivative
+
+    dDB = s.n.NeuronOutput(3) - DBp;
+    dVB = s.n.NeuronOutput(6) - VBp;
+    signtagDB = (dDB  > 0) ? 1 : -1;
+    signtagVB = (dVB  > 0) ? 1 : -1;
+    DBp = s.n.NeuronOutput(3);
+    VBp = s.n.NeuronOutput(6);
+
+    // Time loop
     for (double t = 0.0; t <= Duration; t += StepSize) {
-        w.Step(StepSize, 1);
+        // Step simulation
+        s.Step(StepSize);
+        // check changes in sign of derivative
+        dDB = s.n.NeuronOutput(3) - DBp;
+        dVB = s.n.NeuronOutput(6) - VBp;
+        signDB = (dDB  > 0) ? 1 : ((dDB  < 0) ? -1 : 0);
+        signVB = (dVB  > 0) ? 1 : ((dVB  < 0) ? -1 : 0);
+
+        oscDB += abs(DBp - s.n.NeuronOutput(3));
+        oscVB += abs(VBp - s.n.NeuronOutput(6));
+
+        if ((signDB == -1) and (signtagDB >= 0)){
+            pDB +=1;
+            peaksDB[pDB] = t;
+            if (pDB >= 2*Duration){return 0;};
+        }
+        if ((signVB == -1) and (signtagVB >= 0)){
+            pVB +=1;
+            peaksVB[pVB] = t;
+            if (pVB >= 2*Duration){return 0;};
+        }
+
+        signtagDB = signDB;
+        signtagVB = signVB;
+        DBp = s.n.NeuronOutput(3);
+        VBp = s.n.NeuronOutput(6);
+    }
+    if ((pDB < 2) or (pVB < 2)){return 0;};
+    for (int i = 1; i<pDB; i+=1){freqDB += (1./(pDB-1))*(1./(peaksDB[i+1]- peaksDB[i]));} 
+    for (int i = 1; i<pVB; i+=1){freqVB += (1./(pVB-1))*(1./(peaksVB[i+1]- peaksVB[i]));} 
+
+    FfDB = fabs(freqDB - agarfreq)/agarfreq < 1 ? fabs(freqDB - agarfreq)/agarfreq : 1;
+    FfVB = fabs(freqVB - agarfreq)/agarfreq < 1 ? fabs(freqVB - agarfreq)/agarfreq : 1;
+
+    FoDB = oscDB > OSCT ? 1 : oscDB / OSCT;
+    FoVB = oscVB > OSCT ? 1 : oscVB / OSCT;
+
+    return FoDB * FoVB * (1 - FfDB) * (1 - FfVB);
+}
+
+
+//////// Stage 2 ////////////
+/////////////////////////////
+double Evolution21::EvaluationFunction2(TVector<double> &v, RandomState &rs){
+
+/* #ifdef OUTPUT
+    ofstream bodyfile, actfile, curvfile, paramsfile;
+    bodyfile.open("body.dat");
+    actfile.open("act.dat");
+    curvfile.open("curv.dat");
+    paramsfile.open("params.dat");
+#endif */
+
+ofstream bodyfile, actfile, curvfile, paramsfile;
+if (supArgs1.output){
+    bodyfile.open(supArgs1.rename_file("body.dat"));
+    actfile.open(supArgs1.rename_file("act.dat"));
+    curvfile.open(supArgs1.rename_file("curv.dat"));
+    paramsfile.open(supArgs1.rename_file("params.dat"));
+}
+    // Fitness
+    double fitness_tr = 0.0;
+    double bodyorientation, anglediff;
+    double movementorientation, distancetravelled = 0, displacement, temp;
+    TVector<double> curvature(1, N_curvs);
+    TVector<double> antpostcurv(1, 2);
+    antpostcurv.FillContents(0.0);
+
+    // Evaluation of B-class neuron oscillation,and frequency in segment 2.
+    // The index of B class in this segment correspond to DBs2 = 10; VBs2 = 13
+    double DBp, VBp, dDB, dVB;
+    double oscDB = 0, oscVB = 0;
+    double FoDB, FoVB, FfDB, FfVB;
+
+    double freqDB=0, freqVB=0;
+    int pDB = 0, pVB = 0, signtagDB, signtagVB, signDB, signVB;
+    TVector<double> peaksDB(1, 2*Duration);
+    TVector<double> peaksVB(1, 2*Duration);// longer vector if you want frequencies higer than 2 Hz.
+
+    
+    // Genotype-Phenotype Mapping
+    TVector<double> phenotype(1, VectSize);
+    GenPhenMapping(v, phenotype);
+    
+    Worm21 w(phenotype);
+    
+    if (supArgs1.output){
+    w.DumpParams(paramsfile);
+    }
+
+/* #ifdef OUTPUT
+    w.DumpParams(paramsfile);
+#endif */
+    
+    w.InitializeState(rs);
+    
+    // Transient XXX
+    w.SetAVB(0.0);
+    w.SetAVA(0.0);
+    
+    for (double t = 0.0; t <= Transient; t += StepSize){
+        w.Step(StepSize);
+    }    
+    
+    DBp = w.n.NeuronOutput(10);
+    VBp = w.n.NeuronOutput(13);
+
+    w.Step(StepSize); // determine sign of derivative
+
+    dDB = w.n.NeuronOutput(10) - DBp;
+    dVB = w.n.NeuronOutput(13) - VBp;
+    signtagDB = (dDB  > 0) ? 1 : -1;
+    signtagVB = (dVB  > 0) ? 1 : -1;
+    DBp = w.n.NeuronOutput(10);
+    VBp = w.n.NeuronOutput(13);
+    
+    double xt = w.CoMx(), xtp;
+    double yt = w.CoMy(), ytp;
+
+    // Time loop
+    for (double t = 0.0; t <= Duration; t += StepSize) {
+        // Step simulation
+        w.Step(StepSize);
+        
+        ///// Oscilation
+        // check changes in sign of derivative
+        dDB = w.n.NeuronOutput(10) - DBp;
+        dVB = w.n.NeuronOutput(13) - VBp;
+        signDB = (dDB  > 0) ? 1 : ((dDB  < 0) ? -1 : 0);
+        signVB = (dVB  > 0) ? 1 : ((dVB  < 0) ? -1 : 0);
+
+        oscDB += abs(DBp - w.n.NeuronOutput(10));
+        oscVB += abs(VBp - w.n.NeuronOutput(13));
+
+        if ((signDB == -1) and (signtagDB >= 0)){
+            pDB +=1;
+            peaksDB[pDB] = t;
+            if (pDB >= 2*Duration){return 0;};
+        }
+        if ((signVB == -1) and (signtagVB >= 0)){
+            pVB +=1;
+            peaksVB[pVB] = t;
+            if (pVB >= 2*Duration){return 0;};
+        }
+
+        signtagDB = signDB;
+        signtagVB = signVB;
+        DBp = w.n.NeuronOutput(10);
+        VBp = w.n.NeuronOutput(13);
+        
+        //// Locomotion
         // Current and past centroid position
         xtp = xt; ytp = yt;
         xt = w.CoMx(); yt = w.CoMy();
+        
         // Integration error check
-        if (isnan(xt) || isnan(yt) || sqrt(pow(xt-xtp,2)+pow(yt-ytp,2)) > 10*AvgSpeed*StepSize) {return 0.0;}
-        // Velocity Fitness
+        if (isnan(xt) || isnan(yt) || sqrt(pow(xt-xtp,2)+pow(yt-ytp,2)) > 100*AvgSpeed*StepSize){
+            return 0.0;
+        }
+        
+        // Fitness
         bodyorientation = w.Orientation();                  // Orientation of the body position
         movementorientation = atan2(yt-ytp,xt-xtp);         // Orientation of the movement
         anglediff = movementorientation - bodyorientation;  // Check how orientations align
-        if (direction == 1){
-            temp = cos(anglediff) > 0.0 ? 1.0 : -1.0;           // Add to fitness only movement forward
-        }
-        else{
-            temp = cos(anglediff) > 0.0 ? -1.0 : 1.0;           // Add to fitness only movement backward
-        }
+        temp = cos(anglediff) > 0.0 ? 1.0 : -1.0;           // Add to fitness only movement forward
         distancetravelled += temp * sqrt(pow(xt-xtp,2)+pow(yt-ytp,2));
-    }
-    fxt = w.CoMx(); fyt = w.CoMy();
-    distance = sqrt(pow(oxt-fxt,2)+pow(oyt-fyt,2));
-    fitA = 1 - (fabs(BBCfit - distance)/BBCfit);
-    fitA = (fitA > 0)? fitA : 0.0;
 
-    fitB = 1 - (fabs(BBCfit-distancetravelled)/BBCfit);
-    fitB = (fitB > 0)? fitB : 0.0;
-    return fitB;
+    }
+    // B Oscillation evaluation
+    if ((pDB < 2) or (pVB < 2)){return 0;};
+    for (int i = 1; i<pDB; i+=1){freqDB += (1./(pDB-1))*(1./(peaksDB[i+1]- peaksDB[i]));} 
+    for (int i = 1; i<pVB; i+=1){freqVB += (1./(pVB-1))*(1./(peaksVB[i+1]- peaksVB[i]));} 
+
+    FfDB = fabs(freqDB - agarfreq)/agarfreq < 1 ? fabs(freqDB - agarfreq)/agarfreq : 1;
+    FfVB = fabs(freqVB - agarfreq)/agarfreq < 1 ? fabs(freqVB - agarfreq)/agarfreq : 1;
+
+    FoDB = oscDB > OSCT ? 1 : oscDB / OSCT;
+    FoVB = oscVB > OSCT ? 1 : oscVB / OSCT;
+
+    // Locomotion evaluation
+    fitness_tr = (1 - (fabs(BBCfit-distancetravelled)/BBCfit));
+
+//#ifdef OUTPUT
+if (supArgs1.output){
+    cout << "doout" << endl;
+        for (double t = 0.0; t <= 60; t += StepSize){
+            w.Step(StepSize);
+            w.DumpBodyState(bodyfile, skip_steps);
+            w.DumpActState(actfile, skip_steps);
+            w.DumpCurvature(curvfile, skip_steps);
+        }
+
+        cout << fitness_tr << endl;
+        //cout << fitness_tr << " " << fitness_ds << endl; //removed fitness_ds since not defined
+        bodyfile.close();
+        actfile.close();
+        curvfile.close();
+    }        
+//#endif
+    return fitness_tr * FoDB * FoVB * (1 - FfDB) * (1 - FfVB);
 }
 
+
+void Evolution21::configure_p2()
+{
+    
+    // Stage 1 //
+    {typedef int (*callback_t)(int, double, double, double);
+        Callback<int(int, double, double, double)>::func 
+        = std::bind(&Evolution21::finish_Bosc, this, 
+            std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+        callback_t func = static_cast<callback_t>(Callback<int(int, double, double, double)>::callback); 
+        s->SetSearchTerminationFunction(func);}
+
+    //s->SetSearchTerminationFunction(finish_Bosc);
+
+    {typedef double (*callback_t)(TVector<double> &, RandomState &);
+        Callback<double(TVector<double> &, RandomState &)>::func = std::bind(&Evolution21::EvaluationFunction1, this, 
+                std::placeholders::_1, std::placeholders::_2);
+        callback_t func = static_cast<callback_t>(Callback<double(TVector<double> &, RandomState &)>::callback);
+    s->SetEvaluationFunction(func);}
+
+    //s->SetEvaluationFunction(EvaluationFunction1);
+  
+
+    s->ExecuteSearch();
+
+    // Stage 2 //
+    s->SetSearchTerminationFunction(NULL);
+    {typedef double (*callback_t)(TVector<double> &, RandomState &);
+        Callback<double(TVector<double> &, RandomState &)>::func = std::bind(&Evolution21::EvaluationFunction2, this, 
+                std::placeholders::_1, std::placeholders::_2);
+        callback_t func = static_cast<callback_t>(Callback<double(TVector<double> &, RandomState &)>::callback);
+    s->SetEvaluationFunction(func);}
+
+    //s->SetEvaluationFunction(EvaluationFunction2);
+
+    s->ExecuteSearch();
+}

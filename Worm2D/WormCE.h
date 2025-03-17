@@ -91,6 +91,7 @@ public:
     void addExtraParsToJson(json & j);
     //Params<double> getWormParams();
     vector<doubIntParamsHead> getWormParams();
+    
     //NervousSystemBase *n_ptr;
     StretchReceptorCE sr;
    

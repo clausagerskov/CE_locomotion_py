@@ -5,7 +5,7 @@
 class EvolutionCE:public Evolution
 {
     public:
-    EvolutionCE():Evolution(new SuppliedArgs2018(),new TSearch(30)),
+    EvolutionCE():Evolution(new SuppliedArgs(),new TSearch(17)),
     supArgs1(static_cast<SuppliedArgs&>(*supArgs1_ptr))
     {cout << "const called " << s->VectorSize() << endl;
 

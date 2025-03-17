@@ -48,9 +48,11 @@ public:
     void SetAVA(double value) {AVA = value;};
     void SetAVB(double value) {AVB = value;};
     
-    private:
+    
+    NervousSystem & n;
 
-    const vector<string> & getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
+    private:
+    const vector<string> getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
     void addExtraParsToJson(json & j){}
     vector<doubIntParamsHead> getWormParams();
 

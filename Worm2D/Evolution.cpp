@@ -102,7 +102,6 @@ void Evolution::configure()
 {
     configure_p1();
     configure_p2();
-
 }
 
    

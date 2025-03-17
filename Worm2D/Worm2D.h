@@ -52,7 +52,7 @@ public:
     //WormIzq(wormIzqParams par1_);
     //WormIzq(wormIzqParams par1_, const NervousSystemBase & n);
     virtual void InitializeState(RandomState &rs) = 0;
-    virtual void Step(double StepSize, double output) = 0;
+    
     void addParsToJson(json & j);
     void writeJsonFile(ofstream & json_out);
 

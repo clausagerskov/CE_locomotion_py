@@ -13,7 +13,8 @@
 extern SuppliedArgs2021 supArgs1;
 
 // The constructor
-Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
+Worm21::Worm21(TVector<double> &v)
+:WormIzq({7,24,0.1,7}, new NervousSystem),n(static_cast<NervousSystem&>(*n_ptr))
 {
     // Muscles
     //m.SetMuscleParams(N_muscles, T_muscle);
