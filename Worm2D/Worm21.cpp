@@ -10,7 +10,7 @@
 #include "../argUtils.h"
 
 
-extern SuppliedArgs2021 supArgs1;
+//extern SuppliedArgs2021 supArgs1;
 
 // The constructor
 Worm21::Worm21(TVector<double> &v)

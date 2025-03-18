@@ -13,15 +13,16 @@ int main (int argc, const char* argv[])
     long randomseed = static_cast<long>(time(NULL));
 
     if (argc == 2) randomseed += atoi(argv[1]);
+    SuppliedArgs2018 sa1;
+    sa1.randomseed = randomseed;
+    if (argc>2) if (!sa1.setArgs(argc,argv,randomseed)) return 0;
+
+    EvolutionRS18 er18(sa1);
     
-    EvolutionRS18 er18;
-    SuppliedArgs2018 & supArgs1 = er18.supArgs1;
-    supArgs1.randomseed = randomseed;
-    if (argc>2) if (!supArgs1.setArgs(argc,argv,randomseed)) return 0;
 
     ofstream seedfile;
-    seedfile.open(supArgs1.rename_file("seed.dat"));
-    seedfile << supArgs1.randomseed << endl;
+    seedfile.open(sa1.rename_file("seed.dat"));
+    seedfile << sa1.randomseed << endl;
     seedfile.close();
     
 
@@ -29,12 +30,12 @@ int main (int argc, const char* argv[])
     
     er18.configure();
 
-    supArgs1.output = 1;
-    supArgs1.speedoutput = 1;
+    //er18.output = 1;
+   // er18.speedoutput = 1;
     RandomState rs;
     //long seed = static_cast<long>(time(NULL));
     //rs.SetRandomSeed(seed);
-    rs.SetRandomSeed(supArgs1.randomseed);
+    rs.SetRandomSeed(sa1.randomseed);
 
     std::cout << std::setprecision(10);
 
@@ -43,7 +44,7 @@ int main (int argc, const char* argv[])
 
     ifstream BestIndividualFile;
     TVector<double> bestVector(1, er18.VectSize);
-    BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
+    BestIndividualFile.open(sa1.rename_file("best.gen.dat"));
     BestIndividualFile >> bestVector;
     BestIndividualFile.close();
     
@@ -54,7 +55,7 @@ int main (int argc, const char* argv[])
 
     Worm18 w(phenotype, 0);
     w.InitializeState(rs);
-    ofstream json_out(supArgs1.rename_file("worm_data.json"));
+    ofstream json_out(sa1.rename_file("worm_data.json"));
     w.writeJsonFile(json_out);
     json_out.close();
     

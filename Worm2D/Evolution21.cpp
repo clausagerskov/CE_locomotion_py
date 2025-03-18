@@ -3,6 +3,16 @@
 #include "Worm21.h"
 #include "Segment21.h"
 
+
+
+evoPars Evolution21::getEvoPars(const SuppliedArgs2021 & sa)
+{
+    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
+        sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
+        1.1, 0.04, 1, 0, 0};
+
+}
+
 void Evolution21::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
   // Bias
@@ -134,23 +144,16 @@ double Evolution21::EvaluationFunction1(TVector<double> &v, RandomState &rs){
 
 //////// Stage 2 ////////////
 /////////////////////////////
-double Evolution21::EvaluationFunction2(TVector<double> &v, RandomState &rs){
+double Evolution21::EvaluationFunction2Output(TVector<double> &v, RandomState &rs){
 
-/* #ifdef OUTPUT
-    ofstream bodyfile, actfile, curvfile, paramsfile;
-    bodyfile.open("body.dat");
-    actfile.open("act.dat");
-    curvfile.open("curv.dat");
-    paramsfile.open("params.dat");
-#endif */
 
 ofstream bodyfile, actfile, curvfile, paramsfile;
-if (supArgs1.output){
-    bodyfile.open(supArgs1.rename_file("body.dat"));
-    actfile.open(supArgs1.rename_file("act.dat"));
-    curvfile.open(supArgs1.rename_file("curv.dat"));
-    paramsfile.open(supArgs1.rename_file("params.dat"));
-}
+
+    bodyfile.open(rename_file("body.dat"));
+    actfile.open(rename_file("act.dat"));
+    curvfile.open(rename_file("curv.dat"));
+    paramsfile.open(rename_file("params.dat"));
+
     // Fitness
     double fitness_tr = 0.0;
     double bodyorientation, anglediff;
@@ -177,13 +180,10 @@ if (supArgs1.output){
     
     Worm21 w(phenotype);
     
-    if (supArgs1.output){
+    
     w.DumpParams(paramsfile);
-    }
+    
 
-/* #ifdef OUTPUT
-    w.DumpParams(paramsfile);
-#endif */
     
     w.InitializeState(rs);
     
@@ -274,8 +274,7 @@ if (supArgs1.output){
     fitness_tr = (1 - (fabs(BBCfit-distancetravelled)/BBCfit));
 
 //#ifdef OUTPUT
-if (supArgs1.output){
-    cout << "doout" << endl;
+
         for (double t = 0.0; t <= 60; t += StepSize){
             w.Step(StepSize);
             w.DumpBodyState(bodyfile, skip_steps);
@@ -288,11 +287,131 @@ if (supArgs1.output){
         bodyfile.close();
         actfile.close();
         curvfile.close();
-    }        
+           
 //#endif
     return fitness_tr * FoDB * FoVB * (1 - FfDB) * (1 - FfVB);
 }
 
+double Evolution21::EvaluationFunction2(TVector<double> &v, RandomState &rs){
+
+
+        // Fitness
+        double fitness_tr = 0.0;
+        double bodyorientation, anglediff;
+        double movementorientation, distancetravelled = 0, displacement, temp;
+        TVector<double> curvature(1, N_curvs);
+        TVector<double> antpostcurv(1, 2);
+        antpostcurv.FillContents(0.0);
+    
+        // Evaluation of B-class neuron oscillation,and frequency in segment 2.
+        // The index of B class in this segment correspond to DBs2 = 10; VBs2 = 13
+        double DBp, VBp, dDB, dVB;
+        double oscDB = 0, oscVB = 0;
+        double FoDB, FoVB, FfDB, FfVB;
+    
+        double freqDB=0, freqVB=0;
+        int pDB = 0, pVB = 0, signtagDB, signtagVB, signDB, signVB;
+        TVector<double> peaksDB(1, 2*Duration);
+        TVector<double> peaksVB(1, 2*Duration);// longer vector if you want frequencies higer than 2 Hz.
+    
+        
+        // Genotype-Phenotype Mapping
+        TVector<double> phenotype(1, VectSize);
+        GenPhenMapping(v, phenotype);
+        
+        Worm21 w(phenotype);
+        
+        w.InitializeState(rs);
+        
+        // Transient XXX
+        w.SetAVB(0.0);
+        w.SetAVA(0.0);
+        
+        for (double t = 0.0; t <= Transient; t += StepSize){
+            w.Step(StepSize);
+        }    
+        
+        DBp = w.n.NeuronOutput(10);
+        VBp = w.n.NeuronOutput(13);
+    
+        w.Step(StepSize); // determine sign of derivative
+    
+        dDB = w.n.NeuronOutput(10) - DBp;
+        dVB = w.n.NeuronOutput(13) - VBp;
+        signtagDB = (dDB  > 0) ? 1 : -1;
+        signtagVB = (dVB  > 0) ? 1 : -1;
+        DBp = w.n.NeuronOutput(10);
+        VBp = w.n.NeuronOutput(13);
+        
+        double xt = w.CoMx(), xtp;
+        double yt = w.CoMy(), ytp;
+    
+        // Time loop
+        for (double t = 0.0; t <= Duration; t += StepSize) {
+            // Step simulation
+            w.Step(StepSize);
+            
+            ///// Oscilation
+            // check changes in sign of derivative
+            dDB = w.n.NeuronOutput(10) - DBp;
+            dVB = w.n.NeuronOutput(13) - VBp;
+            signDB = (dDB  > 0) ? 1 : ((dDB  < 0) ? -1 : 0);
+            signVB = (dVB  > 0) ? 1 : ((dVB  < 0) ? -1 : 0);
+    
+            oscDB += abs(DBp - w.n.NeuronOutput(10));
+            oscVB += abs(VBp - w.n.NeuronOutput(13));
+    
+            if ((signDB == -1) and (signtagDB >= 0)){
+                pDB +=1;
+                peaksDB[pDB] = t;
+                if (pDB >= 2*Duration){return 0;};
+            }
+            if ((signVB == -1) and (signtagVB >= 0)){
+                pVB +=1;
+                peaksVB[pVB] = t;
+                if (pVB >= 2*Duration){return 0;};
+            }
+    
+            signtagDB = signDB;
+            signtagVB = signVB;
+            DBp = w.n.NeuronOutput(10);
+            VBp = w.n.NeuronOutput(13);
+            
+            //// Locomotion
+            // Current and past centroid position
+            xtp = xt; ytp = yt;
+            xt = w.CoMx(); yt = w.CoMy();
+            
+            // Integration error check
+            if (isnan(xt) || isnan(yt) || sqrt(pow(xt-xtp,2)+pow(yt-ytp,2)) > 100*AvgSpeed*StepSize){
+                return 0.0;
+            }
+            
+            // Fitness
+            bodyorientation = w.Orientation();                  // Orientation of the body position
+            movementorientation = atan2(yt-ytp,xt-xtp);         // Orientation of the movement
+            anglediff = movementorientation - bodyorientation;  // Check how orientations align
+            temp = cos(anglediff) > 0.0 ? 1.0 : -1.0;           // Add to fitness only movement forward
+            distancetravelled += temp * sqrt(pow(xt-xtp,2)+pow(yt-ytp,2));
+    
+        }
+        // B Oscillation evaluation
+        if ((pDB < 2) or (pVB < 2)){return 0;};
+        for (int i = 1; i<pDB; i+=1){freqDB += (1./(pDB-1))*(1./(peaksDB[i+1]- peaksDB[i]));} 
+        for (int i = 1; i<pVB; i+=1){freqVB += (1./(pVB-1))*(1./(peaksVB[i+1]- peaksVB[i]));} 
+    
+        FfDB = fabs(freqDB - agarfreq)/agarfreq < 1 ? fabs(freqDB - agarfreq)/agarfreq : 1;
+        FfVB = fabs(freqVB - agarfreq)/agarfreq < 1 ? fabs(freqVB - agarfreq)/agarfreq : 1;
+    
+        FoDB = oscDB > OSCT ? 1 : oscDB / OSCT;
+        FoVB = oscVB > OSCT ? 1 : oscVB / OSCT;
+    
+        // Locomotion evaluation
+        fitness_tr = (1 - (fabs(BBCfit-distancetravelled)/BBCfit));
+    
+   
+        return fitness_tr * FoDB * FoVB * (1 - FfDB) * (1 - FfVB);
+    }
 
 void Evolution21::configure_p2()
 {

@@ -20,6 +20,24 @@ std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
 
 struct evoPars;
 
+struct evoPars{
+   string directoryName;
+   long randomseed;
+   TSelectionMode SelectionMode;
+   TReproductionMode ReproductionMode;
+   int PopulationSize;
+   int MaxGenerations;
+   double MutationVariance;
+   double CrossoverProbability;
+   TCrossoverMode CrossoverMode;
+   double MaxExpectedOffspring;
+   double ElitistFraction;
+   int SearchConstraint;
+   int CheckpointInterval;
+   bool ReEvaluationFlag;
+};
+
+
 class Evolution
 {
     public:
@@ -34,29 +52,40 @@ class Evolution
 
     virtual ~Evolution()
     {
-      //evolfile.close();
-    if (supArgs1_ptr) delete supArgs1_ptr; 
-    if (s) delete s;
+      evolfile.close();
+    //if (supArgs1_ptr) delete supArgs1_ptr; 
+      if (s) delete s;
     //if (phenotype) delete phenotype;
     }
 
     protected:
+
+    string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
     void configure_p1();
     void configure_p2();
     void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void ResultsDisplay(TSearch &s);
-    Evolution(SuppliedArgs* sa, TSearch* t):supArgs1_ptr(sa),s(t){}
+    virtual evoPars getEvoPars(const SuppliedArgs  & sa);
     
-    SuppliedArgs* const supArgs1_ptr;
+    Evolution(const SuppliedArgs & sa, TSearch* t)
+    :s(t),evoPars1(getEvoPars(sa))//bestfilename(rename_file("best.gen.dat"))
+    {
+      evolfile.open(rename_file("fitness.dat"));
+    }
+    
+    //SuppliedArgs* const supArgs1_ptr;
     TSearch* const s; //(VectSize);
     //TVector<double> * phenotype; // (1, VectSize);
 
-   evoPars evoPars1;
+    const evoPars evoPars1;
+    
     private:
 
     
     ofstream evolfile;
-    //string bestfilename; 
+    //const string bestfilename; 
+    
+
    //evoPars evoPars1;
 
 };

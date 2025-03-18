@@ -1,22 +1,15 @@
 #include "Evolution.h"
 #include <iomanip> 
 
-struct evoPars{
-    long randomseed;
-    int SelectionMode = RANK_BASED;
-    int ReproductionMode = GENETIC_ALGORITHM;
-    int PopulationSize;
-    int MaxGenerations;
-    double MutationVariance;
-    double CrossoverProbability;
-    int CrossoverMode = UNIFORM;
-    double MaxExpectedOffspring;
-    double ElitistFraction;
-    int SearchConstraint;
-    int CheckpointInterval;
-    bool ReEvaluationFlag;
- };
 
+
+evoPars Evolution::getEvoPars(const SuppliedArgs & sa)
+{
+    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
+        sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
+        1.1, 0.04, 1, 0, 0};
+
+}
 
 void Evolution::EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar)
 {
@@ -37,7 +30,7 @@ void Evolution::ResultsDisplay(TSearch &s)
     ofstream BestIndividualFile;
 
     bestVector = s.BestIndividual();
-    BestIndividualFile.open(supArgs1_ptr->rename_file("best.gen.dat"));
+    BestIndividualFile.open(rename_file("best.gen.dat"));
     //BestIndividualFile.open(bestfilename);
     BestIndividualFile << setprecision(32);
     BestIndividualFile << bestVector << endl;
@@ -46,8 +39,8 @@ void Evolution::ResultsDisplay(TSearch &s)
 
 void Evolution::configure_p1()
 {
-    evolfile.open(supArgs1_ptr->rename_file("fitness.dat"));
-    s->SetRandomSeed(supArgs1_ptr->randomseed);
+   
+    s->SetRandomSeed(evoPars1.randomseed);
 
     {typedef void (*callback_t)(int, double, double, double);
     Callback<void(int, double, double, double)>::func 
@@ -63,19 +56,19 @@ void Evolution::configure_p1()
     s->SetSearchResultsDisplayFunction(func);
     }
 
-  
-    s->SetSelectionMode(RANK_BASED);             //{FITNESS_PROPORTIONATE,RANK_BASED}
-    s->SetReproductionMode(GENETIC_ALGORITHM);	// {HILL_CLIMBING, GENETIC_ALGORITHM}
-    s->SetPopulationSize(supArgs1_ptr->pop_size); //96
-    s->SetMaxGenerations(supArgs1_ptr->max_gens); //1000
-    s->SetMutationVariance(0.1);                // For 71 parameters, an estimated avg change of 0.25 for weights (mapped to 15).
-    s->SetCrossoverProbability(0.5);
-    s->SetCrossoverMode(UNIFORM);              //{UNIFORM, TWO_POINT}
-    s->SetMaxExpectedOffspring(1.1);
-    s->SetElitistFraction(0.04);
-    s->SetSearchConstraint(1);
-    s->SetCheckpointInterval(0);
-    s->SetReEvaluationFlag(1);
+
+    s->SetSelectionMode(evoPars1.SelectionMode);             //{FITNESS_PROPORTIONATE,RANK_BASED}
+    s->SetReproductionMode(evoPars1.ReproductionMode);	// {HILL_CLIMBING, GENETIC_ALGORITHM}
+    s->SetPopulationSize(evoPars1.PopulationSize); //96
+    s->SetMaxGenerations(evoPars1.MaxGenerations); //1000
+    s->SetMutationVariance(evoPars1.MutationVariance);                // For 71 parameters, an estimated avg change of 0.25 for weights (mapped to 15).
+    s->SetCrossoverProbability(evoPars1.CrossoverProbability);
+    s->SetCrossoverMode(evoPars1.CrossoverMode);              //{UNIFORM, TWO_POINT}
+    s->SetMaxExpectedOffspring(evoPars1.MaxExpectedOffspring);
+    s->SetElitistFraction(evoPars1.ElitistFraction);
+    s->SetSearchConstraint(evoPars1.SearchConstraint);
+    s->SetCheckpointInterval(evoPars1.CheckpointInterval);
+    s->SetReEvaluationFlag(evoPars1.ReEvaluationFlag);
 
 }
 
@@ -91,11 +84,8 @@ void Evolution::configure_p2()
     callback_t func = static_cast<callback_t>(Callback<double(TVector<double> &, RandomState &)>::callback);
     s->SetEvaluationFunction(func);}
 
-
-    //s->SetEvaluationFunction(EvaluationFunction);
-    //s->SetEvaluationFunction(func);
     s->ExecuteSearch();
-    evolfile.close();
+  
 }
 
 void Evolution::configure()

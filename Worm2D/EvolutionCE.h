@@ -5,25 +5,18 @@
 class EvolutionCE:public Evolution
 {
     public:
-    EvolutionCE():Evolution(new SuppliedArgs(),new TSearch(17)),
-    supArgs1(static_cast<SuppliedArgs&>(*supArgs1_ptr))
-    {cout << "const called " << s->VectorSize() << endl;
-
-        evoPars1 = {supArgs1.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-            supArgs1.pop_size, supArgs1.max_gens, 0.05, 0.5, UNIFORM, 
-            1.1, 0.02, 1, NULL, 0};
+    EvolutionCE(const SuppliedArgs & sa):Evolution(sa,new TSearch(17)){}
     
-    }
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs);
     double Evaluation(TVector<double> &v, RandomState &rs, int direction);
-    
+    evoPars getEvoPars(const SuppliedArgs & sa);
     //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
     //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
     //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
 
-    SuppliedArgs& supArgs1;
+    //SuppliedArgs& supArgs1;
      // Size of genotype
     const int VectSize = 17;
 

@@ -2,6 +2,13 @@
 #include <math.h>
 #include "WormRS18.h"
 
+evoPars EvolutionRS18::getEvoPars(const SuppliedArgs & sa)
+{  
+    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
+            sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
+            1.1, 0.04, 1, 0, 1};
+}
+
 void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
     // --------------------------------
@@ -148,21 +155,21 @@ double EvolutionRS18::EvaluationFunctionOrig(TVector<double> &v, RandomState &rs
     ofstream fitfile;
   
 
-    if (supArgs1.speedoutput)
+    if (speedoutput)
     {
 
-    fitfile.open(supArgs1.rename_file("speed.dat"));
+    fitfile.open(rename_file("speed.dat"));
 
     }
 
 
 ofstream bodyfile, actfile, curvfile, voltagefile, paramsfile;
-if (supArgs1.output){
-    bodyfile.open(supArgs1.rename_file("body.dat"));
-    actfile.open(supArgs1.rename_file("act.dat"));
-    curvfile.open(supArgs1.rename_file("curv.dat"));
-    paramsfile.open(supArgs1.rename_file("params.dat"));
-}
+
+    bodyfile.open(rename_file("body.dat"));
+    actfile.open(rename_file("act.dat"));
+    curvfile.open(rename_file("curv.dat"));
+    paramsfile.open(rename_file("params.dat"));
+
 
 
     // Fitness
@@ -181,10 +188,10 @@ if (supArgs1.output){
     
 
 
-if (supArgs1.output){
+
     w.DumpParams(paramsfile);
     //writeParsToJson(w);
-}
+
 
 
     w.InitializeState(rs);
@@ -197,13 +204,12 @@ if (supArgs1.output){
         w.Step(StepSize, 1);
        
 
-if (supArgs1.output)
-    {
+
         w.Curvature(curvature);
         curvfile << curvature << endl;
         w.DumpBodyState(bodyfile, skip);
         w.DumpActState(actfile, skip);
-    }
+    
 
     }
 
@@ -233,25 +239,25 @@ if (supArgs1.output)
         distancetravelled += temp * sqrt(pow(xt-xtp,2)+pow(yt-ytp,2));
 
 
-if (supArgs1.output){
+
         w.Curvature(curvature);
         curvfile << curvature << endl;
         w.DumpBodyState(bodyfile, skip);
         w.DumpActState(actfile, skip);
-}
+
 
     }
     fitness = 1 - (fabs(BBCfit-distancetravelled)/BBCfit);
 
 
-if (supArgs1.output){
+
     cout << fitness << " " << BBCfit << " " << distancetravelled << " " << distancetravelled/Duration << endl;
     bodyfile.close();
     actfile.close();
     curvfile.close();
-}
 
-if (supArgs1.speedoutput){
+
+if (speedoutput){
     fitfile << fitness << " "<< BBCfit << " " << distancetravelled << " " << distancetravelled/Duration << " " << endl;
     fitfile.close();
 }
@@ -262,11 +268,11 @@ if (supArgs1.speedoutput){
 void EvolutionRS18::configure()
 {
     configure_p1();
-    if (supArgs1.evo_seed)
+    if (evo_seed)
     {
         ifstream BestIndividualFile;
         TVector<double> bestVector(1, VectSize);
-        BestIndividualFile.open(supArgs1.rename_file("best.gen.dat"));
+        BestIndividualFile.open(rename_file("best.gen.dat"));
         BestIndividualFile >> bestVector;
         s->InitializeSearch();
         for (int i = 1; i <= s->PopulationSize(); i++){

@@ -5,20 +5,13 @@
 class Evolution21:public Evolution
 {
     public:
-    Evolution21():Evolution(new SuppliedArgs2021(),new TSearch(44)),
-    supArgs1(static_cast<SuppliedArgs2021&>(*supArgs1_ptr))
-    {cout << "const called " << s->VectorSize() << endl;
-
-        evoPars1 = {supArgs1.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-            supArgs1.pop_size, supArgs1.max_gens, 0.1, 0.5, UNIFORM, 
-            1.1, 0.04, 1, 0, 0};
+    Evolution21(const SuppliedArgs2021 & sa):Evolution(sa,new TSearch(44)){}
     
-    }
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunction1(TVector<double> &v, RandomState &rs);
     double EvaluationFunction2(TVector<double> &v, RandomState &rs);
-   
+    double EvaluationFunction2Output(TVector<double> &v, RandomState &rs);
     
     int finish_Bosc(int Generation,double BestPerf,double AvgPerf,double PerfVar);
    
@@ -27,13 +20,14 @@ class Evolution21:public Evolution
     //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
     //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
 
-    SuppliedArgs2021& supArgs1;
+    //SuppliedArgs2021& supArgs1;
      // Size of genotype
 
     const int VectSize = 44;
     
     
     protected:
+    evoPars getEvoPars(const SuppliedArgs2021 & sa);
     int skip_steps = 10;
 
      // Integration parameters

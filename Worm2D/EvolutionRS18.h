@@ -5,16 +5,9 @@
 class EvolutionRS18:public Evolution
 {
     public:
-    EvolutionRS18():Evolution(new SuppliedArgs2018(),new TSearch(30)),
-    supArgs1(static_cast<SuppliedArgs2018&>(*supArgs1_ptr))
-    {
-        evoPars1 = {supArgs1.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-            supArgs1.pop_size, supArgs1.max_gens, 0.1, 0.5, UNIFORM, 
-            1.1, 0.04, 1, 0, 1};
-
-        cout << "const called " << s->VectorSize() << endl;
+    EvolutionRS18(const SuppliedArgs2018 & sa)
+    :Evolution(sa,new TSearch(30)),speedoutput(sa.speedoutput),evo_seed(sa.evo_seed){}
     
-    }
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunctionOrig(TVector<double> &v, RandomState &rs);
@@ -24,8 +17,8 @@ class EvolutionRS18:public Evolution
     //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
     //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
 
-    SuppliedArgs2018& supArgs1;
-
+    //SuppliedArgs2018& supArgs1;
+    evoPars getEvoPars(const SuppliedArgs & sa);
     const int VectSize = 30;
     private:
 
@@ -58,6 +51,7 @@ class EvolutionRS18:public Evolution
     double    BBCfit = AvgSpeed*Duration;
 
 // Size of genotype (VC)
-    
+    const bool speedoutput;
+    const bool evo_seed;
 
 };

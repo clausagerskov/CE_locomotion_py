@@ -2,6 +2,15 @@
 #include <math.h>
 #include "WormCE.h"
 
+
+evoPars EvolutionCE::getEvoPars(const SuppliedArgs & sa)
+{  
+    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
+          sa.pop_size, sa.max_gens, 0.05, 0.5, UNIFORM, 
+          1.1, 0.02, 1, NULL, 0};
+
+}
+
 void EvolutionCE::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
      // Parameters for the Stretch Receptors
