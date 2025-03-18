@@ -1,10 +1,13 @@
 //#include "VectorMatrix.h"
 #include "WormRS18.h"
 #include "WormCE.h"
+#include "Worm21.h"
 #include "../argUtils.h"
 #include <iomanip>  // cout precision
 #include "EvolutionRS18.h"
 #include "EvolutionCE.h"
+#include "Evolution21.h"
+
 
 //SuppliedArgs2018 supArgs1;
 
@@ -16,23 +19,28 @@ int main (int argc, const char* argv[])
 
     if (argc == 2) randomseed += atoi(argv[1]);
     //SuppliedArgs2018 sa1;
-    SuppliedArgs sa1;
+    //SuppliedArgs sa1;
+    SuppliedArgs2021 sa1;
 
     sa1.randomseed = randomseed;
     if (argc>2) if (!sa1.setArgs(argc,argv,randomseed)) return 0;
 
     //EvolutionRS18 er18(sa1);
-    EvolutionCE er(sa1);
+    //EvolutionCE er(sa1);
+    bool doEvol = 1;
+    Evolution21 er(sa1);
 
+    
     ofstream seedfile;
     seedfile.open(sa1.rename_file("seed.dat"));
     seedfile << sa1.randomseed << endl;
     seedfile.close();
     
-
-    InitializeBodyConstants();
+    if (doEvol){
+    //InitializeBodyConstants();
     
     er.configure();
+    }
 
     //er18.output = 1;
    // er18.speedoutput = 1;
@@ -44,7 +52,7 @@ int main (int argc, const char* argv[])
     //std::cout << std::setprecision(10);
 
     // Code to run simulation:
-    InitializeBodyConstants();
+   //InitializeBodyConstants();
 
     ifstream BestIndividualFile;
     TVector<double> bestVector(1, er.VectSize);
@@ -52,12 +60,13 @@ int main (int argc, const char* argv[])
     BestIndividualFile >> bestVector;
     BestIndividualFile.close();
     
-    er.save_traces(bestVector, rs);
+    er.EvaluationFunction2Output(bestVector, rs);
 
     TVector<double> phenotype(1, er.VectSize);
     er.GenPhenMapping(bestVector, phenotype);
 
-    WormCE w(phenotype, 0);
+    //WormCE w(phenotype, 0);
+    Worm21 w(phenotype);
     w.InitializeState(rs);
     ofstream json_out(sa1.rename_file("worm_data.json"));
     w.writeJsonFile(json_out);

@@ -439,6 +439,7 @@ void Evolution21::configure_p2()
 
     // Stage 2 //
     s->SetSearchTerminationFunction(NULL);
+
     {typedef double (*callback_t)(TVector<double> &, RandomState &);
         Callback<double(TVector<double> &, RandomState &)>::func = std::bind(&Evolution21::EvaluationFunction2, this, 
                 std::placeholders::_1, std::placeholders::_2);
@@ -446,6 +447,6 @@ void Evolution21::configure_p2()
     s->SetEvaluationFunction(func);}
 
     //s->SetEvaluationFunction(EvaluationFunction2);
-
+    InitializeBodyConstants();
     s->ExecuteSearch();
 }

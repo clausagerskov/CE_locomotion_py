@@ -63,8 +63,8 @@ class Evolution
     protected:
 
     string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
-    void configure_p1();
-    void configure_p2();
+    virtual void configure_p1();
+    virtual void configure_p2();
     void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void ResultsDisplay(TSearch &s);
     
