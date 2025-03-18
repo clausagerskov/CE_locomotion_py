@@ -5,13 +5,13 @@
 class EvolutionCE:public Evolution
 {
     public:
-    EvolutionCE(const SuppliedArgs & sa):Evolution(sa,new TSearch(17)){}
-    
+    EvolutionCE(const SuppliedArgs & sa):Evolution(getEvoPars(sa),new TSearch(17)){}
+
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
-    double EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs);
     double Evaluation(TVector<double> &v, RandomState &rs, int direction);
     evoPars getEvoPars(const SuppliedArgs & sa);
+    double save_traces(TVector<double> &v, RandomState &rs);
     //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
     //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
     //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}

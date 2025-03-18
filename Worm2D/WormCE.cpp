@@ -121,8 +121,7 @@ void WormCE::InitializeState(RandomState &rs)
 
   WormIzq::InitializeState(rs);
   //n_ptr->RandomizeCircuitState(-1.0, 1.0, rs);
-  if (!supArgs1.randomInit)
-  { 
+  
   for (int u = 1; u <= par1.N_units; u++)
   {
     // Dorsal neurons
@@ -134,14 +133,8 @@ void WormCE::InitializeState(RandomState &rs)
     n_ptr->SetNeuronOutput(nn(VB,u), 0.9);
     n_ptr->SetNeuronOutput(nn(VD,u), 0.1);
   }
-}
-  else {
-    for (int u = 1; u <= par1.N_units*par1.N_neuronsperunit; u++)
-    {
-      n_ptr->SetNeuronOutput(u, rs.UniformRandom(0,1));
-    }
 
-  }
+ 
 
 
 

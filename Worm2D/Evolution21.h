@@ -5,8 +5,8 @@
 class Evolution21:public Evolution
 {
     public:
-    Evolution21(const SuppliedArgs2021 & sa):Evolution(sa,new TSearch(44)){}
-    
+    Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),new TSearch(44)){}
+
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunction1(TVector<double> &v, RandomState &rs);

@@ -1,7 +1,9 @@
+#pragma once
 #include "TSearch.h"
 #include "VectorMatrix.h"
 #include "../argUtils.h"
 #include <functional>
+#include <iomanip> 
 
 template <typename T>
 struct Callback;
@@ -65,12 +67,14 @@ class Evolution
     void configure_p2();
     void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void ResultsDisplay(TSearch &s);
-    virtual evoPars getEvoPars(const SuppliedArgs  & sa);
     
-    Evolution(const SuppliedArgs & sa, TSearch* t)
-    :s(t),evoPars1(getEvoPars(sa))//bestfilename(rename_file("best.gen.dat"))
+    
+    Evolution(const evoPars & ep, TSearch* t)
+    :s(t),evoPars1(ep)//,evoPars1(getEvoPars(sa))//bestfilename(rename_file("best.gen.dat"))
     {
+     
       evolfile.open(rename_file("fitness.dat"));
+      evolfile << setprecision(10);
     }
     
     //SuppliedArgs* const supArgs1_ptr;

@@ -1,15 +1,5 @@
 #include "Evolution.h"
-#include <iomanip> 
 
-
-
-evoPars Evolution::getEvoPars(const SuppliedArgs & sa)
-{
-    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-        sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
-        1.1, 0.04, 1, 0, 0};
-
-}
 
 void Evolution::EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar)
 {

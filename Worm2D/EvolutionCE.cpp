@@ -7,7 +7,7 @@ evoPars EvolutionCE::getEvoPars(const SuppliedArgs & sa)
 {  
     return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
           sa.pop_size, sa.max_gens, 0.05, 0.5, UNIFORM, 
-          1.1, 0.02, 1, NULL, 0};
+          1.1, 0.02, 1, 0, 0};
 
 }
 
@@ -51,9 +51,6 @@ void EvolutionCE::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 }
 
 double EvolutionCE::EvaluationFunction(TVector<double> &v, RandomState &rs)
-{return EvaluationFunctionNoOut(v,rs);}
-
-double EvolutionCE::EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs)
 {
     double sra = v(SR_A);
     double srb = v(SR_B);
@@ -128,3 +125,75 @@ double EvolutionCE::Evaluation(TVector<double> &v, RandomState &rs, int directio
     return fitB;
 }
 
+double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
+
+  ofstream curvfile(rename_file("curv.dat"));
+  ofstream bodyfile(rename_file("body.dat"));
+  ofstream actfile(rename_file("act.dat"));
+  // Genotype-Phenotype Mapping
+  TVector<double> phenotype(1, VectSize);
+  GenPhenMapping(v, phenotype);
+  double sra = phenotype(SR_A);
+  double srb = phenotype(SR_B);
+  
+  
+  WormCE w(phenotype, 1);
+ /*  {
+  ofstream phenfile(rename_file("phenotype.dat"));
+  w.DumpParams(phenfile);
+  phenfile.close();
+  } */
+  
+  w.InitializeState(rs);
+  w.sr.SR_A_gain = 0.0;
+  w.sr.SR_B_gain = srb;
+  w.AVA_output =  w.AVA_inact;
+  w.AVB_output =  w.AVB_act;
+
+
+
+  for (double t = 0.0; t <= Transient + Duration; t += StepSize){
+      w.Step(StepSize, 1);
+      w.DumpBodyState(bodyfile, skip_steps);
+      w.DumpCurvature(curvfile, skip_steps);
+      w.DumpActState(actfile, skip_steps);
+  }
+
+   w.sr.SR_A_gain = 0.0;
+   w.sr.SR_B_gain = 0.0;
+
+   for (double t = 0.0; t <= (12); t += StepSize){
+       w.Step(StepSize, 1);
+       w.DumpBodyState(bodyfile, skip_steps);
+       w.DumpCurvature(curvfile, skip_steps);
+       w.DumpActState(actfile, skip_steps);
+   }
+
+   w.sr.SR_A_gain = sra;
+   w.sr.SR_B_gain = 0.0;
+   w.AVA_output =  w.AVA_act;
+   w.AVB_output =  w.AVB_inact;
+
+   for (double t = 0.0; t <= (20); t += StepSize){
+       w.Step(StepSize, 1);
+       w.DumpBodyState(bodyfile, skip_steps);
+       w.DumpCurvature(curvfile, skip_steps);
+       w.DumpActState(actfile, skip_steps);
+   }
+
+   w.sr.SR_A_gain = 0.0;
+   w.sr.SR_B_gain = 0.0;
+
+   for (double t = 0.0; t <= (12); t += StepSize){
+       w.Step(StepSize, 1);
+       w.DumpBodyState(bodyfile, skip_steps);
+       w.DumpCurvature(curvfile, skip_steps);
+       w.DumpActState(actfile, skip_steps);
+   }
+
+  
+  bodyfile.close();
+  curvfile.close();
+  actfile.close();
+  return 0;
+}

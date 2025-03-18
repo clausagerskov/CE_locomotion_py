@@ -6,7 +6,7 @@ class EvolutionRS18:public Evolution
 {
     public:
     EvolutionRS18(const SuppliedArgs2018 & sa)
-    :Evolution(sa,new TSearch(30)),speedoutput(sa.speedoutput),evo_seed(sa.evo_seed){}
+    :Evolution(getEvoPars(sa),new TSearch(30)),speedoutput(sa.speedoutput),evo_seed(sa.evo_seed){}
     
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
@@ -18,7 +18,7 @@ class EvolutionRS18:public Evolution
     //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
 
     //SuppliedArgs2018& supArgs1;
-    evoPars getEvoPars(const SuppliedArgs & sa);
+    evoPars getEvoPars(const SuppliedArgs2018 & sa);
     const int VectSize = 30;
     private:
 

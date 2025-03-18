@@ -1,3 +1,4 @@
+#pragma once
 #include "TSearch.h"
 #include "VectorMatrix.h"
 #include "Muscles.h"
