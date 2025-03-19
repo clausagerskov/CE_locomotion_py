@@ -46,6 +46,7 @@ class Evolution
     //Evolution():supArgs1_ptr(makeArgsPtr()),s(makeTSearchPtr()){}
     virtual void GenPhenMapping(TVector<double> &gen, TVector<double> &phen) = 0;
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
+    virtual void RunSimulation(TVector<double> &v, RandomState &rs) = 0;
     
     virtual void configure();
     //virtual SuppliedArgs* const makeArgsPtr(){return NULL;}
@@ -60,6 +61,9 @@ class Evolution
     //if (phenotype) delete phenotype;
     }
 
+    const int VectSize;
+
+
     protected:
 
     string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
@@ -69,16 +73,18 @@ class Evolution
     void ResultsDisplay(TSearch &s);
     
     
-    Evolution(const evoPars & ep, TSearch* t)
-    :s(t),evoPars1(ep)//,evoPars1(getEvoPars(sa))//bestfilename(rename_file("best.gen.dat"))
+    Evolution(const evoPars & ep, const int & VectSize_)
+    :s(new TSearch(VectSize_)),evoPars1(ep),VectSize(VectSize_)
+    //,evoPars1(getEvoPars(sa))//bestfilename(rename_file("best.gen.dat"))
     {
-     
+      cout << evoPars1.directoryName << endl;
       evolfile.open(rename_file("fitness.dat"));
       evolfile << setprecision(10);
     }
     
-    //SuppliedArgs* const supArgs1_ptr;
     TSearch* const s; //(VectSize);
+
+    //SuppliedArgs* const supArgs1_ptr;
     //TVector<double> * phenotype; // (1, VectSize);
 
     const evoPars evoPars1;

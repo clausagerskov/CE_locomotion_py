@@ -3,7 +3,7 @@ import argparse
 import os
 import sys
 import helper_funcs as hf
-from importlib import import_module
+# from importlib import import_module
 
 
 # from pyneuroml.utils.cli import build_namespace
@@ -12,22 +12,25 @@ from datetime import datetime
 import json
 
 plot_formats = {}
-plot_formats['RS18'] = {}
-plot_formats['RS18']["fig_titles"] = ["Stretch receptors", 
-                                        "Head Neurons", "Body Neurons", "Muscles"]
-plot_formats['RS18']["data_sizes"] = [20, 4, 36, 48]
-plot_formats['RS18']["fig_labels"] = ["SR", "Neu", "Neu", "Mu"]
+plot_formats["RS18"] = {}
+plot_formats["RS18"]["fig_titles"] = [
+    "Stretch receptors",
+    "Head Neurons",
+    "Body Neurons",
+    "Muscles",
+]
+plot_formats["RS18"]["data_sizes"] = [20, 4, 36, 48]
+plot_formats["RS18"]["fig_labels"] = ["SR", "Neu", "Neu", "Mu"]
 
-plot_formats['Net21'] = {}
-plot_formats['Net21']["fig_titles"] = ["Neurons", "Muscles"]
-plot_formats['Net21']["data_sizes"] = [49, 48]
-plot_formats['Net21']["fig_labels"] = ["Neu", "Mu"]
+plot_formats["Net21"] = {}
+plot_formats["Net21"]["fig_titles"] = ["Neurons", "Muscles"]
+plot_formats["Net21"]["data_sizes"] = [49, 48]
+plot_formats["Net21"]["fig_labels"] = ["Neu", "Mu"]
 
-plot_formats['CE'] = {}
-plot_formats['CE']["fig_titles"] = ["Stretch receptors", "Neurons", "Muscles"]
-plot_formats['CE']["data_sizes"] = [40, 60, 48]
-plot_formats['CE']["fig_labels"] = ["SR", "Neu", "Mu"]
-
+plot_formats["CE"] = {}
+plot_formats["CE"]["fig_titles"] = ["Stretch receptors", "Neurons", "Muscles"]
+plot_formats["CE"]["data_sizes"] = [40, 60, 48]
+plot_formats["CE"]["fig_labels"] = ["SR", "Neu", "Mu"]
 
 
 defaults_base_celoc = {
@@ -73,7 +76,7 @@ DEFAULTS = {
     "mainProcessName": "main",
     "modelFolder": ".",
     "maxGens": None,
-    "modelName": None
+    "modelName": None,
 }
 
 
@@ -92,10 +95,11 @@ def process_args():
         type=str,
         metavar="<model name>",
         default=DEFAULTS["modelName"],
-        help=("Name of model, required if Worm2D is the model folder.\n"
-              "Options include: RS18, CE, Net21."
-              #"Default is: %s" % DEFAULTS["modelName"]
-              ),
+        help=(
+            "Name of model, required if Worm2D is the model folder.\n"
+            "Options include: RS18, CE, Net21."
+            # "Default is: %s" % DEFAULTS["modelName"]
+        ),
     )
 
     parser.add_argument(
@@ -391,20 +395,25 @@ def run(a=None, **kwargs):
         else:
             do_randInit = 0
 
-    model_names = {".":'CE', "RoyalSociety2018":'RS18', "network2021": 'Net21'}
+    model_names = {".": "CE", "RoyalSociety2018": "RS18", "network2021": "Net21"}
 
     model_name = None
-    if a.modelFolder == 'Worm2D':
+    if a.modelFolder == "Worm2D":
         if a.modelName is None:
-            print("'modelName' parameter is required if `Worm2D' is the model folder.\n"
-                  "Options are 'CE', 'RS18', 'Net21'.\n")
+            print(
+                "'modelName' parameter is required if `Worm2D' is the model folder.\n"
+                "Options are 'CE', 'RS18', 'Net21'.\n"
+            )
             sys.exit(1)
         model_name = a.modelName
     else:
         model_name = model_names[a.modelFolder]
-   
-    defaults_bases = {'CE': defaults_base_celoc, 
-                     'RS18': defaults_base_2018, 'Net21': defaults_base_2021}
+
+    defaults_bases = {
+        "CE": defaults_base_celoc,
+        "RS18": defaults_base_2018,
+        "Net21": defaults_base_2021,
+    }
 
     defaults_base = defaults_bases[model_name]
     plot_format = plot_formats[model_name]
@@ -526,7 +535,8 @@ def run(a=None, **kwargs):
     rsr(show_plot=False, plot_format = plot_format) """
 
     from load_data import reload_single_run
-    reload_single_run(show_plot=False, plot_format = plot_format)
+
+    reload_single_run(show_plot=False, plot_format=plot_format)
 
 
 if __name__ == "__main__":

@@ -6,12 +6,13 @@ class EvolutionRS18:public Evolution
 {
     public:
     EvolutionRS18(const SuppliedArgs2018 & sa)
-    :Evolution(getEvoPars(sa),new TSearch(30)),speedoutput(sa.speedoutput),evo_seed(sa.evo_seed){}
+    :Evolution(getEvoPars(sa),30),speedoutput(sa.speedoutput),evo_seed(sa.evo_seed){}
     
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunctionOrig(TVector<double> &v, RandomState &rs);
     double EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs);
+    void RunSimulation(TVector<double> &v, RandomState &rs);
     void configure();
     //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
     //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
@@ -19,7 +20,7 @@ class EvolutionRS18:public Evolution
 
     //SuppliedArgs2018& supArgs1;
     evoPars getEvoPars(const SuppliedArgs2018 & sa);
-    const int VectSize = 30;
+    //const int VectSize = 30;
     private:
 
     double Duration = 50.0;           // Seconds

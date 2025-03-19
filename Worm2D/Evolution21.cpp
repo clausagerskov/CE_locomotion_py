@@ -55,6 +55,14 @@ phen(39) = MapSearchParameter(gen(39), 0.2, 1.0);       // Used to be 0.4/0.6 XX
 
 }
 
+void Evolution21::RunSimulation(TVector<double> &v, RandomState &rs)
+{
+    EvaluationFunction2Output(v,rs);
+    return;
+}
+
+
+
 double Evolution21::EvaluationFunction(TVector<double> &v, RandomState &rs)
 {return EvaluationFunction2(v,rs);}
 

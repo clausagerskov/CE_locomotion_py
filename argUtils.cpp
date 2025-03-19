@@ -24,9 +24,7 @@ SuppliedArgs::SuppliedArgs()
 
 
 SuppliedArgs2018::SuppliedArgs2018():SuppliedArgs()
-{
-  do_evol = 1;
-  pop_size = 96;
+{ 
   max_gens = 1000;
   printToFile = 1;
   evo_seed = 0;
@@ -36,7 +34,6 @@ SuppliedArgs2018::SuppliedArgs2018():SuppliedArgs()
 
 SuppliedArgs2021::SuppliedArgs2021():SuppliedArgs()
 {
-  do_evol = 1;
   pop_size = 100;
   max_gens = 2000;
   printToFile = 1;
@@ -98,7 +95,7 @@ if (((argc-1) % 2) != 0)
     if (strcmp(argv[arg],"-r")==0) randomseed = randomseed1 + atoi(argv[arg+1]);
     seed_flag = 0;
     }
-
+    if (strcmp(argv[arg], "--modelname")==0) model_name = argv[arg+1];
     if (strcmp(argv[arg],"-p")==0) pop_size = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"-d")==0) traceDuration = atoi(argv[arg+1]);
     if (strcmp(argv[arg],"--nervous")==0) 

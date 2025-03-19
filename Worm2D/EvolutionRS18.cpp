@@ -4,7 +4,8 @@
 
 evoPars EvolutionRS18::getEvoPars(const SuppliedArgs2018 & sa)
 {  
-    cout << "er18 getevo" << endl;
+    //cout << "er18 getevo" << endl;
+    //cout << sa.output_dir_name << endl;
     return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
             sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
             1.1, 0.04, 1, 0, 1};
@@ -85,6 +86,14 @@ void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 
 double EvolutionRS18::EvaluationFunction(TVector<double> &v, RandomState &rs)
 {return EvaluationFunctionNoOut(v,rs);}
+
+
+void EvolutionRS18::RunSimulation(TVector<double> &v, RandomState &rs)
+{
+    EvaluationFunctionOrig(v,rs);
+    return;
+}
+
 
 double EvolutionRS18::EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs)
 {

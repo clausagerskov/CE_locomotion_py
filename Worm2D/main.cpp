@@ -15,70 +15,78 @@ int main (int argc, const char* argv[])
 {
  
     std::cout << std::setprecision(10);
+
+    string model_name = "";
+    for (int arg = 1; arg<argc; arg+=2)
+    {
+        if (strcmp(argv[arg], "--modelname")==0) 
+        {model_name = argv[arg+1];break;}
+    }
+    if (model_name == "")
+    {
+    cout << "Model name required for Worm2D. Exiting." << endl;
+    return 0;
+    }
+    SuppliedArgs* sa = 0;
+    Evolution* er = 0;
+
     long randomseed = static_cast<long>(time(NULL));
-
-    if (argc == 2) randomseed += atoi(argv[1]);
-    //SuppliedArgs2018 sa1;
-    //SuppliedArgs sa1;
-    SuppliedArgs2021 sa1;
-
-    sa1.randomseed = randomseed;
-    if (argc>2) if (!sa1.setArgs(argc,argv,randomseed)) return 0;
-
-    //EvolutionRS18 er18(sa1);
-    //EvolutionCE er(sa1);
-    bool doEvol = 1;
-    Evolution21 er(sa1);
-
-    
-    ofstream seedfile;
-    seedfile.open(sa1.rename_file("seed.dat"));
-    seedfile << sa1.randomseed << endl;
-    seedfile.close();
-    
-    if (doEvol){
-    //InitializeBodyConstants();
-    
-    er.configure();
+    if (model_name == "CE"){
+        sa = new SuppliedArgs;
+        sa->setArgs(argc,argv,randomseed);
+        er = new EvolutionCE(*sa);
+    }
+    if (model_name == "RS18"){
+        sa = new SuppliedArgs2018;
+        sa->setArgs(argc,argv,randomseed);
+        er = new EvolutionRS18(static_cast<SuppliedArgs2018&>(*sa));
+    }
+    if (model_name == "Net21"){
+        cout << "making Net21" << endl;
+        sa = new SuppliedArgs2021;
+        sa->setArgs(argc,argv,randomseed);
+        er = new Evolution21(static_cast<SuppliedArgs2021&>(*sa));
     }
 
-    //er18.output = 1;
-   // er18.speedoutput = 1;
+    ofstream seedfile;
+    seedfile.open(sa->rename_file("seed.dat"));
+    seedfile << sa->randomseed << endl;
+    seedfile.close();
+
+    InitializeBodyConstants();
+    if (sa->do_evol) 
+    {
+        cout << "config" << endl;
+        er->configure();
+    }
+    
+    
     RandomState rs;
-    //long seed = static_cast<long>(time(NULL));
-    //rs.SetRandomSeed(seed);
-    rs.SetRandomSeed(sa1.randomseed);
-
-    //std::cout << std::setprecision(10);
-
-    // Code to run simulation:
-   //InitializeBodyConstants();
+    rs.SetRandomSeed(sa->randomseed);
 
     ifstream BestIndividualFile;
-    TVector<double> bestVector(1, er.VectSize);
-    BestIndividualFile.open(sa1.rename_file("best.gen.dat"));
+    TVector<double> bestVector(1, er->VectSize);
+    BestIndividualFile.open(sa->rename_file("best.gen.dat"));
     BestIndividualFile >> bestVector;
     BestIndividualFile.close();
     
-    er.EvaluationFunction2Output(bestVector, rs);
+    er->RunSimulation(bestVector, rs);
+    WormIzq* w = 0;
 
-    TVector<double> phenotype(1, er.VectSize);
-    er.GenPhenMapping(bestVector, phenotype);
+    TVector<double> phenotype(1, er->VectSize);
+    er->GenPhenMapping(bestVector, phenotype);
 
-    //WormCE w(phenotype, 0);
-    Worm21 w(phenotype);
-    w.InitializeState(rs);
-    ofstream json_out(sa1.rename_file("worm_data.json"));
-    w.writeJsonFile(json_out);
+    if (model_name == "CE") w = new WormCE(phenotype,0);
+    if (model_name == "RS18") w = new Worm18(phenotype,0);
+    if (model_name == "Net21") w = new Worm21(phenotype);
+
+  
+    w->InitializeState(rs);
+    ofstream json_out(sa->rename_file("worm_data.json"));
+    w->writeJsonFile(json_out);
     json_out.close();
     
 
-    
-    //supArgs1.writeMessage();
-    //int	VectSize = 30;
-    //TVector<double> phenotype(1, VectSize);
-    //Worm18 w(phenotype, 0);
-    //w.writeJsonFile();
 
     return 0;
 }

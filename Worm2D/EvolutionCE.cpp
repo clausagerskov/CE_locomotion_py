@@ -124,6 +124,11 @@ double EvolutionCE::Evaluation(TVector<double> &v, RandomState &rs, int directio
     fitB = (fitB > 0)? fitB : 0.0;
     return fitB;
 }
+void EvolutionCE::RunSimulation(TVector<double> &v, RandomState &rs)
+{
+  save_traces(v,rs);
+  return;
+}
 
 double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
 

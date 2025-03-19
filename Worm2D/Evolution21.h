@@ -5,13 +5,14 @@
 class Evolution21:public Evolution
 {
     public:
-    Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),new TSearch(44)){}
+    Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44){}
 
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double EvaluationFunction1(TVector<double> &v, RandomState &rs);
     double EvaluationFunction2(TVector<double> &v, RandomState &rs);
     double EvaluationFunction2Output(TVector<double> &v, RandomState &rs);
+    void RunSimulation(TVector<double> &v, RandomState &rs);
     
     int finish_Bosc(int Generation,double BestPerf,double AvgPerf,double PerfVar);
    
@@ -23,7 +24,7 @@ class Evolution21:public Evolution
     //SuppliedArgs2021& supArgs1;
      // Size of genotype
 
-    const int VectSize = 44;
+   // const int VectSize = 44;
     
     
     protected:

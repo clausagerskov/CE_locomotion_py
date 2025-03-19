@@ -4,6 +4,7 @@ run(
     maxGens=20,
     popSize=56,
     RandSeed=151750,
+    modelName="RS18",
     modelFolder="Worm2D",
     outputFolderName="exampleRunRS18W2D",
     doEvol=True,

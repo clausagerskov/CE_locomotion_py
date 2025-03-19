@@ -32,7 +32,7 @@ int traceDuration;
 bool doOrigNS;
 long randomseed;
 int max_gens;
-
+string model_name;
 
 };
 class SuppliedArgs2018 : public SuppliedArgs
