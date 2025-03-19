@@ -31,7 +31,7 @@ jsonUtils.o: jsonUtils.cpp jsonUtils.h
 	g++ -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include  -flto $(CXXFLAGS) $(LDFLAGS) jsonUtils.cpp	
 
 argUtils.o: argUtils.cpp argUtils.h
-	g++ -c -O3 -flto argUtils.cpp
+	g++ -c -O3 -std=c++11 -flto argUtils.cpp
 Worm.o: Worm.cpp Worm.h
 	g++ -c -O3 -flto $(CXXFLAGS) $(LDFLAGS) Worm.cpp
 WormBody.o: WormBody.cpp WormBody.h
