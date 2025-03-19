@@ -21,6 +21,7 @@ template <typename Ret, typename... Params>
 std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
 
 struct evoPars;
+struct simPars;
 
 struct evoPars{
    string directoryName;
@@ -37,6 +38,15 @@ struct evoPars{
    int SearchConstraint;
    int CheckpointInterval;
    bool ReEvaluationFlag;
+};
+
+struct simPars{
+   int skip_steps;
+   // Integration parameters
+   double Duration;       //
+   double Transient;       //
+   double StepSize;
+   int N_curvs;             // Number of cuvature points
 };
 
 
@@ -64,6 +74,7 @@ class Evolution
     const int VectSize;
 
 
+
     protected:
 
     string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
@@ -71,11 +82,10 @@ class Evolution
     virtual void configure_p2();
     void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void ResultsDisplay(TSearch &s);
+    //virtual simPars getSimPars(const SuppliedArgs &) = 0;
     
-    
-    Evolution(const evoPars & ep, const int & VectSize_)
-    :s(new TSearch(VectSize_)),evoPars1(ep),VectSize(VectSize_)
-    //,evoPars1(getEvoPars(sa))//bestfilename(rename_file("best.gen.dat"))
+    Evolution(const evoPars & ep, const int & VectSize_, const simPars & sp)
+    :s(new TSearch(VectSize_)),evoPars1(ep),VectSize(VectSize_),simPars1(sp)
     {
       cout << evoPars1.directoryName << endl;
       evolfile.open(rename_file("fitness.dat"));
@@ -88,7 +98,8 @@ class Evolution
     //TVector<double> * phenotype; // (1, VectSize);
 
     const evoPars evoPars1;
-    
+    const simPars simPars1;
+
     private:
 
     

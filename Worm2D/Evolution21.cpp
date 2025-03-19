@@ -3,7 +3,11 @@
 #include "Worm21.h"
 #include "Segment21.h"
 
-
+simPars Evolution21::getSimPars(const SuppliedArgs &)
+{
+    return {10, 40.0, 10.0, 0.005, 23};
+   
+}
 
 evoPars Evolution21::getEvoPars(const SuppliedArgs2021 & sa)
 {

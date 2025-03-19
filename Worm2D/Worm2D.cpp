@@ -1,7 +1,7 @@
 #include "Worm2D.h"
 #include <iomanip>
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 Worm2D::Worm2D(NervousSystemBase * n_ptr_):n_ptr(n_ptr_){}
 

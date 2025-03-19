@@ -5,7 +5,7 @@
 class Evolution21:public Evolution
 {
     public:
-    Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44){}
+    Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44,getSimPars(sa)){}
 
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
@@ -28,6 +28,7 @@ class Evolution21:public Evolution
     
     
     protected:
+    simPars getSimPars(const SuppliedArgs &);
     evoPars getEvoPars(const SuppliedArgs2021 & sa);
     int skip_steps = 10;
 
