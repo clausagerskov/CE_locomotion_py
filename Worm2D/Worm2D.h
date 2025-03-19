@@ -4,11 +4,11 @@
 #include "Muscles.h"
 #include "WormBody.h"
 #include "NervousSystem.h"
-//#include <nlohmann/json.hpp>
+#include <nlohmann/json.hpp>
 #include "jsonUtils.h"
 
 
-//using json = nlohmann::json;
+using json = nlohmann::json;
 
 #define PI 3.14159265
 
