@@ -11,6 +11,24 @@ import random
 from datetime import datetime
 import json
 
+plot_formats = {}
+plot_formats['RS18'] = {}
+plot_formats['RS18']["fig_titles"] = ["Stretch receptors", 
+                                        "Head Neurons", "Body Neurons", "Muscles"]
+plot_formats['RS18']["data_sizes"] = [20, 4, 36, 48]
+plot_formats['RS18']["fig_labels"] = ["SR", "Neu", "Neu", "Mu"]
+
+plot_formats['Net21'] = {}
+plot_formats['Net21']["fig_titles"] = ["Neurons", "Muscles"]
+plot_formats['Net21']["data_sizes"] = [49, 48]
+plot_formats['Net21']["fig_labels"] = ["Neu", "Mu"]
+
+plot_formats['CE'] = {}
+plot_formats['CE']["fig_titles"] = ["Stretch receptors", "Neurons", "Muscles"]
+plot_formats['CE']["data_sizes"] = [40, 60, 48]
+plot_formats['CE']["fig_labels"] = ["SR", "Neu", "Mu"]
+
+
 
 defaults_base_celoc = {
     "popSize": 96,
@@ -55,6 +73,7 @@ DEFAULTS = {
     "mainProcessName": "main",
     "modelFolder": ".",
     "maxGens": None,
+    "modelName": None
 }
 
 
@@ -65,6 +84,18 @@ def process_args():
     """
     parser = argparse.ArgumentParser(
         description=("A script for supplying arguments to execute Worm2D")
+    )
+
+    parser.add_argument(
+        "-O",
+        "--modelName",
+        type=str,
+        metavar="<model name>",
+        default=DEFAULTS["modelName"],
+        help=("Name of model, required if Worm2D is the model folder.\n"
+              "Options include: RS18, CE, Net21."
+              #"Default is: %s" % DEFAULTS["modelName"]
+              ),
     )
 
     parser.add_argument(
@@ -84,7 +115,7 @@ def process_args():
         default=DEFAULTS["modelFolder"],
         help=(
             "Name of model code folder. Default is the current folder.\n"
-            "Other options include `RoyalSociety2018' and 'network2021'.\n"
+            "Other options include `RoyalSociety2018', 'network2021' and 'Worm2D'\n"
         ),
     )
 
@@ -360,14 +391,23 @@ def run(a=None, **kwargs):
         else:
             do_randInit = 0
 
-    if a.modelFolder == ".":
-        defaults_base = defaults_base_celoc
-    elif a.modelFolder == "RoyalSociety2018":
-        defaults_base = defaults_base_2018
-    elif a.modelFolder == "exampleRunNet21":
-        defaults_base = defaults_base_2021
+    model_names = {".":'CE', "RoyalSociety2018":'RS18', "network2021": 'Net21'}
+
+    model_name = None
+    if a.modelFolder == 'Worm2D':
+        if a.modelName is None:
+            print("'modelName' parameter is required if `Worm2D' is the model folder.\n"
+                  "Options are 'CE', 'RS18', 'Net21'.\n")
+            sys.exit(1)
+        model_name = a.modelName
     else:
-        defaults_base = defaults_base_celoc
+        model_name = model_names[a.modelFolder]
+   
+    defaults_bases = {'CE': defaults_base_celoc, 
+                     'RS18': defaults_base_2018, 'Net21': defaults_base_2021}
+
+    defaults_base = defaults_bases[model_name]
+    plot_format = plot_formats[model_name]
 
     evol_pars = ["Duration", "pop_size", "randomseed", "max_gens"]
     evol_args = [a.duration, a.popSize, a.RandSeed, a.maxGens]
@@ -462,6 +502,7 @@ def run(a=None, **kwargs):
     cmd += ["--dorandinit", str(sim_data["doRandInit"])]
     cmd += ["--donml", str(sim_data["doNML"])]
     cmd += ["--folder", str(a.outputFolderName)]
+    cmd += ["--modelname", str(model_name)]
 
     # Run the C++
     if True:
@@ -476,15 +517,16 @@ def run(a=None, **kwargs):
             print(result.stderr)
 
     hf.dir_name = a.outputFolderName
-    if a.modelFolder == ".":
+
+    """     if a.modelFolder == ".":
         module_name = "load_data"
     else:
         module_name = a.modelFolder + ".load_data"
     rsr = import_module(module_name).reload_single_run
-    # from load_data import reload_single_run
-    rsr(show_plot=False)
+    rsr(show_plot=False, plot_format = plot_format) """
 
-    # reload_single_run(show_plot=False)
+    from load_data import reload_single_run
+    reload_single_run(show_plot=False, plot_format = plot_format)
 
 
 if __name__ == "__main__":
