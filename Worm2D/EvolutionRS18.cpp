@@ -2,7 +2,7 @@
 #include <math.h>
 #include "WormRS18.h"
 
-evoPars EvolutionRS18::getDefaultPars()
+/* evoPars EvolutionRS18::getDefaultPars()
 {
     return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
         96, 1000, 0.1, 0.5, UNIFORM, 
@@ -10,7 +10,7 @@ evoPars EvolutionRS18::getDefaultPars()
 
 }
 
-
+ */
 void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
     // --------------------------------

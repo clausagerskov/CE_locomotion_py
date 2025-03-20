@@ -16,9 +16,8 @@ const char* getParameter(int argc, const char* argv[], string parName, const cha
 }
 
 
-evoPars Evolution::setPars(int argc, const char* argv[]){
+evoPars Evolution::setPars(int argc, const char* argv[], evoPars ep1){
 
-    evoPars ep1 =  getDefaultPars();
 
     if (((argc-1) % 2) != 0)
      {cout << "The arguments are not configured correctly." << endl;exit(1);}

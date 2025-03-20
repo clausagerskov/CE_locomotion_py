@@ -2,15 +2,6 @@
 #include <math.h>
 #include "WormCE.h"
 
-evoPars EvolutionCE::getDefaultPars()
-{
-
-  return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
-    96, 10, 0.05, 0.5, UNIFORM, 
-    1.1, 0.02, 1, 0, 0, 10, 24, 8.0, 0.005, 23, 17};
-   
-}
-
 
 void EvolutionCE::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {

@@ -15,15 +15,14 @@ int main (int argc, const char* argv[])
 {
  
     std::cout << std::setprecision(10);
-    string model_name =  
-    //getParameter<string>(argc,argv,"--modelname","");
-    getParameter(argc,argv,"--modelname","");
+    string model_name =  getParameter(argc,argv,"--modelname","");
     if (model_name == "")
     {
     cout << "Model name required for Worm2D. Exiting." << endl;
     return 0;
     }
 
+   
     //SuppliedArgs* sa = 0;
     Evolution* er = 0;
     if (model_name == "CE") er = new EvolutionCE(argc,argv);
@@ -37,9 +36,7 @@ int main (int argc, const char* argv[])
     seedfile.close();
 
     InitializeBodyConstants();
-    //if (getParameter<bool>(argc,argv,"--doevol",0))
-    if (atoi(getParameter(argc,argv,"--doevol","0")))
-    er->configure();
+    if (atoi(getParameter(argc,argv,"--doevol","0"))) er->configure();
     
     
     
@@ -68,7 +65,8 @@ int main (int argc, const char* argv[])
     w->writeJsonFile(json_out);
     json_out.close();
     
-
+    delete er;
+    delete w;
 
     return 0;
 }

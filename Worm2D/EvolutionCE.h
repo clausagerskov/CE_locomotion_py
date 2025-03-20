@@ -2,15 +2,22 @@
 #include "VectorMatrix.h"
 #include "Evolution.h"
 
+/* evoPars evCEdefault{".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+    96, 10, 0.05, 0.5, UNIFORM, 
+    1.1, 0.02, 1, 0, 0, 10, 24, 8.0, 0.005, 23, 17}; */
+
 class EvolutionCE:public Evolution
 {
     public:
-    EvolutionCE(int argc, const char* argv[]):Evolution(argc,argv){}
+    EvolutionCE(int argc, const char* argv[])
+    :Evolution(argc,argv, {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+        96, 10, 0.05, 0.5, UNIFORM, 
+        1.1, 0.02, 1, 0, 0, 10, 24, 8.0, 0.005, 23, 17}, 17){}
 
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
     double Evaluation(TVector<double> &v, RandomState &rs, int direction);
-    evoPars getEvoPars(const SuppliedArgs & sa);
+    //evoPars getEvoPars(const SuppliedArgs & sa);
     double save_traces(TVector<double> &v, RandomState &rs);
     void RunSimulation(TVector<double> &v, RandomState &rs);
 
@@ -25,7 +32,7 @@ class EvolutionCE:public Evolution
 
     protected:
 
-    evoPars getDefaultPars();
+    //evoPars getDefaultPars();
     private:
     //int skip_steps = 10;
     

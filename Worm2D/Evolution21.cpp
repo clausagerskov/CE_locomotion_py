@@ -3,16 +3,22 @@
 #include "Worm21.h"
 #include "Segment21.h"
 
+/* evoPars ev21default = {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+    100, 2000, 0.1, 0.5, UNIFORM, 
+    1.1, 0.04, 1, 0, 0, 10, 40.0, 10.0, 0.005, 23, 44}; */
 
 
-evoPars Evolution21::getDefaultPars()
+/* evoPars Evolution21::getDefaultPars()
 {
-   
+   cout << "21 default" << endl;
+   exit(1);
+
     return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
             100, 2000, 0.1, 0.5, UNIFORM, 
             1.1, 0.04, 1, 0, 0, 10, 40.0, 10.0, 0.005, 23, 44};
 
-}
+} */
+
 
 void Evolution21::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {

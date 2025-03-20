@@ -89,8 +89,8 @@ class Evolution
     string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
 
     protected:
-    virtual evoPars getDefaultPars() = 0;
-    evoPars setPars(int argc, const char* argv[]);
+    //virtual evoPars getDefaultPars() {cout << "wrong get def" << endl; exit(1);}
+    evoPars setPars(int argc, const char* argv[], evoPars ep1);
 
     
     virtual void configure_p1();
@@ -99,8 +99,9 @@ class Evolution
     void ResultsDisplay(TSearch &s);
     //virtual simPars getSimPars(const SuppliedArgs &) = 0;
     
-    Evolution(int argc, const char* argv[])
-    :evoPars1(setPars(argc,argv)),s(new TSearch(evoPars1.VectSize))
+    Evolution(int argc, const char* argv[], evoPars ep1, int VectSize)
+    :evoPars1(setPars(argc,argv,ep1)),s(new TSearch(VectSize))
+    //s(new TSearch(evoPars1.VectSize))
     {
       evolfile.open(rename_file("fitness.dat"));
       evolfile << setprecision(10);

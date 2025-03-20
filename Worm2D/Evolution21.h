@@ -2,12 +2,21 @@
 #include "VectorMatrix.h"
 #include "Evolution.h"
 
+
+/* evoPars ev21default{".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+  100, 2000, 0.1, 0.5, UNIFORM, 
+  1.1, 0.04, 1, 0, 0, 10, 40.0, 10.0, 0.005, 23, 44}; */
+
 class Evolution21:public Evolution
 {
     public:
     //Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44,getSimPars(sa)){}
 
-    Evolution21(int argc, const char* argv[]):Evolution(argc,argv){}
+    Evolution21(int argc, const char* argv[]):Evolution(argc,argv,
+      {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+        100, 2000, 0.1, 0.5, UNIFORM, 
+        1.1, 0.04, 1, 0, 0, 10, 40.0, 10.0, 0.005, 23, 44},44
+    ){}
 
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
