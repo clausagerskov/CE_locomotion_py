@@ -89,16 +89,33 @@ def reload_single_run(show_plot=True, verbose=False):
 
     axs[3, 0].set_title("2D worm motion", fontsize=title_font_size)
 
+    wcon = {}
+    wcon["data"] = []
+
+    dd = {}
+    wcon["data"].append(dd)
+    dd["id"] = "test"
+    dd["ptail"] = 0  # required??
+    dd["t"] = []
+    dd["x"] = []
+    dd["y"] = []
+
     for t in range(1, tmax, int(tmax / num)):
         f = float(t) / tmax
+
+        dd["t"].append(t)
 
         color = "#%02x%02x00" % (int(0xFF * (f)), int(0xFF * (1 - f) * 0.8))
         # color2 = "#%06x" % random.randint(0, 0xFFFFFF)
 
         point_start = 1
+        xs = []
+        ys = []
         for i in range(point_start, 50):
             x = body_data[i * 3 + 1][t]
+            xs.append(x * 1000)
             y = body_data[i * 3 + 2][t]
+            ys.append(y * 1000)
             # y1 = body_data[i * 3 + 2][t]
             if i == 1 and verbose:
                 print(
@@ -111,11 +128,21 @@ def reload_single_run(show_plot=True, verbose=False):
             # print("%s - Plotting %i at t=%s (%s,%s), %s"%('\n' if i==point_start else '', i, t,x,y1, color))
             # plt.plot([x],[y1],'.',color=color)
 
+        dd["x"].append(xs)
+        dd["y"].append(ys)
+
+        # print("--- - Plotting at t=%s (%s,%s)" % (t, xs, ys))
+
     axs[3, 0].set_aspect("equal")
 
     filename = hf.rename_file("ExampleActivity.png")
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     print("Saved plot image to: %s" % filename)
+
+    import json
+
+    with open(hf.rename_file("output.wcon"), "w", encoding="utf-8") as json_file:
+        json.dump(wcon, json_file, indent=4, ensure_ascii=False)
 
     if show_plot:
         plt.show()
