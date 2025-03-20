@@ -1,7 +1,7 @@
 #pragma once
 #include "TSearch.h"
 #include "VectorMatrix.h"
-#include "../argUtils.h"
+//#include "../argUtils.h"
 #include <functional>
 #include <iomanip> 
 #include <string.h>
@@ -96,9 +96,7 @@ class Evolution
     void addParsToJson(json & j);
     
     virtual void configure();
-    //virtual SuppliedArgs* const makeArgsPtr(){return NULL;}
-    //virtual TSearch* const makeTSearchPtr(){return NULL;}
-    //void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
+    
     
     const evoPars & itsEvoPars() const {return evoPars1;}
 
