@@ -44,7 +44,7 @@ doubIntParamsHead SuppliedArgs::getParams()
 {
   doubIntParamsHead var1;
   var1.parInt.head = "Evolutionary Optimization Parameters";
-  var1.parInt.names = {"pop_size", "Duration", "randomseed", "max_gens"};
+  var1.parInt.names = {"PopulationSize", "Duration", "randomseed", "MaxGenerations"};
   var1.parInt.vals = {pop_size, traceDuration, randomseed, max_gens};
   var1.parInt.messages ={"population size", 
     "optimization simulation duration", "seed", "maximum evolution generations"};

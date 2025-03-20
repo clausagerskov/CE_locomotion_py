@@ -66,11 +66,11 @@
             "message": "optimization simulation duration",
             "value": 24
         },
-        "max_gens": {
+        "MaxGenerations": {
             "message": "maximum evolution generations",
             "value": 10
         },
-        "pop_size": {
+        "PopulationSize": {
             "message": "population size",
             "value": 96
         },
@@ -5145,9 +5145,7 @@
         },
         "NMJ_VD": {
             "value": -0.3888755563666353
-        }
-    },
-    "Worm global parameters": {
+        },
         "N_muscles": {
             "message": "Number of muscles on each side of the body (ventral and dorsal)",
             "value": 24
@@ -5172,7 +5170,7 @@
             "message": "Muscle time constant",
             "value": 0.1
         },
-        "Vectsize": {
+        "VectSize": {
             "message": "Size of genotype",
             "value": 17
         }

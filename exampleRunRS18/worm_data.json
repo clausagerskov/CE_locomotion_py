@@ -66,11 +66,11 @@
             "message": "optimization simulation duration",
             "value": 50
         },
-        "max_gens": {
+        "MaxGenerations": {
             "message": "maximum evolution generations",
             "value": 20
         },
-        "pop_size": {
+        "PopulationSize": {
             "message": "population size",
             "value": 56
         },

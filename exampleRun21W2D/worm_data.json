@@ -62,6 +62,18 @@
         }
     },
     "Evolutionary Optimization Parameters": {
+        "AvgSpeed": {
+            "value": 0.00022
+        },
+        "BBCfit": {
+            "value": 0.0088
+        },
+        "BiasRange": {
+            "value": 15.0
+        },
+        "CSRange": {
+            "value": 15.0
+        },
         "CheckpointInterval": {
             "value": 0
         },
@@ -74,8 +86,14 @@
         "Duration": {
             "value": 40.0
         },
+        "ESRange": {
+            "value": 2.0
+        },
         "ElitistFraction": {
             "value": 0.04
+        },
+        "IIRange": {
+            "value": 15.0
         },
         "MaxExpectedOffspring": {
             "value": 1.1
@@ -86,8 +104,14 @@
         "MutationVariance": {
             "value": 0.1
         },
+        "NMJmax": {
+            "value": 1.2
+        },
         "N_curvs": {
             "value": 23
+        },
+        "OSCT": {
+            "value": 10.0
         },
         "PopulationSize": {
             "value": 100
@@ -98,6 +122,9 @@
         "ReproductionMode": {
             "value": 1
         },
+        "SCRange": {
+            "value": 15.0
+        },
         "SearchConstraint": {
             "value": 1
         },
@@ -107,11 +134,20 @@
         "StepSize": {
             "value": 0.005
         },
+        "TauMax": {
+            "value": 2.5
+        },
+        "TauMin": {
+            "value": 0.1
+        },
         "Transient": {
             "value": 10.0
         },
         "VectSize": {
             "value": 44
+        },
+        "agarfreq": {
+            "value": 0.44
         },
         "randomseed": {
             "value": 95166

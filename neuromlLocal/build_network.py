@@ -194,7 +194,7 @@ def run(a=None, **kwargs):
     elif (
         population_structure == "cell specific populations"
     ):  # cells divided into cell specific populations
-        num_unit = network_json_data["Worm global parameters"]["N_units"]["value"]
+        num_unit = network_json_data["Worm"]["N_units"]["value"]
         for ind, pop_cell_name in enumerate(pop_cell_names):
             cell_comp_loc = pop_cell_name
             size0 = num_unit

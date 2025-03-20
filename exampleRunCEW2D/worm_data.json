@@ -62,6 +62,18 @@
         }
     },
     "Evolutionary Optimization Parameters": {
+        "AvgSpeed": {
+            "value": 0.0001
+        },
+        "BBCfit": {
+            "value": 0.0024000000000000002
+        },
+        "BiasRange": {
+            "value": 16.0
+        },
+        "CSRange": {
+            "value": 16.0
+        },
         "CheckpointInterval": {
             "value": 0
         },
@@ -73,6 +85,9 @@
         },
         "Duration": {
             "value": 24.0
+        },
+        "ESRange": {
+            "value": 2.0
         },
         "ElitistFraction": {
             "value": 0.02
@@ -86,6 +101,12 @@
         "MutationVariance": {
             "value": 0.05
         },
+        "NMJmax": {
+            "value": 0.8
+        },
+        "NMJmin": {
+            "value": 0.0
+        },
         "N_curvs": {
             "value": 23
         },
@@ -97,6 +118,18 @@
         },
         "ReproductionMode": {
             "value": 1
+        },
+        "SCRange": {
+            "value": 16.0
+        },
+        "SR_A": {
+            "value": 1
+        },
+        "SR_B": {
+            "value": 2
+        },
+        "SRmax": {
+            "value": 200.0
         },
         "SearchConstraint": {
             "value": 1

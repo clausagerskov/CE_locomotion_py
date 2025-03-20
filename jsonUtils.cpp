@@ -180,7 +180,7 @@ vector<ParamsHead<double> > getGlobalParamsDouble()
 {
 vector<ParamsHead<double> > parvec;
 {ParamsHead<double> par;
-par.head = "Worm global parameters";
+par.head = "Worm";
 par.names = {"T_muscle"};
 par.vals = {T_muscle};
 par.messages ={"Muscle time constant"};
@@ -217,7 +217,7 @@ vector<ParamsHead<int> > getGlobalParamsInt()
 {
 vector<ParamsHead<int> > parvec;
 {ParamsHead<int> par;
-par.head = "Worm global parameters";
+par.head = "Worm";
 par.names = { "N_muscles", "N_units", "N_neuronsperunit", "N_stretchrec", "NmusclePerNU"};
 par.vals = {N_muscles, N_units, N_neuronsperunit, N_stretchrec, NmusclePerNU};
 par.messages = {"Number of muscles on each side of the body (ventral and dorsal)", 
@@ -242,8 +242,8 @@ par.names =  {"SR_A", "SR_B"};
 par.vals = {SR_A, SR_B};
 parvec.push_back(par);}
 {ParamsHead<int> par;
-par.head =  "Worm global parameters";
-par.names =  {"Vectsize"};
+par.head =  "Worm";
+par.names =  {"VectSize"};
 par.vals = {VectSize};
 par.messages = {"Size of genotype"};
 par.messages_inds = {0}; 
@@ -665,7 +665,7 @@ auto time_consts = jns["taus"]["value"].template get< vector<double> >();
 auto maxchemcons = jns["maxchemcons"]["value"].template get<int>();
 auto maxelecconns = jns["maxelecconns"]["value"].template get<int>();
 auto size = jns["size"]["value"].template get<int>(); 
-json jw = j["Worm global parameters"];
+json jw = j["Worm"];
 
 auto N_units_val = jw["N_units"]["value"].template get<int>();
 auto N_neuronsperunit_val = jw["N_neuronsperunit"]["value"].template get<int>();
@@ -880,7 +880,7 @@ return os;
 ostream& writeGlobalParsToFile(ostream& os)
 {   
     os << setprecision(32);
-    os << "Worm global parameters" << endl;
+    os << "Worm" << endl;
 
     os << "N_muscles: " << N_muscles << endl;
     os << "N_units: " << N_units << endl;
