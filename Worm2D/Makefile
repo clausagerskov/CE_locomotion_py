@@ -29,11 +29,11 @@ Segment21.o: Segment21.cpp Segment21.h
 WormBody.o: WormBody.cpp WormBody.h
 	g++ -c -O3 -flto WormBody.cpp
 NervousSystem.o: NervousSystem.cpp NervousSystem.h #VectorMatrix.h random.h ../neuromlLocal/NervousSystemBase.h
-	g++ -c -O3 -flto NervousSystem.cpp
+	g++ -c -O3 -std=c++11 -flto NervousSystem.cpp
 StretchReceptor18.o: StretchReceptor18.cpp StretchReceptor18.h
-	g++ -c -O3 -flto StretchReceptor18.cpp
+	g++ -c -O3 -std=c++11 -flto StretchReceptor18.cpp
 StretchReceptorCE.o: StretchReceptorCE.cpp StretchReceptorCE.h
-	g++ -c -O3 -flto StretchReceptorCE.cpp	
+	g++ -c -O3 -std=c++11 -flto StretchReceptorCE.cpp	
 Muscles.o: Muscles.cpp Muscles.h #VectorMatrix.h random.h
 	g++ -c -O3 -flto Muscles.cpp
 main.o: main.cpp #WormRS18.h Worm2D.h WormBody.h StretchReceptor18.h Muscles.h TSearch.h
