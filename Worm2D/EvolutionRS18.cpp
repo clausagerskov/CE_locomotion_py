@@ -2,15 +2,26 @@
 #include <math.h>
 #include "WormRS18.h"
 
-/* evoPars EvolutionRS18::getDefaultPars()
+void EvolutionRS18::addExtraParsToJson(json & j)
 {
-    return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
-        96, 1000, 0.1, 0.5, UNIFORM, 
-        1.1, 0.04, 1, 0, 1, 0, 50.0, 10.0, 0.01, 23, 30};
+  
+    doubIntParamsHead var1;
+    var1.parDoub.head = "Evolutionary Optimization Parameters";
+       var1.parInt.head = "Evolutionary Optimization Parameters";
+       var1.parDoub.names = {"fps", "BiasRange", "SCRange", "CSRange", "TauMin",
+        "TauMax", "ESRange", "SRmax", "NMJmax", "HCSRange", "AvgSpeed", "BBCfit", 
+    };
+       var1.parDoub.vals = {fps, BiasRange, SCRange, CSRange, TauMin,
+        TauMax, ESRange, SRmax, NMJmax, HCSRange, AvgSpeed, BBCfit, 
+    };
 
+       var1.parInt.names = {"skip", "speedoutput", "evo_seed"};
+       var1.parInt.vals = {skip, speedoutput, evo_seed};
+
+    appendToJson<double>(j[var1.parDoub.head],var1.parDoub);
+    appendToJson<long>(j[var1.parInt.head],var1.parInt);
 }
 
- */
 void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
     // --------------------------------

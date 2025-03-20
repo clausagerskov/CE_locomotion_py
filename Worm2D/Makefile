@@ -37,6 +37,6 @@ StretchReceptorCE.o: StretchReceptorCE.cpp StretchReceptorCE.h
 Muscles.o: Muscles.cpp Muscles.h #VectorMatrix.h random.h
 	g++ -c -O3 -flto Muscles.cpp
 main.o: main.cpp #WormRS18.h Worm2D.h WormBody.h StretchReceptor18.h Muscles.h TSearch.h
-	g++ -c -O3 -flto main.cpp
+	g++ -c -O3 -std=c++11 -flto main.cpp
 clean:
 	rm -f *.o main

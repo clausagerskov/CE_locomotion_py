@@ -2,20 +2,11 @@
 #include "VectorMatrix.h"
 #include "Evolution.h"
 
-/* evoPars ev18default{".", 42, RANK_BASED, GENETIC_ALGORITHM, 
-        96, 1000, 0.1, 0.5, UNIFORM, 
-        1.1, 0.04, 1, 0, 1, 0, 50.0, 10.0, 0.01, 23, 30}; */
-
 
 class EvolutionRS18:public Evolution
 {
     public:
-    //EvolutionRS18(const SuppliedArgs2018 & sa)
-    //:Evolution(getEvoPars(sa),30),speedoutput(sa.speedoutput),evo_seed(sa.evo_seed){}
     
-    /* EvolutionRS18(int argc, const char* argv[])
-    :Evolution(argc,argv),speedoutput(getParameter<bool>(argc,argv,"--speed_output", 0)),
-    evo_seed(getParameter<bool>(argc,argv,"--evo_seed", 0)){} */
 
     EvolutionRS18(int argc, const char* argv[])
     :Evolution(argc,argv, {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
@@ -30,22 +21,13 @@ class EvolutionRS18:public Evolution
     double EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs);
     void RunSimulation(TVector<double> &v, RandomState &rs);
     void configure();
-    //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
-    //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
-    //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
+    
+    protected:
+    void addExtraParsToJson(json & j);
 
-    //SuppliedArgs2018& supArgs1;
-    //evoPars getEvoPars(const SuppliedArgs2018 & sa);
-    //evoPars getDefaultPars();
-    //const int VectSize = 30;
+    
     private:
 
-    //double Duration = 50.0;           // Seconds
-    //double Transient = 10.0;          // 
-    //double StepSize = 0.01;
-    //int N_curvs = 23;                 // Number of cuvature points
-
-// Used for Dumping: Frame rate for recording datais set to 50 frames per second
 
     const double fps = 25.0;
     const int skip = (int) (1/(evoPars1.StepSize*fps));

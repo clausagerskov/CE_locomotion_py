@@ -3,14 +3,10 @@
 #include "Evolution.h"
 
 
-/* evoPars ev21default{".", 42, RANK_BASED, GENETIC_ALGORITHM, 
-  100, 2000, 0.1, 0.5, UNIFORM, 
-  1.1, 0.04, 1, 0, 0, 10, 40.0, 10.0, 0.005, 23, 44}; */
-
 class Evolution21:public Evolution
 {
     public:
-    //Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44,getSimPars(sa)){}
+    
 
     Evolution21(int argc, const char* argv[]):Evolution(argc,argv,
       {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
@@ -28,29 +24,14 @@ class Evolution21:public Evolution
     int finish_Bosc(int Generation,double BestPerf,double AvgPerf,double PerfVar);
    
 
-    //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
-    //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
-    //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
-
-    //SuppliedArgs2021& supArgs1;
-     // Size of genotype
-
-   // const int VectSize = 44;
-    
     
     protected:
-    //simPars getSimPars(const SuppliedArgs &);
-    evoPars getDefaultPars();
+    
 
-    //int skip_steps = 10;
-
-     // Integration parameters
-     //const double Duration = 40.0;       //
-     //const double Transient = 10.0;       //
-     //const double StepSize = 0.005;
-     //const int N_curvs = 23;             // Number of cuvature points
+    void addExtraParsToJson(json & j);
+    
      
-     double OSCT = 0.25 * evoPars1.Duration; // Cap for oscillation evaluation
+     const double OSCT = 0.25 * evoPars1.Duration; // Cap for oscillation evaluation
      const double agarfreq = 0.44;
      
      // Genotype -> Phenotype Mapping (Ventral cord)
@@ -66,6 +47,8 @@ class Evolution21:public Evolution
      // Fitness
      const double    AvgSpeed = 0.00022;             // Average speed of the worm in meters per seconds
      const double    BBCfit = AvgSpeed*evoPars1.Duration;
+
+     
      void configure_p2();
    
 };

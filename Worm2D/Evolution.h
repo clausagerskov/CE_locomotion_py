@@ -5,7 +5,7 @@
 #include <functional>
 #include <iomanip> 
 #include <string.h>
-
+#include "jsonUtils.h"
 
 template <typename T>
 struct Callback;
@@ -48,6 +48,30 @@ struct evoPars{
    int N_curvs;
    int VectSize;
 
+
+   const doubIntParamsHead getParams() const
+   {
+       doubIntParamsHead var1;
+       var1.parDoub.head = "Evolutionary Optimization Parameters";
+       var1.parInt.head = "Evolutionary Optimization Parameters";
+       var1.parDoub.names = 
+       {"MutationVariance", "CrossoverProbability", 
+         "MaxExpectedOffspring", "ElitistFraction",
+         "Duration", "Transient", "StepSize"};
+       var1.parDoub.vals = {MutationVariance, CrossoverProbability, 
+         MaxExpectedOffspring, ElitistFraction,
+         Duration, Transient, StepSize};
+
+       var1.parInt.names = {"randomseed", "SelectionMode", "ReproductionMode", 
+         "PopulationSize", "MaxGenerations", "CrossoverMode", "SearchConstraint", 
+         "CheckpointInterval", "ReEvaluationFlag", "skip_steps", "N_curvs", "VectSize"};
+       var1.parInt.vals = {randomseed, SelectionMode, ReproductionMode, 
+         PopulationSize, MaxGenerations, CrossoverMode, SearchConstraint, CheckpointInterval, 
+         ReEvaluationFlag, skip_steps, N_curvs, VectSize};
+
+       return var1;
+   }
+
 };
 
 /* template<class T> 
@@ -66,10 +90,10 @@ const char* getParameter(int argc, const char* argv[], string parName, const cha
 class Evolution
 {
     public:
-    //Evolution():supArgs1_ptr(makeArgsPtr()),s(makeTSearchPtr()){}
     virtual void GenPhenMapping(TVector<double> &gen, TVector<double> &phen) = 0;
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
     virtual void RunSimulation(TVector<double> &v, RandomState &rs) = 0;
+    void addParsToJson(json & j);
     
     virtual void configure();
     //virtual SuppliedArgs* const makeArgsPtr(){return NULL;}
@@ -84,12 +108,10 @@ class Evolution
       if (s) delete s;
     }
 
-    //const int VectSize;
 
     string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
 
     protected:
-    //virtual evoPars getDefaultPars() {cout << "wrong get def" << endl; exit(1);}
     evoPars setPars(int argc, const char* argv[], evoPars ep1);
 
     
@@ -97,41 +119,23 @@ class Evolution
     virtual void configure_p2();
     void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void ResultsDisplay(TSearch &s);
-    //virtual simPars getSimPars(const SuppliedArgs &) = 0;
+    
     
     Evolution(int argc, const char* argv[], evoPars ep1, int VectSize)
     :evoPars1(setPars(argc,argv,ep1)),s(new TSearch(VectSize))
-    //s(new TSearch(evoPars1.VectSize))
     {
       evolfile.open(rename_file("fitness.dat"));
       evolfile << setprecision(10);
     }
 
-    /* Evolution(const evoPars & ep, const int & VectSize_, const simPars & sp)
-    :s(new TSearch(VectSize_)),evoPars1(ep),VectSize(VectSize_),simPars1(sp)
-    {
-      cout << evoPars1.directoryName << endl;
-      evolfile.open(rename_file("fitness.dat"));
-      evolfile << setprecision(10);
-    } */
-    
-    TSearch* const s; //(VectSize);
-
-    //SuppliedArgs* const supArgs1_ptr;
-    //TVector<double> * phenotype; // (1, VectSize);
-
+    virtual void addExtraParsToJson(json & j) = 0;
+    TSearch* const s; 
     const evoPars evoPars1;
-    //const simPars simPars1;
-    //string directoryName;
-
+    
     private:
-
-    
+ 
     ofstream evolfile;
-    //const string bestfilename; 
-    
-
-   //evoPars evoPars1;
+   
 
 };
 

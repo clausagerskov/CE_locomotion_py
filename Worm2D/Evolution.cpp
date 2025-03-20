@@ -15,6 +15,15 @@ const char* getParameter(int argc, const char* argv[], string parName, const cha
    return retval;
 }
 
+void Evolution::addParsToJson(json & j)
+{  
+    
+    doubIntParamsHead par1pars = evoPars1.getParams();
+    appendToJson<double>(j[par1pars.parDoub.head],par1pars.parDoub);
+    appendToJson<long>(j[par1pars.parInt.head],par1pars.parInt);
+
+    addExtraParsToJson(j);
+}
 
 evoPars Evolution::setPars(int argc, const char* argv[], evoPars ep1){
 

@@ -7,7 +7,9 @@
 #include "EvolutionRS18.h"
 #include "EvolutionCE.h"
 #include "Evolution21.h"
+//#include "jsonUtils.h"
 
+//using json = nlohmann::json;
 
 //SuppliedArgs2018 supArgs1;
 
@@ -22,8 +24,6 @@ int main (int argc, const char* argv[])
     return 0;
     }
 
-   
-    //SuppliedArgs* sa = 0;
     Evolution* er = 0;
     if (model_name == "CE") er = new EvolutionCE(argc,argv);
     if (model_name == "RS18") er = new EvolutionRS18(argc,argv);
@@ -62,7 +62,15 @@ int main (int argc, const char* argv[])
   
     w->InitializeState(rs);
     ofstream json_out(er->rename_file("worm_data.json"));
-    w->writeJsonFile(json_out);
+
+    json j;
+    w->addParsToJson(j);
+    er->addParsToJson(j);
+    //ofstream json_out(supArgs1.rename_file("worm_data.json"));
+    //ofstream json_out("worm_data.json");
+    json_out << std::setw(4) << j << std::endl;
+
+    //w->writeJsonFile(json_out);
     json_out.close();
     
     delete er;

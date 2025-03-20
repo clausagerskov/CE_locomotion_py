@@ -418,7 +418,7 @@ def run(a=None, **kwargs):
     defaults_base = defaults_bases[model_name]
     plot_format = plot_formats[model_name]
 
-    evol_pars = ["Duration", "pop_size", "randomseed", "max_gens"]
+    evol_pars = ["Duration", "PopulationSize", "randomseed", "MaxGenerations"]
     evol_args = [a.duration, a.popSize, a.RandSeed, a.maxGens]
     evol_defaults = [
         defaults_base["duration"],
@@ -502,9 +502,9 @@ def run(a=None, **kwargs):
         else:
             cmd = [main_cmd, "-R", str(sim_data["seed"])]
     # cmd += ["-sr", str(sim_data["seed"])]
-    cmd += ["-p", str(evol_data["pop_size"])]
+    cmd += ["-p", str(evol_data["PopulationSize"])]
     cmd += ["-d", str(evol_data["Duration"])]
-    cmd += ["--maxgens", str(evol_data["max_gens"])]
+    cmd += ["--maxgens", str(evol_data["MaxGenerations"])]
     cmd += ["-sd", str(sim_data["Duration"])]
     cmd += ["--doevol", str(do_evol)]
 

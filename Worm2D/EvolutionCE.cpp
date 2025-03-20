@@ -2,6 +2,25 @@
 #include <math.h>
 #include "WormCE.h"
 
+void EvolutionCE::addExtraParsToJson(json & j)
+{
+
+    doubIntParamsHead var1;
+    var1.parDoub.head = "Evolutionary Optimization Parameters";
+       var1.parInt.head = "Evolutionary Optimization Parameters";
+       var1.parDoub.names = {"AvgSpeed", "BBCfit", "BiasRange", "SCRange",
+        "CSRange", "ESRange", "SRmax", "NMJmax", "NMJmin"
+      };
+       var1.parDoub.vals = {AvgSpeed, BBCfit, BiasRange, SCRange,
+        CSRange, ESRange, SRmax, NMJmax, NMJmin
+      };
+
+       var1.parInt.names = {"SR_A", "SR_B"};
+       var1.parInt.vals = {SR_A, SR_B};
+
+    appendToJson<double>(j[var1.parDoub.head],var1.parDoub);
+    appendToJson<long>(j[var1.parInt.head],var1.parInt);
+}
 
 void EvolutionCE::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {

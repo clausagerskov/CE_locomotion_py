@@ -2,9 +2,7 @@
 #include "VectorMatrix.h"
 #include "Evolution.h"
 
-/* evoPars evCEdefault{".", 42, RANK_BASED, GENETIC_ALGORITHM, 
-    96, 10, 0.05, 0.5, UNIFORM, 
-    1.1, 0.02, 1, 0, 0, 10, 24, 8.0, 0.005, 23, 17}; */
+
 
 class EvolutionCE:public Evolution
 {
@@ -22,26 +20,12 @@ class EvolutionCE:public Evolution
     void RunSimulation(TVector<double> &v, RandomState &rs);
 
     
-    //SuppliedArgs2018& supArgs1 = static_cast<SuppliedArgs2018&>(*supArgs1_ptr);
-    //SuppliedArgs2018* const makeArgsPtr() {cout << "set pointer" << endl; return new SuppliedArgs2018();}
-    //TSearch* const makeTSearchPtr() {return new TSearch(VectSize);}
-
-    //SuppliedArgs& supArgs1;
-     // Size of genotype
-    //const int VectSize = 17;
 
     protected:
-
-    //evoPars getDefaultPars();
+    void addExtraParsToJson(json & j);
+  
     private:
-    //int skip_steps = 10;
     
-    
-    // Integration parameters
-    //const int Duration = 24;
-    //const double Transient = 8.0;
-    //const double StepSize = 0.005;
-    //const int N_curvs = 23;
     
     // Fitness traj
     const double    AvgSpeed = 0.0001; //0.00022;              // Average speed of the worm in meters per seconds

@@ -61,6 +61,65 @@
             "value": 0.41666666666666663
         }
     },
+    "Evolutionary Optimization Parameters": {
+        "CheckpointInterval": {
+            "value": 0
+        },
+        "CrossoverMode": {
+            "value": 0
+        },
+        "CrossoverProbability": {
+            "value": 0.5
+        },
+        "Duration": {
+            "value": 24.0
+        },
+        "ElitistFraction": {
+            "value": 0.02
+        },
+        "MaxExpectedOffspring": {
+            "value": 1.1
+        },
+        "MaxGenerations": {
+            "value": 10
+        },
+        "MutationVariance": {
+            "value": 0.05
+        },
+        "N_curvs": {
+            "value": 23
+        },
+        "PopulationSize": {
+            "value": 96
+        },
+        "ReEvaluationFlag": {
+            "value": 0
+        },
+        "ReproductionMode": {
+            "value": 1
+        },
+        "SearchConstraint": {
+            "value": 1
+        },
+        "SelectionMode": {
+            "value": 1
+        },
+        "StepSize": {
+            "value": 0.005
+        },
+        "Transient": {
+            "value": 8.0
+        },
+        "VectSize": {
+            "value": 17
+        },
+        "randomseed": {
+            "value": 1233
+        },
+        "skip_steps": {
+            "value": 10
+        }
+    },
     "Muscle": {
         "Nmuscles": {
             "value": 24
