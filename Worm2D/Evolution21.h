@@ -5,7 +5,9 @@
 class Evolution21:public Evolution
 {
     public:
-    Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44,getSimPars(sa)){}
+    //Evolution21(const SuppliedArgs2021 & sa):Evolution(getEvoPars(sa),44,getSimPars(sa)){}
+
+    Evolution21(int argc, const char* argv[]):Evolution(argc,argv){}
 
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
@@ -28,17 +30,18 @@ class Evolution21:public Evolution
     
     
     protected:
-    simPars getSimPars(const SuppliedArgs &);
-    evoPars getEvoPars(const SuppliedArgs2021 & sa);
-    int skip_steps = 10;
+    //simPars getSimPars(const SuppliedArgs &);
+    evoPars getDefaultPars();
+
+    //int skip_steps = 10;
 
      // Integration parameters
-     const double Duration = 40.0;       //
-     const double Transient = 10.0;       //
-     const double StepSize = 0.005;
-     const int N_curvs = 23;             // Number of cuvature points
+     //const double Duration = 40.0;       //
+     //const double Transient = 10.0;       //
+     //const double StepSize = 0.005;
+     //const int N_curvs = 23;             // Number of cuvature points
      
-     double OSCT = 0.25 * Duration; // Cap for oscillation evaluation
+     double OSCT = 0.25 * evoPars1.Duration; // Cap for oscillation evaluation
      const double agarfreq = 0.44;
      
      // Genotype -> Phenotype Mapping (Ventral cord)
@@ -53,7 +56,7 @@ class Evolution21:public Evolution
      
      // Fitness
      const double    AvgSpeed = 0.00022;             // Average speed of the worm in meters per seconds
-     const double    BBCfit = AvgSpeed*Duration;
+     const double    BBCfit = AvgSpeed*evoPars1.Duration;
      void configure_p2();
    
 };

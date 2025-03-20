@@ -2,14 +2,15 @@
 #include <math.h>
 #include "WormCE.h"
 
+evoPars EvolutionCE::getDefaultPars()
+{
 
-evoPars EvolutionCE::getEvoPars(const SuppliedArgs & sa)
-{  
-    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-          sa.pop_size, sa.max_gens, 0.05, 0.5, UNIFORM, 
-          1.1, 0.02, 1, 0, 0};
-
+  return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+    96, 10, 0.05, 0.5, UNIFORM, 
+    1.1, 0.02, 1, 0, 0, 10, 24, 8.0, 0.005, 23, 17};
+   
 }
+
 
 void EvolutionCE::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
@@ -67,6 +68,13 @@ double EvolutionCE::EvaluationFunction(TVector<double> &v, RandomState &rs)
 }
 
 double EvolutionCE::Evaluation(TVector<double> &v, RandomState &rs, int direction){
+
+  const double & Duration = evoPars1.Duration;
+  const int & VectSize = evoPars1.VectSize;
+  const double & StepSize = evoPars1.StepSize;
+  const double & Transient = evoPars1.Transient;
+
+
     double fitA,fitB;
     double bodyorientation, anglediff;
     double movementorientation, distancetravelled = 0, temp;
@@ -131,6 +139,14 @@ void EvolutionCE::RunSimulation(TVector<double> &v, RandomState &rs)
 }
 
 double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
+
+
+  const double & Duration = evoPars1.Duration;
+  const int & VectSize = evoPars1.VectSize;
+  const double & StepSize = evoPars1.StepSize;
+  const double & Transient = evoPars1.Transient;
+  const int & skip_steps = evoPars1.skip_steps;
+
 
   ofstream curvfile(rename_file("curv.dat"));
   ofstream bodyfile(rename_file("body.dat"));

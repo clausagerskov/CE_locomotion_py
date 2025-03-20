@@ -4,6 +4,8 @@
 #include "../argUtils.h"
 #include <functional>
 #include <iomanip> 
+#include <string.h>
+
 
 template <typename T>
 struct Callback;
@@ -21,7 +23,7 @@ template <typename Ret, typename... Params>
 std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
 
 struct evoPars;
-struct simPars;
+
 
 struct evoPars{
    string directoryName;
@@ -38,17 +40,28 @@ struct evoPars{
    int SearchConstraint;
    int CheckpointInterval;
    bool ReEvaluationFlag;
-};
-
-struct simPars{
    int skip_steps;
    // Integration parameters
    double Duration;       //
    double Transient;       //
    double StepSize;
-   int N_curvs;             // Number of cuvature points
+   int N_curvs;
+   int VectSize;
+
 };
 
+/* template<class T> 
+T getParameter(int argc, const char* argv[], string parName, T defaultval){
+    
+    T retval = defaultval;
+    if (((argc-1) % 2) != 0)
+    {cout << "The arguments are not configured correctly." << endl;exit(1);}
+    for (int arg = 1; arg<argc; arg+=2) 
+    if (strcmp(argv[arg],parName.c_str())==0) {retval = atoi(argv[arg+1]);break;}
+    return retval;
+} */
+
+const char* getParameter(int argc, const char* argv[], string parName, const char* defaultval);
 
 class Evolution
 {
@@ -62,35 +75,44 @@ class Evolution
     //virtual SuppliedArgs* const makeArgsPtr(){return NULL;}
     //virtual TSearch* const makeTSearchPtr(){return NULL;}
     //void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
+    
+    const evoPars & itsEvoPars() const {return evoPars1;}
 
     virtual ~Evolution()
     {
       evolfile.close();
-    //if (supArgs1_ptr) delete supArgs1_ptr; 
       if (s) delete s;
-    //if (phenotype) delete phenotype;
     }
 
-    const int VectSize;
-
-
-
-    protected:
+    //const int VectSize;
 
     string rename_file(string filename){return evoPars1.directoryName + "/" + filename;}
+
+    protected:
+    virtual evoPars getDefaultPars() = 0;
+    evoPars setPars(int argc, const char* argv[]);
+
+    
     virtual void configure_p1();
     virtual void configure_p2();
     void EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar);
     void ResultsDisplay(TSearch &s);
     //virtual simPars getSimPars(const SuppliedArgs &) = 0;
     
-    Evolution(const evoPars & ep, const int & VectSize_, const simPars & sp)
+    Evolution(int argc, const char* argv[])
+    :evoPars1(setPars(argc,argv)),s(new TSearch(evoPars1.VectSize))
+    {
+      evolfile.open(rename_file("fitness.dat"));
+      evolfile << setprecision(10);
+    }
+
+    /* Evolution(const evoPars & ep, const int & VectSize_, const simPars & sp)
     :s(new TSearch(VectSize_)),evoPars1(ep),VectSize(VectSize_),simPars1(sp)
     {
       cout << evoPars1.directoryName << endl;
       evolfile.open(rename_file("fitness.dat"));
       evolfile << setprecision(10);
-    }
+    } */
     
     TSearch* const s; //(VectSize);
 
@@ -98,7 +120,8 @@ class Evolution
     //TVector<double> * phenotype; // (1, VectSize);
 
     const evoPars evoPars1;
-    const simPars simPars1;
+    //const simPars simPars1;
+    //string directoryName;
 
     private:
 

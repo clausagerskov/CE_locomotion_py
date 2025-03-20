@@ -1,18 +1,70 @@
 #include "Evolution.h"
+//#include <string>
+#include <string.h>
+#include <sys/stat.h>
+//#include <stdio.h>
+#include <iostream>
 
+const char* getParameter(int argc, const char* argv[], string parName, const char* defaultval)
+{    
+   const char* retval = defaultval;
+   if (((argc-1) % 2) != 0)
+   {cout << "The arguments are not configured correctly." << endl;exit(1);}
+   for (int arg = 1; arg<argc; arg+=2) 
+   if (strcmp(argv[arg],parName.c_str())==0) {retval = argv[arg+1];break;}
+   return retval;
+}
+
+
+evoPars Evolution::setPars(int argc, const char* argv[]){
+
+    evoPars ep1 =  getDefaultPars();
+
+    if (((argc-1) % 2) != 0)
+     {cout << "The arguments are not configured correctly." << endl;exit(1);}
+    
+    bool seed_flag = 1;
+    
+    for (int arg = 1; arg<argc; arg+=2)
+    { 
+    if (strcmp(argv[arg],"--maxgens")==0) ep1.MaxGenerations = atoi(argv[arg+1]);
+    //if (strcmp(argv[arg],"--doevol")==0) do_evol = atoi(argv[arg+1]);
+    //if (strcmp(argv[arg],"--dorandinit")==0) simRandomInit = atoi(argv[arg+1]);
+    //if (strcmp(argv[arg],"--skipOrigSim")==0) skipOrigSim = atoi(argv[arg+1]);
+    //if (strcmp(argv[arg],"--donml")==0) do_nml = atoi(argv[arg+1]);
+
+    if (strcmp(argv[arg],"--folder")==0) {
+      ep1.directoryName= argv[arg+1];
+      struct stat sb;
+      if (stat(ep1.directoryName.c_str(), &sb) != 0) 
+      {cout << "Directory doesn't exist." << endl;exit(1);}
+    }
+
+    if (seed_flag){ 
+    if (strcmp(argv[arg],"-R")==0) ep1.randomseed = atoi(argv[arg+1]);
+    if (strcmp(argv[arg],"-r")==0) 
+    {long randomseed1 = static_cast<long>(time(NULL));
+           ep1.randomseed = randomseed1 + atoi(argv[arg+1]);
+    }
+    seed_flag = 0;
+    }
+    //if (strcmp(argv[arg], "--modelname")==0) model_name = argv[arg+1];
+    if (strcmp(argv[arg],"-p")==0) ep1.PopulationSize = atoi(argv[arg+1]);
+    if (strcmp(argv[arg],"-d")==0) ep1.Duration = atoi(argv[arg+1]);
+  
+    //if (strcmp(argv[arg],"--nervous")==0) nervousSystemNameForSim = argv[arg+1];
+    
+    }
+    return ep1;
+
+}
 
 void Evolution::EvolutionaryRunDisplay(int Generation, double BestPerf, double AvgPerf, double PerfVar)
 {
     evolfile << Generation << " " << BestPerf << " " << AvgPerf << " " << PerfVar << endl;
 }
 
-//void (Evolution::*RD)(TSearch &s) = &Evolution::ResultsDisplay;
-//typedef void (Evolution::*RD)(TSearch &s);
-//RD rd1 = &Evolution::ResultsDisplay;
 
-//void (*ResultsDisplay)(TSearch &s) = NULL;
-
-//ResultsDisplay = &Evolution::ResultsDisplay;
 
 void Evolution::ResultsDisplay(TSearch &s)
 {

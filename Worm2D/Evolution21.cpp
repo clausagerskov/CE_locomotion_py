@@ -3,17 +3,14 @@
 #include "Worm21.h"
 #include "Segment21.h"
 
-simPars Evolution21::getSimPars(const SuppliedArgs &)
-{
-    return {10, 40.0, 10.0, 0.005, 23};
-   
-}
 
-evoPars Evolution21::getEvoPars(const SuppliedArgs2021 & sa)
+
+evoPars Evolution21::getDefaultPars()
 {
-    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-        sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
-        1.1, 0.04, 1, 0, 0};
+   
+    return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+            100, 2000, 0.1, 0.5, UNIFORM, 
+            1.1, 0.04, 1, 0, 0, 10, 40.0, 10.0, 0.005, 23, 44};
 
 }
 
@@ -79,6 +76,11 @@ int Evolution21::finish_Bosc(int Generation,double BestPerf,double AvgPerf,doubl
 //////// Stage 1 ////////////
 /////////////////////////////
 double Evolution21::EvaluationFunction1(TVector<double> &v, RandomState &rs){
+
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+
     // Fitness variables
     double DBp, VBp, dDB, dVB;
     double oscDB = 0, oscVB = 0;
@@ -158,6 +160,12 @@ double Evolution21::EvaluationFunction1(TVector<double> &v, RandomState &rs){
 /////////////////////////////
 double Evolution21::EvaluationFunction2Output(TVector<double> &v, RandomState &rs){
 
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+    const int & N_curvs = evoPars1.N_curvs;
+    const double & Transient = evoPars1.Transient;
+    const int & skip_steps = evoPars1.skip_steps;
 
 ofstream bodyfile, actfile, curvfile, paramsfile;
 
@@ -306,7 +314,14 @@ ofstream bodyfile, actfile, curvfile, paramsfile;
 
 double Evolution21::EvaluationFunction2(TVector<double> &v, RandomState &rs){
 
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+    const int & N_curvs = evoPars1.N_curvs;
+    const double & Transient = evoPars1.Transient;
+    const int & skip_steps = evoPars1.skip_steps;
 
+    
         // Fitness
         double fitness_tr = 0.0;
         double bodyorientation, anglediff;

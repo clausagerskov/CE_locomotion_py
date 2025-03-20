@@ -5,7 +5,7 @@
 class EvolutionCE:public Evolution
 {
     public:
-    EvolutionCE(const SuppliedArgs & sa):Evolution(getEvoPars(sa),17){}
+    EvolutionCE(int argc, const char* argv[]):Evolution(argc,argv){}
 
     void GenPhenMapping(TVector<double> &gen, TVector<double> &phen);
     double EvaluationFunction(TVector<double> &v, RandomState &rs);
@@ -23,20 +23,22 @@ class EvolutionCE:public Evolution
      // Size of genotype
     //const int VectSize = 17;
 
-    
+    protected:
+
+    evoPars getDefaultPars();
     private:
-    int skip_steps = 10;
+    //int skip_steps = 10;
     
     
     // Integration parameters
-    const int Duration = 24;
-    const double Transient = 8.0;
-    const double StepSize = 0.005;
-    const int N_curvs = 23;
+    //const int Duration = 24;
+    //const double Transient = 8.0;
+    //const double StepSize = 0.005;
+    //const int N_curvs = 23;
     
     // Fitness traj
     const double    AvgSpeed = 0.0001; //0.00022;              // Average speed of the worm in meters per seconds
-    const double    BBCfit = AvgSpeed*Duration;
+    const double    BBCfit = AvgSpeed*evoPars1.Duration;
     
     // Genotype -> Phenotype Mapping Ranges
     const double    BiasRange               = 16.0; //15.0;

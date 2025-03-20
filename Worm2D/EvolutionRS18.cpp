@@ -2,14 +2,14 @@
 #include <math.h>
 #include "WormRS18.h"
 
-evoPars EvolutionRS18::getEvoPars(const SuppliedArgs2018 & sa)
-{  
-    //cout << "er18 getevo" << endl;
-    //cout << sa.output_dir_name << endl;
-    return {sa.output_dir_name, sa.randomseed, RANK_BASED, GENETIC_ALGORITHM, 
-            sa.pop_size, sa.max_gens, 0.1, 0.5, UNIFORM, 
-            1.1, 0.04, 1, 0, 1};
+evoPars EvolutionRS18::getDefaultPars()
+{
+    return {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
+        96, 1000, 0.1, 0.5, UNIFORM, 
+        1.1, 0.04, 1, 0, 1, 0, 50.0, 10.0, 0.01, 23, 30};
+
 }
+
 
 void EvolutionRS18::GenPhenMapping(TVector<double> &gen, TVector<double> &phen)
 {
@@ -98,8 +98,15 @@ void EvolutionRS18::RunSimulation(TVector<double> &v, RandomState &rs)
 double EvolutionRS18::EvaluationFunctionNoOut(TVector<double> &v, RandomState &rs)
 {
     double fitness;
-    ofstream fitfile;
+    //ofstream fitfile;
   
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+    const int & N_curvs = evoPars1.N_curvs;
+    const double & Transient = evoPars1.Transient;
+    //const int & skip_steps = evoPars1.skip_steps;
+
 
     // Fitness
     fitness = 0.0;
@@ -164,6 +171,12 @@ double EvolutionRS18::EvaluationFunctionOrig(TVector<double> &v, RandomState &rs
     double fitness;
     ofstream fitfile;
   
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+    const int & N_curvs = evoPars1.N_curvs;
+    const double & Transient = evoPars1.Transient;
+
 
     if (speedoutput)
     {
@@ -281,12 +294,12 @@ void EvolutionRS18::configure()
     if (evo_seed)
     {
         ifstream BestIndividualFile;
-        TVector<double> bestVector(1, VectSize);
+        TVector<double> bestVector(1, evoPars1.VectSize);
         BestIndividualFile.open(rename_file("best.gen.dat"));
         BestIndividualFile >> bestVector;
         s->InitializeSearch();
         for (int i = 1; i <= s->PopulationSize(); i++){
-            for (int j = 1; j <= VectSize; j++)
+            for (int j = 1; j <= evoPars1.VectSize; j++)
             {
                 s->Individual(i)[j] = bestVector[j];
             }
