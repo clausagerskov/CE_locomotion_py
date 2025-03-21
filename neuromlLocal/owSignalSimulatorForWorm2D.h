@@ -11,7 +11,7 @@ public:
 
   void strValFunc(const std::string & funcName, const std::string & parName,
   const int & i, const double & value);
-
+  void strOneValFunc(const std::string & funcName, const std::string & parName, const int & i);
   ~SignalSimulatorForWorm2D();
   double getTwoValFunc(const std::string & funcName, const int & i, const int & j);
   double getValFunc(const std::string & funcName, const std::string & parName, const int & i);

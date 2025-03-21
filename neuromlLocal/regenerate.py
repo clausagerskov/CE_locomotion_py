@@ -7,6 +7,9 @@ population_structures = [
     "cell specific populations",
 ]
 population_structure = population_structures[2]
-json_file = "../exampleRun/worm_data.json"
+json_file = "../exampleRunCEW2D/worm_data.json"
+# json_file = "../exampleRun21W2D/worm_data.json"
+# json_file = "../exampleRunRS18W2D/worm_data.json"
+# json_file = "../exampleRunRS18/worm_data.json"
 build_network_run(population_structure=population_structure, json_file=json_file)
 create_new_lems_run(population_structure=population_structure, json_file=json_file)

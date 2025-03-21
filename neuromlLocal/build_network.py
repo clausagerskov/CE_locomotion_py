@@ -25,31 +25,61 @@ from neuroml import (
 
 import utils
 
+
 colors = {
+    "AS": ".80 .1 .30",
     "DA": ".82 .7 .43",
     "DB": ".43 .69 .67",
     "DD": ".24 .32 .62",
     "VA": ".52 .33 .17",
     "VB": ".17 .4 .37",
     "VD": ".65 .78 .9",
+    "VDA": ".82 .7 .43",
+    "VBA": ".52 .33 .17",
+    "VBP": ".17 .4 .37",
+    "VDP": ".65 .78 .9",
+    "SMDD": ".82 .7 .43",
+    "RMDD": ".43 .69 .67",
+    "SMDV": ".24 .32 .62",
+    "RMDV": ".52 .33 .17",
 }
 
+
+# RS18 E/I (V*) type does not seem to obey Dale's rule, here selected arbitrarily.
 exc_inh_type = {
+    "AS": "I",
     "DA": "E",
     "DB": "E",
     "DD": "I",
     "VA": "E",
     "VB": "E",
     "VD": "I",
+    "VDA": "E",
+    "VBA": "E",
+    "VBP": "E",
+    "VDP": "E",
+    "SMDD": "E",
+    "RMDD": "I",
+    "SMDV": "E",
+    "RMDV": "I",
 }
 
 origins = {
+    "AS": [0, 0],
     "DA": [1, -1],
     "DB": [1, 0],
     "DD": [1, 1],
     "VA": [-1, -1],
     "VB": [-1, 0],
     "VD": [-1, 1],
+    "VDA": [1, -1],
+    "VBA": [-1, -1],
+    "VBP": [-1, 0],
+    "VDP": [-1, 1],
+    "SMDD": [1, 1],
+    "RMDD": [1, -1],
+    "SMDV": [-1, -1],
+    "RMDV": [-1, 1],
 }
 
 spacing = 0.2

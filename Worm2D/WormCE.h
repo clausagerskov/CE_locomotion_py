@@ -95,7 +95,7 @@ public:
     vector<doubIntParamsHead> getWormParams();
     
     //NervousSystemBase *n_ptr;
-    
+    NervousSystem & n;
    
 
     //    double t; // Time

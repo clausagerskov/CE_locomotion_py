@@ -35,7 +35,7 @@ rS18Macros(setMacros())
 {
     //supArgs1.writeMessage();
     // Nervous system // Ventral cord
-    n_ptr->SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 4, 4);
+    n.SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 4, 4);
 
     int db, dd, vba, vda, vbp, vdp;
     int ddNext, dbNext, vdaNext, vbaNext;
@@ -55,66 +55,66 @@ rS18Macros(setMacros())
 
         // Bias
         //  B-
-        n_ptr->SetNeuronBias(db, v(1));
-        n_ptr->SetNeuronBias(vba, v(1));
-        n_ptr->SetNeuronBias(vbp, v(1));
+        n.SetNeuronBias(db, v(1));
+        n.SetNeuronBias(vba, v(1));
+        n.SetNeuronBias(vbp, v(1));
         //  D-
-        n_ptr->SetNeuronBias(dd, v(2));
-        n_ptr->SetNeuronBias(vda, v(2));
-        n_ptr->SetNeuronBias(vdp, v(2));
+        n.SetNeuronBias(dd, v(2));
+        n.SetNeuronBias(vda, v(2));
+        n.SetNeuronBias(vdp, v(2));
 
         // Time Constant
         //  B-
-        n_ptr->SetNeuronTimeConstant(db, v(3));
-        n_ptr->SetNeuronTimeConstant(vba, v(3));
-        n_ptr->SetNeuronTimeConstant(vbp, v(3));
+        n.SetNeuronTimeConstant(db, v(3));
+        n.SetNeuronTimeConstant(vba, v(3));
+        n.SetNeuronTimeConstant(vbp, v(3));
         //  D-
-        n_ptr->SetNeuronTimeConstant(dd, v(4));
-        n_ptr->SetNeuronTimeConstant(vda, v(4));
-        n_ptr->SetNeuronTimeConstant(vdp, v(4));
+        n.SetNeuronTimeConstant(dd, v(4));
+        n.SetNeuronTimeConstant(vda, v(4));
+        n.SetNeuronTimeConstant(vdp, v(4));
 
         // Self connections
         //  B-
-        n_ptr->SetChemicalSynapseWeight(db, db, v(5));
-        n_ptr->SetChemicalSynapseWeight(vba, vba, v(5));
-        n_ptr->SetChemicalSynapseWeight(vbp, vbp, v(5));
+        n.SetChemicalSynapseWeight(db, db, v(5));
+        n.SetChemicalSynapseWeight(vba, vba, v(5));
+        n.SetChemicalSynapseWeight(vbp, vbp, v(5));
         //  D-
-        n_ptr->SetChemicalSynapseWeight(dd, dd, v(6));
-        n_ptr->SetChemicalSynapseWeight(vda, vda, v(6));
-        n_ptr->SetChemicalSynapseWeight(vdp, vdp, v(6));
+        n.SetChemicalSynapseWeight(dd, dd, v(6));
+        n.SetChemicalSynapseWeight(vda, vda, v(6));
+        n.SetChemicalSynapseWeight(vdp, vdp, v(6));
 
         // Chemical synapses (COLORS AS IN FIGURE)
         // xB -> xD
-        n_ptr->SetChemicalSynapseWeight(db, dd, v(7));       // Lighter Green
-        n_ptr->SetChemicalSynapseWeight(vba, vda, v(7));
-        n_ptr->SetChemicalSynapseWeight(vbp, vdp, v(7));
+        n.SetChemicalSynapseWeight(db, dd, v(7));       // Lighter Green
+        n.SetChemicalSynapseWeight(vba, vda, v(7));
+        n.SetChemicalSynapseWeight(vbp, vdp, v(7));
         // xB -> yD
-        n_ptr->SetChemicalSynapseWeight(db, vda, v(8));      // Darker Green
-        n_ptr->SetChemicalSynapseWeight(db, vdp, v(8));
-        n_ptr->SetChemicalSynapseWeight(vba, dd, v(8)/2);
-        n_ptr->SetChemicalSynapseWeight(vbp, dd, v(8)/2);
+        n.SetChemicalSynapseWeight(db, vda, v(8));      // Darker Green
+        n.SetChemicalSynapseWeight(db, vdp, v(8));
+        n.SetChemicalSynapseWeight(vba, dd, v(8)/2);
+        n.SetChemicalSynapseWeight(vbp, dd, v(8)/2);
         // xD- -> yD
-        n_ptr->SetChemicalSynapseWeight(dd, vda, v(9));     // Darker Blue
+        n.SetChemicalSynapseWeight(dd, vda, v(9));     // Darker Blue
 
         // Gap junctions within the unit
-        n_ptr->SetElectricalSynapseWeight(dd, vda, v(10));   // Light Gray
-        n_ptr->SetElectricalSynapseWeight(dd, vdp, v(10));
+        n.SetElectricalSynapseWeight(dd, vda, v(10));   // Light Gray
+        n.SetElectricalSynapseWeight(dd, vdp, v(10));
 
         // D-
-        n_ptr->SetElectricalSynapseWeight(vda, vdp, v(11));  // Blue
+        n.SetElectricalSynapseWeight(vda, vdp, v(11));  // Blue
         // B-
-        n_ptr->SetElectricalSynapseWeight(vba, vbp, v(12));  // Green
+        n.SetElectricalSynapseWeight(vba, vbp, v(12));  // Green
 
         // Gap junctions across units
         if (u < par1.N_units){
             //  D-
-            n_ptr->SetElectricalSynapseWeight(dd, ddNext, v(11));    // Blue
-            n_ptr->SetElectricalSynapseWeight(vdp, vdaNext, v(11));
+            n.SetElectricalSynapseWeight(dd, ddNext, v(11));    // Blue
+            n.SetElectricalSynapseWeight(vdp, vdaNext, v(11));
             //  B-
-            n_ptr->SetElectricalSynapseWeight(db, dbNext, v(12));  // Green
-            n_ptr->SetElectricalSynapseWeight(vbp, vbaNext, v(12));
+            n.SetElectricalSynapseWeight(db, dbNext, v(12));  // Green
+            n.SetElectricalSynapseWeight(vbp, vbaNext, v(12));
             //
-            n_ptr->SetElectricalSynapseWeight(vbp, dbNext, v(13)); // Darker Gray
+            n.SetElectricalSynapseWeight(vbp, dbNext, v(13)); // Darker Gray
         }
     }
 
@@ -184,7 +184,7 @@ void Worm18::InitializeState(RandomState &rs)
 {
     WormIzq::InitializeState(rs);
 
-    n_ptr->RandomizeCircuitState(-0.5, 0.5, rs);
+    n.RandomizeCircuitState(-0.5, 0.5, rs);
     h.RandomizeCircuitState(-0.5, 0.5, rs);
     
 }
@@ -236,16 +236,16 @@ if (rS18Macros.headsr)
 if (rS18Macros.vncsr)
 {
     for (int i = 1; i <= par1.N_units; i++){
-        n_ptr->SetNeuronExternalInput(nn(DB,i), sr.VCDorsalOutput(i));
-        n_ptr->SetNeuronExternalInput(nn(VBA,i), sr.VCVentralAOutput(i));
-        n_ptr->SetNeuronExternalInput(nn(VBP,i), sr.VCVentralPOutput(i));
+        n.SetNeuronExternalInput(nn(DB,i), sr.VCDorsalOutput(i));
+        n.SetNeuronExternalInput(nn(VBA,i), sr.VCVentralAOutput(i));
+        n.SetNeuronExternalInput(nn(VBP,i), sr.VCVentralPOutput(i));
     }
 }    
 //#endif
 
     // Update Nervous System
     h.EulerStep(StepSize);
-    n_ptr->EulerStep(StepSize);
+    n.EulerStep(StepSize);
 
     // Set input to Muscles
     //  Input from the head circuit
@@ -261,10 +261,10 @@ if (rS18Macros.vncsr)
     //  Dorsal muscles (each motor neuron innervates three muscles, no overlap)
     for (int i = VNCMuscleStart; i <= par1.N_muscles; i++){
         mi = (int) ((i-VNCMuscleStart)/NmusclePerNU)+1;
-        dorsalHeadInput = NMJ_DD*n_ptr->NeuronOutput(nn(DD,mi)) + NMJ_DB*n_ptr->NeuronOutput(nn(DB,mi));
+        dorsalHeadInput = NMJ_DD*n.NeuronOutput(nn(DD,mi)) + NMJ_DB*n.NeuronOutput(nn(DB,mi));
         m.SetDorsalMuscleInput(i, NMJ_Gain(i)*dorsalHeadInput);
-        ventralHeadInputA = NMJ_VDa*n_ptr->NeuronOutput(nn(VDA,mi)) + NMJ_VBa*n_ptr->NeuronOutput(nn(VBA,mi));
-        ventralHeadInputP = NMJ_VDp*n_ptr->NeuronOutput(nn(VDP,mi)) + NMJ_VBp*n_ptr->NeuronOutput(nn(VBP,mi));
+        ventralHeadInputA = NMJ_VDa*n.NeuronOutput(nn(VDA,mi)) + NMJ_VBa*n.NeuronOutput(nn(VBA,mi));
+        ventralHeadInputP = NMJ_VDp*n.NeuronOutput(nn(VDP,mi)) + NMJ_VBp*n.NeuronOutput(nn(VBP,mi));
         mt = (i-VNCMuscleStart)%NmusclePerNU;
         switch(mt){
             case 0:
@@ -344,19 +344,6 @@ vector<doubIntParamsHead> Worm18::getWormParams(){
 }
 
 
-/* Params<double> Worm18::getWormParams()
-{
-Params<double> par;
-par.vals = {NMJ_DB, NMJ_VBa, NMJ_VBp, NMJ_DD, NMJ_VDa, NMJ_VDp, 
-    NMJ_SMDD, NMJ_SMDV, NMJ_RMDD, NMJ_RMDV, NMJ_Gain_Map};
-par.names = {"NMJ_DB", "NMJ_VBa", "NMJ_VBp", "NMJ_DD", "NMJ_VDa", "NMJ_VDp",
-    "NMJ_SMDD", "NMJ_SMDV", "NMJ_RMDD", "NMJ_RMDV", "NMJ Gain"};
-return par;
-}
- */
-// Dump the state to OFS if SKIPS steps have been performed
-
-
 
 void Worm18::DumpActState(ofstream &ofs, int skips)
 {
@@ -381,7 +368,7 @@ void Worm18::DumpActState(ofstream &ofs, int skips)
         //ofs << "\nV: ";
         for (int i = 1; i <= par1.N_units; i++) {
             for (int j = 1; j <= par1.N_neuronsperunit; j++) {
-                ofs <<  " " << n_ptr->NeuronOutput(nn(j,i));
+                ofs <<  " " << n.NeuronOutput(nn(j,i));
             }
         }
         // Muscles
@@ -408,7 +395,7 @@ void Worm18::DumpVoltage(ofstream &ofs, int skips)
         // Ventral Cord Motor Neurons
         for (int i = 1; i <= par1.N_units; i++) {
             for (int j = 1; j <= par1.N_neuronsperunit; j++) {
-                ofs <<  " " << n_ptr->NeuronState(nn(j,i));
+                ofs <<  " " << n.NeuronState(nn(j,i));
             }
         }
         ofs << "\n";
@@ -419,11 +406,11 @@ void Worm18::DumpVoltage(ofstream &ofs, int skips)
 
 void Worm18::DumpParams(ofstream &ofs)
 {
-    ofs << "Time-constants: \n DB: " << n_ptr->NeuronTimeConstant(DB) << "\n VBA/P: " << n_ptr->NeuronTimeConstant(VBA) << " / " << n_ptr->NeuronTimeConstant(VBP) << "\n DD: " << n_ptr->NeuronTimeConstant(DD) << "\n VDA/P: " << n_ptr->NeuronTimeConstant(VDA) << " / " << n_ptr->NeuronTimeConstant(VDP) << endl;
-    ofs << "Biases: \n DB: " << n_ptr->NeuronBias(DB) << "\n VBA/P: " << n_ptr->NeuronBias(VBA) << " / " << n_ptr->NeuronBias(VBP)  <<  "\n DD: " << n_ptr->NeuronBias(DD) << "\n VDA/P: " << n_ptr->NeuronBias(VDA) <<  " / " << n_ptr->NeuronBias(VDP) << endl;
-    ofs << "Self conns: \n DB: " << n_ptr->ChemicalSynapseWeight(DB, DB) << "\n VBA/P: " << n_ptr->ChemicalSynapseWeight(VBA, VBA) << " / " << n_ptr->ChemicalSynapseWeight(VBP, VBP) << "\n DD: " << n_ptr->ChemicalSynapseWeight(DD, DD) <<  "\n VDA/P: " << n_ptr->ChemicalSynapseWeight(VDA, VDA) <<  " / " << n_ptr->ChemicalSynapseWeight(VDP, VDP) << endl;
-    ofs << "Chem Conns: \n DB->DD: " << n_ptr->ChemicalSynapseWeight(DB, DD) <<  "\n DB->VDA/VDP: " << n_ptr->ChemicalSynapseWeight(DB, VDA) << " / " << n_ptr->ChemicalSynapseWeight(DB, VDP) << "\n VBA/P->DD: " << n_ptr->ChemicalSynapseWeight(VBA, DD) << " / " << n_ptr->ChemicalSynapseWeight(VBP, DD) << "\n VBA/P->VDA/P: " << n_ptr->ChemicalSynapseWeight(VBA, VDA) << " / " << n_ptr->ChemicalSynapseWeight(VBP, VDP) << "\n VDA/P->VBA/P: " << n_ptr->ChemicalSynapseWeight(VDA, VBA) << " / " << n_ptr->ChemicalSynapseWeight(VDP, VBP) << "\n DD->VDA: " << n_ptr->ChemicalSynapseWeight(DD, VDA) <<endl;
-    ofs << "Gap Juncs: \n DB-DB+1: " << n_ptr->ElectricalSynapseWeight(DB, DB+par1.N_neuronsperunit) << "\n VBA-VBP / VBP-VBP+1: " << n_ptr->ElectricalSynapseWeight(VBA, VBP) << " / " << n_ptr->ElectricalSynapseWeight(VBP, VBA+par1.N_neuronsperunit) << "\n VBP-DB+1: " << n_ptr->ElectricalSynapseWeight(VBP, DB+par1.N_neuronsperunit) << "\n DD-VDA/P: " << n_ptr->ElectricalSynapseWeight(DD, VDA) << " / " << n_ptr->ElectricalSynapseWeight(DD, VDP) << "\n DD-DD+1: " << n_ptr->ElectricalSynapseWeight(DD, DD+par1.N_neuronsperunit) << "\n VDA-VDP / VDP-VDP+1: " << n_ptr->ElectricalSynapseWeight(VDA, VDP) << " / " << n_ptr->ElectricalSynapseWeight(VDP, VDA+par1.N_neuronsperunit) <<  endl;
+    ofs << "Time-constants: \n DB: " << n.NeuronTimeConstant(DB) << "\n VBA/P: " << n.NeuronTimeConstant(VBA) << " / " << n.NeuronTimeConstant(VBP) << "\n DD: " << n.NeuronTimeConstant(DD) << "\n VDA/P: " << n.NeuronTimeConstant(VDA) << " / " << n.NeuronTimeConstant(VDP) << endl;
+    ofs << "Biases: \n DB: " << n.NeuronBias(DB) << "\n VBA/P: " << n.NeuronBias(VBA) << " / " << n.NeuronBias(VBP)  <<  "\n DD: " << n.NeuronBias(DD) << "\n VDA/P: " << n.NeuronBias(VDA) <<  " / " << n.NeuronBias(VDP) << endl;
+    ofs << "Self conns: \n DB: " << n.ChemicalSynapseWeight(DB, DB) << "\n VBA/P: " << n.ChemicalSynapseWeight(VBA, VBA) << " / " << n.ChemicalSynapseWeight(VBP, VBP) << "\n DD: " << n.ChemicalSynapseWeight(DD, DD) <<  "\n VDA/P: " << n.ChemicalSynapseWeight(VDA, VDA) <<  " / " << n.ChemicalSynapseWeight(VDP, VDP) << endl;
+    ofs << "Chem Conns: \n DB->DD: " << n.ChemicalSynapseWeight(DB, DD) <<  "\n DB->VDA/VDP: " << n.ChemicalSynapseWeight(DB, VDA) << " / " << n.ChemicalSynapseWeight(DB, VDP) << "\n VBA/P->DD: " << n.ChemicalSynapseWeight(VBA, DD) << " / " << n.ChemicalSynapseWeight(VBP, DD) << "\n VBA/P->VDA/P: " << n.ChemicalSynapseWeight(VBA, VDA) << " / " << n.ChemicalSynapseWeight(VBP, VDP) << "\n VDA/P->VBA/P: " << n.ChemicalSynapseWeight(VDA, VBA) << " / " << n.ChemicalSynapseWeight(VDP, VBP) << "\n DD->VDA: " << n.ChemicalSynapseWeight(DD, VDA) <<endl;
+    ofs << "Gap Juncs: \n DB-DB+1: " << n.ElectricalSynapseWeight(DB, DB+par1.N_neuronsperunit) << "\n VBA-VBP / VBP-VBP+1: " << n.ElectricalSynapseWeight(VBA, VBP) << " / " << n.ElectricalSynapseWeight(VBP, VBA+par1.N_neuronsperunit) << "\n VBP-DB+1: " << n.ElectricalSynapseWeight(VBP, DB+par1.N_neuronsperunit) << "\n DD-VDA/P: " << n.ElectricalSynapseWeight(DD, VDA) << " / " << n.ElectricalSynapseWeight(DD, VDP) << "\n DD-DD+1: " << n.ElectricalSynapseWeight(DD, DD+par1.N_neuronsperunit) << "\n VDA-VDP / VDP-VDP+1: " << n.ElectricalSynapseWeight(VDA, VDP) << " / " << n.ElectricalSynapseWeight(VDP, VDA+par1.N_neuronsperunit) <<  endl;
     ofs << "SR Gain (VNC and Head): " << sr.SRvncgain << " " << sr.SRheadgain << endl;
     ofs << "NMJ weights: \n B: " << NMJ_DB << " " << NMJ_VBa << " " << NMJ_VBp << "\n D: " <<  NMJ_DD << " " << NMJ_VDa << " " << NMJ_VDp << endl;
     ofs << "Head: \nBiases: \n SMD(D/V): " << h.NeuronBias(SMDD) << " " << h.NeuronBias(SMDV) << "\n RMD(D/V): "<< h.NeuronBias(RMDD) << " "<< h.NeuronBias(RMDV) << endl;

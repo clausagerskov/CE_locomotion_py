@@ -1,7 +1,7 @@
 #include "c302NervousSystem.h"
 //#include "owSignalSimulator.h"
 
-const bool skipCalc = 1;
+//const bool skipCalc = 1;
 const std::string defaultSimClassName = "Worm2DNRNSimulation";
 
 c302NervousSystem::c302NervousSystem(const std::string & simFileName):
@@ -9,6 +9,7 @@ simulation(new SignalSimulatorForWorm2D(simFileName,defaultSimClassName,0.005)){
 
 //c302NervousSystem::c302NervousSystem():
 //simulation(new SignalSimulatorForWorm2D("neuromlLocal.main_sim",defaultSimClassName,0.005)){}
+
 c302NervousSystem::c302NervousSystem():
 simulation(new SignalSimulatorForWorm2D("main_sim",defaultSimClassName,"neuromlLocal",0.005)){}
 
@@ -32,6 +33,10 @@ float timeStep)
     simulation = new SignalSimulatorForWorm2D(simFileName, simClassName, timeStep);
 } */
 
+void c302NervousSystem::SetPopStructure(const std::string & popStruct, int popSize)
+{
+    simulation->strOneValFunc("set_up", popStruct, popSize);
+}
 
 void c302NervousSystem::SetNeuronExternalInput(int i, double value)
 {

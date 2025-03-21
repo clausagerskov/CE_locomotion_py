@@ -217,29 +217,37 @@ def check_equal(list):
     return all(i == list[0] for i in list)
 
 
-def getVals(pop_names, cell_names, vals):
+def getVals(pop_names, cell_names, vals, do_check_equal=True):
     pop_vals = []
     for pop_name in pop_names:
         vals_list = [vals[i] for i, val in enumerate(cell_names) if val == pop_name]
-        if check_equal(vals_list):
-            pop_vals.append(vals_list[0])
+        if do_check_equal:
+            if check_equal(vals_list):
+                pop_vals.append(vals_list[0])
+            else:
+                print("Not all equal")
+                exit()
         else:
-            print("Not all equal")
-            exit()
+            pop_vals.append(vals_list[0])
     return pop_vals
 
 
 def makeCellXml(network_json_data, cellX_filename):
+    print("generating CellXml")
     pop_names = getPopNames(network_json_data)
     cell_names = network_json_data["Nervous system"]["Cell name"]["value"]
     cell_biases = network_json_data["Nervous system"]["biases"]["value"]
     cell_gains = network_json_data["Nervous system"]["gains"]["value"]
     cell_taus = network_json_data["Nervous system"]["taus"]["value"]
     cell_states = network_json_data["Nervous system"]["states"]["value"]
+    # print('biases')
     pop_biases = getVals(pop_names, cell_names, cell_biases)
+    # print('gains')
     pop_gains = getVals(pop_names, cell_names, cell_gains)
+    # print('taus')
     pop_taus = getVals(pop_names, cell_names, cell_taus)
-    pop_states = getVals(pop_names, cell_names, cell_states)
+    # print('states')
+    pop_states = getVals(pop_names, cell_names, cell_states, do_check_equal=False)
 
     cellX_strings = []
     for ind, pop_cell_name in enumerate(pop_names):

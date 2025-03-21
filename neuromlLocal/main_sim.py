@@ -13,7 +13,7 @@ def announce(message):
     )
 
 
-def get_pop_number(i):
+""" def get_pop_number(i):
     stim_pop_list = ["DA", "DB", "DD", "VD", "VA", "VB"]
     pop_num = int(i % 6)
     neuron_num = int(i / 6)
@@ -24,7 +24,7 @@ def get_neuron_number(pop, i):
     stim_pop_list = {"DA": 0, "DB": 1, "DD": 2, "VD": 3, "VA": 4, "VB": 5}
     return stim_pop_list[pop] + i * 6
 
-
+ """
 # fout_weights = open('Worm2D.weights-test.dat', 'w')
 
 
@@ -36,6 +36,21 @@ class Worm2DNRNSimulation:
         self.tstop = 1
         print("Worm2DNRNSimulation init called")
         return
+
+    def set_up(self, pop_list_str, pop_size):
+        self.pop_list = pop_list_str.split()
+        self.pop_size = pop_size  # number of repetitions
+        self.pop_num = len(self.pop_list)
+        self.pop_dict = {value: index for index, value in enumerate(self.pop_list)}
+        self.pop_name_list = ["m_" + val + "_Pop" + val for val in self.pop_list]
+
+    def get_neuron_number(self, pop, i):
+        return self.pop_dict[pop] + i * self.pop_num
+
+    def get_pop_number(self, i):
+        pop_num = int(i % self.pop_num)
+        neuron_num = int(i / self.pop_num)
+        return self.pop_list[pop_num], neuron_num
 
     def set_timestep(self, dt):
         print("Setting timestep to %s..." % dt)
@@ -120,7 +135,7 @@ class Worm2DNRNSimulation:
         )
 
     def set_neuron_input(self, i, weight):
-        pop_name, nn = get_pop_number(i)
+        pop_name, nn = self.get_pop_number(i)
         getattr(self.h, "ExtStimPop" + pop_name + "_" + str(nn)).weight = weight
         # fout_weights.write(pop_name + ' ' + str(nn) + ' ' + str(weight) + '\n')
         return
@@ -130,8 +145,8 @@ class Worm2DNRNSimulation:
         pass
 
     def set_synaptic_weight(self, pre, post, weight):
-        pre_pop, pre_neuron_number = get_pop_number(pre)
-        post_pop, post_neuron_number = get_pop_number(post)
+        pre_pop, pre_neuron_number = self.get_pop_number(pre)
+        post_pop, post_neuron_number = self.get_pop_number(post)
         syn_str = "syn_NC_Pop" + pre_pop + "_Pop" + post_pop + "_silentSyn_"
         try:
             getattr(self.h, syn_str + "silentSyn_pre")[
@@ -144,8 +159,8 @@ class Worm2DNRNSimulation:
             print("No such connection: %s " % e)
 
     def get_synaptic_weight(self, pre, post):
-        pre_pop, pre_neuron_number = get_pop_number(pre)
-        post_pop, post_neuron_number = get_pop_number(post)
+        pre_pop, pre_neuron_number = self.get_pop_number(pre)
+        post_pop, post_neuron_number = self.get_pop_number(post)
         syn_str = "syn_NC_Pop" + pre_pop + "_Pop" + post_pop + "_silentSyn_"
         try:
             return getattr(self.h, syn_str + "silentSyn_pre")[pre_neuron_number].weight
@@ -157,13 +172,13 @@ class Worm2DNRNSimulation:
         # syn_NC_PopDD_PopDA_silentSyn_neuron_to_neuron_syn_x_post[4].weight
 
     def set_neuron_inputs(self, weight):
-        stim_pop_list = ["DA", "DB", "DD", "VD", "VA", "VB"]
-        for stim_pop in stim_pop_list:
-            for i in range(10):
+        # stim_pop_list = ["DA", "DB", "DD", "VD", "VA", "VB"]
+        for stim_pop in self.pop_list:
+            for i in range(self.pop_size):
                 getattr(self.h, "ExtStimPop" + stim_pop + "_" + str(i)).weight = weight
 
     def get_neuron_parameter(self, parameter, i):
-        pop_name, nn = get_pop_number(i)
+        pop_name, nn = self.get_pop_number(i)
         pop_full_name = "m_" + pop_name + "_Pop" + pop_name
         try:
             if parameter == "bias":
@@ -178,7 +193,7 @@ class Worm2DNRNSimulation:
             print("Problem setting neuron parameter: %s" % e)
 
     def set_neuron_parameter(self, parameter, i, val):
-        pop_name, nn = get_pop_number(i)
+        pop_name, nn = self.get_pop_number(i)
         pop_full_name = "m_" + pop_name + "_Pop" + pop_name
         try:
             if parameter == "bias":
@@ -196,22 +211,22 @@ class Worm2DNRNSimulation:
 
         self.ns.advance()
 
-        print_("< Current NEURON time: %s ms" % self.h.t)
+        #print_("< Current NEURON time: %s ms" % self.h.t)
 
         # values = []
-        pop_list = [
+        """ pop_list = [
             "m_DA_PopDA",
             "m_DB_PopDB",
             "m_DD_PopDD",
             "m_VD_PopVD",
             "m_VA_PopVA",
             "m_VB_PopVB",
-        ]
+        ] """
 
         values = []
         vars_read = []
-        for i in range(10):
-            for pop in pop_list:
+        for i in range(self.pop_size):
+            for pop in self.pop_name_list:
                 try:
                     # val = getattr(self.h, var)[0].soma.cai
                     val = getattr(self.h, pop)[i].output
@@ -262,8 +277,8 @@ if __name__ == "__main__":
         if i == 5000:
             pre_pop = "DD"
             post_pop = "DA"
-            pre = get_neuron_number(pre_pop, 5)
-            post = get_neuron_number(post_pop, 5)
+            pre = w.get_neuron_number(pre_pop, 5)
+            post = w.get_neuron_number(post_pop, 5)
             w.set_synaptic_weight(pre, post, 3)
             # w.set_input_weights(1.0)
             # w.set_neuron_input(53, 1.0)

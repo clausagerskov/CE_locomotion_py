@@ -9,14 +9,16 @@ int main (int argc, const char* argv[])
 
 c302NervousSystem n("main_sim", "parent");
 
+n.SetPopStructure("DA DB DD VD VA VB", 10);
+n.skipCalc = 1;
 
 ofstream fout("testc302NervousSystem-output.dat");
 for (int i=0;i<10000;i++){
-if (i==3000) n.SetChemicalSynapseWeight(22, 2, 1);
+if (i==3000) n.SetChemicalSynapseWeight(3, 1, 1);
 
 if (i==6000) n.SetNeuronExternalInput(53, 1);
 
-if (i==9800) n.SetNeuronBias(55, 1);
+if (i==9000) n.SetNeuronBias(35, 1);
 
 
 n.EulerStep(1);

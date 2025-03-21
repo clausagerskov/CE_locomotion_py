@@ -11,8 +11,7 @@ public:
 
 c302NervousSystem(const std::string & simFileName);
 c302NervousSystem();
-c302NervousSystem(const std::string & simFileName, 
-const std::string & simDirName);
+c302NervousSystem(const std::string & simFileName, const std::string & simDirName);
 
 /* void setSimulator(
 const std::string & simFileName = "neuromlLocal.main_sim", 
@@ -30,6 +29,9 @@ void SetNeuronExternalInput(int i, double value);
 double NeuronOutput(int i);
 void EulerStep(double );
 
+//required for population structure in main_sim
+
+void SetPopStructure(const std::string & popStruct, int popSize);
 
 //required for nervous system setup
 
@@ -67,6 +69,7 @@ void SetElectricalSynapseWeight(int n1, int n2, double value);
 
  const std::vector<float> & getOutputValues() const {return output_value;}
  ostream & writeOutputValues(ostream & os) {return writeVector(os,output_value);}
+ bool skipCalc = 1;
 
 private:
 
