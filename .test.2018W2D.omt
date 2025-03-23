@@ -10,7 +10,7 @@ experiments:
       spike times:
         file: 
           path: exampleRunRS18W2D/act.dat
-          columns: [0, 4]
+          columns: [0, 1]
           scaling: [1, 1]
         spike detection: 
           method: threshold

@@ -1,9 +1,9 @@
 from run_main import run
 
 run(
-    maxGens=20,
-    popSize=56,
-    RandSeed=151750,
+    maxGens=100,
+    popSize=16,
+    RandSeed=881375,
     modelFolder="RoyalSociety2018",
     outputFolderName="exampleRunRS18",
     doEvol=True,
