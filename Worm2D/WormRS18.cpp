@@ -29,8 +29,7 @@ return {headsr,vncsr};
 }
 
 // The constructor
-Worm18::Worm18(TVector<double> &v,double output)
-:WormIzq({6,24,0.1,6}, new NervousSystem),n(static_cast<NervousSystem&>(*n_ptr)),
+Worm18::Worm18(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),
 rS18Macros(setMacros())
 {
     //supArgs1.writeMessage();

@@ -3,10 +3,27 @@
 
 //using json = nlohmann::json;
 
-Worm2D::Worm2D(NervousSystemBase * n_ptr_):n_ptr(n_ptr_){}
+void Worm2D::setUp()
+{
+    t = 0;
+    m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
+    b.InitializeBodyState();
+    m.InitializeMuscleState();
+    //InitializeState(rs);
+}
+
+int Worm2D::nn(int neuronNumber, int unitNumber)
+{
+    return neuronNumber+((unitNumber-1)*par1.N_neuronsperunit);
+}
+
+Worm2D::Worm2D(wormIzqParams par1_):par1(par1_)
+{
+    setUp();
+}
 
 
-WormIzq::WormIzq(wormIzqParams par1_, NervousSystemBase * n_ptr_):n_ptr(n_ptr_),par1(par1_)
+WormIzq::WormIzq(wormIzqParams par1_):par1(par1_)
 {
     setUp();
 }
@@ -152,7 +169,7 @@ void WormIzq::addParsToJson(json & j)
     appendBodyToJson(j, b);
     appendMuscleToJson(j,m);
     string nsHead = "Nervous system";
-    appendAllNSJson(j[nsHead], static_cast<NervousSystem&>(*n_ptr));
+    appendAllNSJson(j[nsHead], n);
     appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
 
     vector<doubIntParamsHead> parvec = getWormParams();

@@ -49,7 +49,7 @@ public:
     
     //WormBody b;
     //Muscles m;
-    NervousSystem & n;
+    //NervousSystem & n;
     StretchReceptor18 sr;
     NervousSystem h;
     

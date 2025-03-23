@@ -49,7 +49,7 @@ public:
     void SetAVB(double value) {AVB = value;};
     
     
-    NervousSystem & n;
+    //NervousSystem & n;
 
     private:
     const vector<string> getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}

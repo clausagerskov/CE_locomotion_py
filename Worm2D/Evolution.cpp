@@ -5,6 +5,7 @@
 //#include <stdio.h>
 #include <iostream>
 
+
 const char* getParameter(int argc, const char* argv[], string parName, const char* defaultval)
 {    
    const char* retval = defaultval;

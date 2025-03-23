@@ -7,27 +7,12 @@
 //#include <nlohmann/json.hpp>
 #include "jsonUtils.h"
 
-
 //using json = nlohmann::json;
 
 #define PI 3.14159265
 
-class Worm2D {
-    
-    public:
-    virtual void addParsToJson(json & j) = 0;
-    ~Worm2D(){if (n_ptr) delete n_ptr;}
-
-    protected:
-    NervousSystemBase * const n_ptr;
-   
-    Worm2D(NervousSystemBase * n_ptr_);
-    
-};
-
 struct wormIzqParams
 {
-    
     int N_neuronsperunit;
     int N_muscles;
     double T_muscle;
@@ -46,6 +31,31 @@ struct wormIzqParams
     }
 
 };
+
+
+
+class Worm2D {
+    
+    public:
+    //virtual void InitializeState(RandomState &rs) = 0;
+    //virtual void DumpBodyState(ofstream &ofs, int skips) = 0;
+    //virtual void DumpCurvature(ofstream &ofs, int skips) = 0;
+    virtual void DumpActState(ofstream &ofs, int skips) = 0;
+    virtual void Step(double StepSize, double output) = 0;
+    Worm2D(wormIzqParams par1_);
+
+    protected:
+    int nn(int neuronNumber, int unitNumber);
+    void setUp();
+    Muscles m;
+    WormBody b;
+    NSForW2D * n_ptr;
+    const wormIzqParams par1;
+    double t; // Time
+};
+
+
+
 
 class WormIzq
 {
@@ -67,16 +77,16 @@ public:
     virtual void DumpParams(ofstream &ofs) = 0;
     void DumpBodyState(ofstream &ofs, int skips);
     
-    ~WormIzq(){if (n_ptr) delete n_ptr;}
+   // ~WormIzq(){if (n_ptr) delete n_ptr;}
 
     protected:
-    WormIzq(wormIzqParams par1_, NervousSystemBase * n_ptr_);
+    WormIzq(wormIzqParams par1);
     int nn(int neuronNumber, int unitNumber);
     double t; // Time
 
     Muscles m;
     WormBody b;
-    NervousSystemBase * const n_ptr;
+    NervousSystem n;
     const wormIzqParams par1;
 
     // Body segment name conventions

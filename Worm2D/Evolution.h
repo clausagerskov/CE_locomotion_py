@@ -7,6 +7,7 @@
 #include <string.h>
 #include "jsonUtils.h"
 
+
 template <typename T>
 struct Callback;
 
@@ -87,12 +88,17 @@ T getParameter(int argc, const char* argv[], string parName, T defaultval){
 
 const char* getParameter(int argc, const char* argv[], string parName, const char* defaultval);
 
+
+
+
+
 class Evolution
 {
     public:
     virtual void GenPhenMapping(TVector<double> &gen, TVector<double> &phen) = 0;
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
     virtual void RunSimulation(TVector<double> &v, RandomState &rs) = 0;
+   
     void addParsToJson(json & j);
     
     virtual void configure();
