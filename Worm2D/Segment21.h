@@ -2,9 +2,9 @@
 //  Segment.hpp
 //
 
-#include "VectorMatrix.h"
-#include "random.h"
-#include "NervousSystem.h"
+#include "../VectorMatrix.h"
+#include "../random.h"
+#include "../NervousSystem.h"
 
 
 #include <cmath>

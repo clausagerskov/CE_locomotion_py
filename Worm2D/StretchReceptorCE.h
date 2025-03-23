@@ -7,8 +7,8 @@
 // Modified by Erick Olivares, Feb 2019
 // Added SR for class A motorneurons
 
-#include "VectorMatrix.h"
-#include "random.h"
+#include "../VectorMatrix.h"
+#include "../random.h"
 #include <cmath>
 #include "StretchReceptor.h"
 using namespace std;

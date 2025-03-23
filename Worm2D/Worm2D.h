@@ -1,9 +1,9 @@
 #pragma once
-#include "TSearch.h"
-#include "VectorMatrix.h"
-#include "Muscles.h"
-#include "WormBody.h"
-#include "NervousSystem.h"
+//#include "../TSearch.h"
+//#include "../VectorMatrix.h"
+//#include "../Muscles.h"
+//#include "../WormBody.h"
+//#include "../NervousSystem.h"
 //#include <nlohmann/json.hpp>
 #include "jsonUtils.h"
 
@@ -49,7 +49,7 @@ class Worm2D {
     void setUp();
     Muscles m;
     WormBody b;
-    NSForW2D * n_ptr;
+    //NSForW2D * n_ptr;
     const wormIzqParams par1;
     double t; // Time
 };
@@ -79,6 +79,7 @@ public:
     
    // ~WormIzq(){if (n_ptr) delete n_ptr;}
 
+    NervousSystem n;
     protected:
     WormIzq(wormIzqParams par1);
     int nn(int neuronNumber, int unitNumber);
@@ -86,7 +87,7 @@ public:
 
     Muscles m;
     WormBody b;
-    NervousSystem n;
+  
     const wormIzqParams par1;
 
     // Body segment name conventions

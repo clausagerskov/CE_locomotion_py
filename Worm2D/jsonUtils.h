@@ -1,10 +1,10 @@
 #pragma once
 #include <vector>
-#include "VectorMatrix.h"
+#include "../VectorMatrix.h"
 #include <nlohmann/json.hpp>
-#include "Muscles.h"
-#include "WormBody.h"
-#include "NervousSystem.h"
+#include "../Muscles.h"
+#include "../WormBody.h"
+#include "../NervousSystem.h"
 #include "../utils.h"
 
 using json = nlohmann::json;

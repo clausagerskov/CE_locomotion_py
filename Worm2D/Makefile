@@ -17,12 +17,12 @@ owSignalSimulator.o: ../neuromlLocal/owSignalSimulator.cpp ../neuromlLocal/owSig
 owSignalSimulatorForWorm2D.o: ../neuromlLocal/owSignalSimulatorForWorm2D.cpp ../neuromlLocal/owSignalSimulatorForWorm2D.h ../neuromlLocal/owSignalSimulator.h
 	$(CC) -c -O3 $(CXXFLAGS) $(LDFLAGS) $(EXTRA_FLAGS) ../neuromlLocal/owSignalSimulatorForWorm2D.cpp
 	@echo ' '
-random.o: random.cpp random.h #VectorMatrix.h
-	$(CC) -c -O3 -flto random.cpp
+random.o: ../random.cpp ../random.h #VectorMatrix.h
+	$(CC) -c -O3 -flto ../random.cpp
 jsonUtils.o: jsonUtils.cpp jsonUtils.h
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include  -flto jsonUtils.cpp	
-TSearch.o: TSearch.cpp TSearch.h
-	$(CC) -c -O3 -flto TSearch.cpp
+TSearch.o: ../TSearch.cpp ../TSearch.h
+	$(CC) -c -O3 -flto ../TSearch.cpp
 #argUtils.o: ../argUtils.cpp ../argUtils.h
 #	g++ -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto ../argUtils.cpp
 Worm2D.o: Worm2D.cpp Worm2D.h
@@ -43,16 +43,16 @@ Worm21.o: Worm21.cpp Worm21.h
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto Worm21.cpp
 Segment21.o: Segment21.cpp Segment21.h
 	$(CC) -c -O3 -std=c++11 -flto Segment21.cpp	
-WormBody.o: WormBody.cpp WormBody.h
-	$(CC) -c -O3 -flto WormBody.cpp
-NervousSystem.o: NervousSystem.cpp NervousSystem.h #VectorMatrix.h random.h ../neuromlLocal/NervousSystemBase.h
-	$(CC) -c -O3 -std=c++11 -flto NervousSystem.cpp
+WormBody.o: ../WormBody.cpp ../WormBody.h
+	$(CC) -c -O3 -flto ../WormBody.cpp
+NervousSystem.o: ../NervousSystem.cpp ../NervousSystem.h #VectorMatrix.h random.h ../neuromlLocal/NervousSystemBase.h
+	$(CC) -c -O3 -std=c++11 -flto ../NervousSystem.cpp
 StretchReceptor18.o: StretchReceptor18.cpp StretchReceptor18.h
 	$(CC) -c -O3 -std=c++11 -flto StretchReceptor18.cpp
 StretchReceptorCE.o: StretchReceptorCE.cpp StretchReceptorCE.h
 	$(CC) -c -O3 -std=c++11 -flto StretchReceptorCE.cpp	
-Muscles.o: Muscles.cpp Muscles.h #VectorMatrix.h random.h
-	$(CC) -c -O3 -flto Muscles.cpp
+Muscles.o: ../Muscles.cpp ../Muscles.h #VectorMatrix.h random.h
+	$(CC) -c -O3 -flto ../Muscles.cpp
 main.o: main.cpp #WormRS18.h Worm2D.h WormBody.h StretchReceptor18.h Muscles.h TSearch.h
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto main.cpp
 clean:

@@ -1,6 +1,6 @@
 #pragma once
-#include "TSearch.h"
-#include "VectorMatrix.h"
+#include "../TSearch.h"
+#include "../VectorMatrix.h"
 //#include "../argUtils.h"
 #include <functional>
 #include <iomanip> 
