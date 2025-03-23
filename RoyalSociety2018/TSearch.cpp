@@ -136,7 +136,8 @@ void TSearch::SetPopulationSize(int NewSize)
 	fitness.SetSize(NewSize);
   RandomStates.SetSize(NewSize);
   for (int i = 1; i <= NewSize; i++)
-      RandomStates[i].SetRandomSeed(rs.UniformRandomInteger(1,32767)); // XXX
+      RandomStates[i].SetRandomSeed(rs.UniformRandomInteger(1,(int)LONG_MAX));
+//    RandomStates[i].SetRandomSeed(rs.UniformRandomInteger(1,32767)); // XXX
 //    RandomStates[i].SetRandomSeed(rs.UniformRandomInteger(1,LONG_MAX));
 }
 

@@ -4,7 +4,7 @@
 
 // Uncomment the following line to enable multithreading
 #define THREADED_SEARCH
-#define THREAD_COUNT 8
+#define THREAD_COUNT 16
 
 #pragma once
 
@@ -15,7 +15,6 @@
 #endif
 
 using namespace std;
-
 
 // A utility function for clipping a double to lie within the interval [MIN,MAX]
 
