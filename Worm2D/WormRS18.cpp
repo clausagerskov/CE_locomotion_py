@@ -7,7 +7,7 @@
 //
 
 #include "WormRS18.h"
-#include "../argUtils.h"
+//#include "../argUtils.h"
 
 #define HEADSR
 #define VNCSR
@@ -33,6 +33,11 @@ Worm18::Worm18(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),
 rS18Macros(setMacros())
 {
     //supArgs1.writeMessage();
+
+    // Muscles
+   // m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
+
+
     // Nervous system // Ventral cord
     n.SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 4, 4);
 
@@ -181,11 +186,10 @@ rS18Macros(setMacros())
 
 void Worm18::InitializeState(RandomState &rs)
 {
-    WormIzq::InitializeState(rs);
-
+    
     n.RandomizeCircuitState(-0.5, 0.5, rs);
     h.RandomizeCircuitState(-0.5, 0.5, rs);
-    
+    WormIzq::InitializeState(rs);
 }
 
 void Worm18::HeadStep(double StepSize, double output)

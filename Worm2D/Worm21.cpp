@@ -16,7 +16,7 @@
 Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
 {
     // Muscles
-    //m.SetMuscleParams(N_muscles, T_muscle);
+   // m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
     
     // Nervous system // Ventral cord
     n.SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 9, 6);

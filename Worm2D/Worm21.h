@@ -39,7 +39,7 @@ public:
     
     void InitializeState(RandomState &rs);
     void Step(double StepSize);
-    
+    void Step(double StepSize, double output){return Step(StepSize);}
    
     void DumpActState(ofstream &ofs, int skips);
     void DumpCurvature(ofstream &ofs, int skips);

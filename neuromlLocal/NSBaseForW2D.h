@@ -1,5 +1,5 @@
 #pragma once
-//#include "random.h"
+
 
 class NSForW2D {
     public:

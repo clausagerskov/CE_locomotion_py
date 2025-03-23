@@ -3,13 +3,25 @@
 
 //using json = nlohmann::json;
 
+
+Worm2D::Worm2D(wormIzqParams par1_, NSForW2D * n_ptr_):par1(par1_),n_ptr(n_ptr_)
+{
+    setUp();
+}
+
+
 void Worm2D::setUp()
 {
-    t = 0;
-    m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
+    m.SetMuscleParams(par1.N_muscles, par1.T_muscle);  
+    //InitializeState(rs);
+}
+
+
+void Worm2D::InitializeState(RandomState &rs)
+{
+    t = 0.0;
     b.InitializeBodyState();
     m.InitializeMuscleState();
-    //InitializeState(rs);
 }
 
 int Worm2D::nn(int neuronNumber, int unitNumber)
@@ -17,41 +29,37 @@ int Worm2D::nn(int neuronNumber, int unitNumber)
     return neuronNumber+((unitNumber-1)*par1.N_neuronsperunit);
 }
 
-Worm2D::Worm2D(wormIzqParams par1_):par1(par1_)
-{
-    setUp();
-}
 
+WormIzq::WormIzq(wormIzqParams par1_):Worm2D(par1_, new NervousSystem()),
+n(dynamic_cast<NervousSystem&>(*n_ptr))
+{}
 
-WormIzq::WormIzq(wormIzqParams par1_):par1(par1_)
-{
-    setUp();
-}
 
 /* WormIzq::WormIzq(wormIzqParams par1_, const NervousSystemBase & n):par1(par1_),n_ptr(n.clone())
 {
     setUp();
 } */
 
-void WormIzq::setUp()
+/* void WormIzq::setUp()
 {
     m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
 }
+ */
 
-int WormIzq::nn(int neuronNumber, int unitNumber)
+/* int WormIzq::nn(int neuronNumber, int unitNumber)
 {
     return neuronNumber+((unitNumber-1)*par1.N_neuronsperunit);
-}
+} */
 
-void WormIzq::InitializeState(RandomState &rs)
+/* void WormIzq::InitializeState(RandomState &rs)
 {
     t = 0.0;
     b.InitializeBodyState();
     m.InitializeMuscleState();
 }
+ */
 
-
-double WormIzq::CoMx()
+double Worm2D::CoMx()
 {
     double temp = 0.0;
     for (int i = 1; i <= N_rods; i++) {
@@ -60,7 +68,7 @@ double WormIzq::CoMx()
     return temp/N_rods;
 }
 
-double WormIzq::CoMy()
+double Worm2D::CoMy()
 {
     double temp = 0.0;
     for (int i = 1; i <= N_rods; i++) {
@@ -69,7 +77,7 @@ double WormIzq::CoMy()
     return temp/N_rods;
 }
 
-void WormIzq::Curvature(TVector<double> &c)
+void Worm2D::Curvature(TVector<double> &c)
 {
     double dx1,dy1,dx2,dy2,a,a1,a2,seg;
     int k=1;
@@ -98,12 +106,12 @@ void WormIzq::Curvature(TVector<double> &c)
     }
 }
 
-double WormIzq::Orientation()
+double Worm2D::Orientation()
 {
     return atan2(b.Y(Head)-b.Y(Tail),b.X(Head)-b.X(Tail));
 }
 
-void WormIzq::AngleCurvature(TVector<double> &c)
+void Worm2D::AngleCurvature(TVector<double> &c)
 {
   double dx1,dy1,dx2,dy2,a,a1,a2,seg;
   int k=1;
@@ -130,7 +138,7 @@ void WormIzq::AngleCurvature(TVector<double> &c)
   }
 }
 
-void WormIzq::DumpBodyState(ofstream &ofs, int skips)
+void Worm2D::DumpBodyState(ofstream &ofs, int skips)
 {
     static int tt = skips;
 
