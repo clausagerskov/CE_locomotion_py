@@ -299,6 +299,122 @@ if (speedoutput){
     return fitness;
 }
 
+void EvolutionRS18::RunSimulation(Worm2D &w1, RandomState &rs)
+{
+    Worm18 & w = dynamic_cast<Worm18&>(w1);
+    double fitness;
+    ofstream fitfile;
+  
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+    const int & N_curvs = evoPars1.N_curvs;
+    const double & Transient = evoPars1.Transient;
+
+
+    if (speedoutput)
+    {
+
+    fitfile.open(rename_file("speed.dat"));
+
+    }
+
+
+ofstream bodyfile, actfile, curvfile, voltagefile, paramsfile;
+
+    bodyfile.open(rename_file("body.dat"));
+    actfile.open(rename_file("act.dat"));
+    curvfile.open(rename_file("curv.dat"));
+    paramsfile.open(rename_file("params.dat"));
+
+
+
+    // Fitness
+    fitness = 0.0;
+    double bodyorientation, anglediff;
+    double movementorientation, distancetravelled = 0, temp;
+    TVector<double> curvature(1, N_curvs);
+    TVector<double> antpostcurv(1, 2);
+    antpostcurv.FillContents(0.0);
+
+    // Genotype-Phenotype Mapping
+    
+    
+
+
+
+    w.DumpParams(paramsfile);
+    //writeParsToJson(w);
+
+
+
+    w.InitializeState(rs);
+
+
+
+    // Transient
+    for (double t = 0.0; t <= Transient; t += StepSize)
+    {
+        w.Step(StepSize, 1);
+       
+
+
+        w.Curvature(curvature);
+        curvfile << curvature << endl;
+        w.DumpBodyState(bodyfile, skip);
+        w.DumpActState(actfile, skip);
+    
+
+    }
+
+    double xt = w.CoMx(), xtp;
+    double yt = w.CoMy(), ytp;
+
+    // Time loop
+    for (double t = 0.0; t <= Duration; t += StepSize) {
+
+        w.Step(StepSize, 1);
+
+        // Current and past centroid position
+        xtp = xt; ytp = yt;
+        xt = w.CoMx(); yt = w.CoMy();
+
+       
+        // Fitness
+        bodyorientation = w.Orientation();                  // Orientation of the body position
+        movementorientation = atan2(yt-ytp,xt-xtp);         // Orientation of the movement
+        anglediff = movementorientation - bodyorientation;  // Check how orientations align
+        temp = cos(anglediff) > 0.0 ? 1.0 : -1.0;           // Add to fitness only movement forward
+        distancetravelled += temp * sqrt(pow(xt-xtp,2)+pow(yt-ytp,2));
+
+
+
+        w.Curvature(curvature);
+        curvfile << curvature << endl;
+        w.DumpBodyState(bodyfile, skip);
+        w.DumpActState(actfile, skip);
+
+
+    }
+    fitness = 1 - (fabs(BBCfit-distancetravelled)/BBCfit);
+
+
+
+    cout << fitness << " " << BBCfit << " " << distancetravelled << " " << distancetravelled/Duration << endl;
+    bodyfile.close();
+    actfile.close();
+    curvfile.close();
+
+
+if (speedoutput){
+    fitfile << fitness << " "<< BBCfit << " " << distancetravelled << " " << distancetravelled/Duration << " " << endl;
+    fitfile.close();
+}
+
+    
+}
+
+
 void EvolutionRS18::configure()
 {
     configure_p1();

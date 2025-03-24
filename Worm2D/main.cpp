@@ -49,19 +49,21 @@ int main (int argc, const char* argv[])
     BestIndividualFile >> bestVector;
     BestIndividualFile.close();
     
+    WormIzq* w = 0;
+    TVector<double> phenotype(1, er->itsEvoPars().VectSize);
+    er->GenPhenMapping(bestVector, phenotype);
+
+    if (model_name == "CE") w = new WormCE(phenotype,0);
+    if (model_name == "RS18") w = new Worm18(phenotype,0);
+    if (model_name == "Net21") w = new Worm21(phenotype);
+
+
     // write worm_data.json if ran an evolution
     if (atoi(getParameter(argc,argv,"--doevol","0"))) {
 
-        WormIzq* w = 0;
-        TVector<double> phenotype(1, er->itsEvoPars().VectSize);
-        er->GenPhenMapping(bestVector, phenotype);
-    
-        if (model_name == "CE") w = new WormCE(phenotype,0);
-        if (model_name == "RS18") w = new Worm18(phenotype,0);
-        if (model_name == "Net21") w = new Worm21(phenotype);
-    
+        
         RandomState rs;
-        rs.SetRandomSeed( er->itsEvoPars().randomseed);
+        rs.SetRandomSeed(er->itsEvoPars().randomseed);
         w->InitializeState(rs);
         ofstream json_out(er->rename_file("worm_data.json"));
     
@@ -70,7 +72,7 @@ int main (int argc, const char* argv[])
         er->addParsToJson(j);
         json_out << std::setw(4) << j << std::endl;
         json_out.close();
-        delete w;
+        
     }
 
     bool do_nml =  atoi(getParameter(argc,argv,"--donml","0"));
@@ -86,24 +88,33 @@ int main (int argc, const char* argv[])
     if (!do_nml){
     
     er->RunSimulation(bestVector, rs);
-    
+    w->InitializeState(rs);
+    Simulation s1(er->itsEvoPars());
+    s1.runSimulation(*w);
     }
     else{
     if (model_name == "CE"){
-        
+
         ifstream json_in(er->rename_file("worm_data.json"));
         json j;
         json_in >> j;
-        Worm2DCE w(j);
+
+        {Worm2DCE w(j);
+        er->RunSimulation(w, rs);
+        }     
+
+        {Worm2DCE w(j);
         w.InitializeState(rs);
         Simulation s1(er->itsEvoPars());
-        s1.runSimulation(w);
-        
+        s1.runSimulation(w);}
+
+
+        json_in.close();
     }
     }
 
     delete er;
-   
+    delete w;
 
     return 0;
 }

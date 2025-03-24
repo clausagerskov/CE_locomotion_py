@@ -71,14 +71,16 @@ class Worm2DCE: public  Worm2D{
     void InitializeState(RandomState &rs);
     Worm2DCE(json & j);
 
-    private:
-
     StretchReceptorCE sr;
+    
+
+    
 
     double NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD; //EEE
     double AVA_output, AVB_output;
     double AVA_act, AVA_inact, AVB_act, AVB_inact;
 
+    private:
     const int N_stretchrec = 10;            // N_units // Number of stretch receptors
     const int NmusclePerNU = 4;             // All the way down to 24, in groups of 3 per unit
 

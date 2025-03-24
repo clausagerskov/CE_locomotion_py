@@ -6,7 +6,7 @@
 #include <iomanip> 
 #include <string.h>
 #include "jsonUtils.h"
-
+#include "Worm2D.h"
 
 template <typename T>
 struct Callback;
@@ -98,7 +98,8 @@ class Evolution
     virtual void GenPhenMapping(TVector<double> &gen, TVector<double> &phen) = 0;
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
     virtual void RunSimulation(TVector<double> &v, RandomState &rs) = 0;
-   
+    virtual void RunSimulation(Worm2D & w, RandomState &rs) = 0;
+
     void addParsToJson(json & j);
     
     virtual void configure();

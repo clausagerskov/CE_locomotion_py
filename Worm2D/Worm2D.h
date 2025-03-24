@@ -44,6 +44,7 @@ class Worm2D {
 
     virtual void DumpActState(ofstream &ofs, int skips) = 0;
     void DumpBodyState(ofstream &ofs, int skips);
+    void DumpCurvature(ofstream &ofs, int skips);
 
     virtual void Step(double StepSize, double output) = 0;
    

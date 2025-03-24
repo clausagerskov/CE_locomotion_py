@@ -4,10 +4,13 @@ string Simulation::rename_file(string filename){return directoryName + "/" + fil
 
 void Simulation::runSimulation(Worm2D & w)
 {
-    
+    cout << "running simulation sim" << endl;
     for (double t = 0.0; t <= Duration; t += StepSize){
         w.Step(StepSize, 1);
+        w.DumpBodyState(bodyfile, skip_steps);
+        w.DumpCurvature(curvfile, skip_steps);
         w.DumpActState(actfile, skip_steps);
     }
+    
     
 }

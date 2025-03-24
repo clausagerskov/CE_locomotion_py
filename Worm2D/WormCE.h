@@ -78,7 +78,7 @@ public:
     void DumpActState(ofstream &ofs, int skips);
     void DumpVoltage(ofstream &ofs, int skips);
     void DumpParams(ofstream &ofs);
-    void DumpCurvature(ofstream &ofs, int skips);
+    
     
     
     

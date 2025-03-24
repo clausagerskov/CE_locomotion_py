@@ -87,6 +87,7 @@ void Evolution21::RunSimulation(TVector<double> &v, RandomState &rs)
     return;
 }
 
+void Evolution21::RunSimulation(Worm2D & w, RandomState &rs){}
 
 
 double Evolution21::EvaluationFunction(TVector<double> &v, RandomState &rs)

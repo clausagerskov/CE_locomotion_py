@@ -1,6 +1,7 @@
 #include "EvolutionCE.h"
 #include <math.h>
 #include "WormCE.h"
+#include "Worm2DCE.h"
 
 void EvolutionCE::addExtraParsToJson(json & j)
 {
@@ -142,11 +143,16 @@ double EvolutionCE::Evaluation(TVector<double> &v, RandomState &rs, int directio
     fitB = (fitB > 0)? fitB : 0.0;
     return fitB;
 }
+
+
 void EvolutionCE::RunSimulation(TVector<double> &v, RandomState &rs)
 {
   save_traces(v,rs);
   return;
 }
+
+
+
 
 double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
 
@@ -169,11 +175,88 @@ double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
   
   
   WormCE w(phenotype, 1);
- /*  {
+  {
   ofstream phenfile(rename_file("phenotype.dat"));
   w.DumpParams(phenfile);
   phenfile.close();
-  } */
+  } 
+  
+  w.InitializeState(rs);
+  w.sr.SR_A_gain = 0.0;
+  w.sr.SR_B_gain = srb;
+  w.AVA_output =  w.AVA_inact;
+  w.AVB_output =  w.AVB_act;
+
+
+
+  for (double t = 0.0; t <= Transient + Duration; t += StepSize){
+      w.Step(StepSize, 1);
+      w.DumpBodyState(bodyfile, skip_steps);
+      w.DumpCurvature(curvfile, skip_steps);
+      w.DumpActState(actfile, skip_steps);
+  }
+
+   w.sr.SR_A_gain = 0.0;
+   w.sr.SR_B_gain = 0.0;
+
+   for (double t = 0.0; t <= (12); t += StepSize){
+       w.Step(StepSize, 1);
+       w.DumpBodyState(bodyfile, skip_steps);
+       w.DumpCurvature(curvfile, skip_steps);
+       w.DumpActState(actfile, skip_steps);
+   }
+
+   w.sr.SR_A_gain = sra;
+   w.sr.SR_B_gain = 0.0;
+   w.AVA_output =  w.AVA_act;
+   w.AVB_output =  w.AVB_inact;
+
+   for (double t = 0.0; t <= (20); t += StepSize){
+       w.Step(StepSize, 1);
+       w.DumpBodyState(bodyfile, skip_steps);
+       w.DumpCurvature(curvfile, skip_steps);
+       w.DumpActState(actfile, skip_steps);
+   }
+
+   w.sr.SR_A_gain = 0.0;
+   w.sr.SR_B_gain = 0.0;
+
+   for (double t = 0.0; t <= (12); t += StepSize){
+       w.Step(StepSize, 1);
+       w.DumpBodyState(bodyfile, skip_steps);
+       w.DumpCurvature(curvfile, skip_steps);
+       w.DumpActState(actfile, skip_steps);
+   }
+
+  
+  bodyfile.close();
+  curvfile.close();
+  return 0;
+}
+
+
+void EvolutionCE::RunSimulation(Worm2D & w1, RandomState &rs){
+
+  cout << "running sim" << endl;
+  
+  Worm2DCE & w = dynamic_cast<Worm2DCE&>(w1);
+
+  const double & Duration = evoPars1.Duration;
+  const int & VectSize = evoPars1.VectSize;
+  const double & StepSize = evoPars1.StepSize;
+  const double & Transient = evoPars1.Transient;
+  const int & skip_steps = evoPars1.skip_steps;
+
+
+  ofstream curvfile(rename_file("curv.dat"));
+  ofstream bodyfile(rename_file("body.dat"));
+  ofstream actfile(rename_file("act.dat"));
+  
+
+  double sra = w.sr.SR_A_gain;
+  double srb = w.sr.SR_B_gain;
+  
+  
   
   w.InitializeState(rs);
   w.sr.SR_A_gain = 0.0;
@@ -226,5 +309,6 @@ double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
   bodyfile.close();
   curvfile.close();
   actfile.close();
-  return 0;
 }
+
+

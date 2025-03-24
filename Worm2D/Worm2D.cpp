@@ -138,6 +138,43 @@ void Worm2D::AngleCurvature(TVector<double> &c)
   }
 }
 
+void Worm2D::DumpCurvature(ofstream &ofs, int skips)
+{
+
+  double dx1,dy1,dx2,dy2,a,a1,a2,seg;
+  static int tt = skips;
+
+  if (++tt >= skips) {
+    tt = 0;
+    //time
+    ofs << t;
+
+    for (int i = 3; i < N_segments-1; i+=2)
+    {
+      dx1 = b.X(i) - b.X(i-2);
+      dy1 = b.Y(i) - b.Y(i-2);
+      dx2 = b.X(i+2) - b.X(i);
+      dy2 = b.Y(i+2) - b.Y(i);
+
+      a1 = atan2(dy1,dx1);
+      a2 = atan2(dy2,dx2);
+
+      if (a1 > PI/2 and a2 < -PI/2)
+      a = (a1 - 2*PI) - a2;
+      else
+      if (a1 < -PI/2 and a2 > PI/2)
+      a = a1 - (a2 - 2*PI);
+      else
+      a = a1-a2;
+
+      seg = sqrt(pow(b.X(i-2)-b.X(i+2),2) + pow(b.Y(i-2)-b.Y(i+2),2));
+      ofs <<  " " << (2*sin(a)/seg)/1000;
+    }
+    ofs << "\n";
+  }
+}
+
+
 void Worm2D::DumpBodyState(ofstream &ofs, int skips)
 {
     static int tt = skips;
