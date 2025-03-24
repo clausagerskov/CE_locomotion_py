@@ -12,10 +12,10 @@
 
  
 Worm2DCE::Worm2DCE(json & j):Worm2D(
-  {j["Worm"]["N_neuronsperunit"], 
-    j["Worm"]["N_muscles"], 
-    j["Worm"]["T_muscle"],
-    j["Worm"]["N_units"]
+  {j["Worm"]["N_neuronsperunit"]["value"], 
+    j["Worm"]["N_muscles"]["value"], 
+    j["Worm"]["T_muscle"]["value"],
+    j["Worm"]["N_units"]["value"]
   }, new c302ForW2D())
 {
 
@@ -25,17 +25,17 @@ Worm2DCE::Worm2DCE(json & j):Worm2D(
   AVB_inact = 0;
  
   sr.SetStretchReceptorParams(N_segments, N_stretchrec,
-    j["Stretch receptor"]["SR_A_gain"] , j["Stretch receptor"]["SR_B_gain"]);
+    j["Stretch receptor"]["SR_A_gain"]["value"] , j["Stretch receptor"]["SR_B_gain"]["value"]);
 
 // Excitatory VNC NMJ Weight
-NMJ_DA = j["Worm"]["NMJ_DA"];
-NMJ_VA = j["Worm"]["NMJ_VA"];
-NMJ_DB = j["Worm"]["NMJ_DB"];
-NMJ_VB = j["Worm"]["NMJ_VB"];
+NMJ_DA = j["Worm"]["NMJ_DA"]["value"];
+NMJ_VA = j["Worm"]["NMJ_VA"]["value"];
+NMJ_DB = j["Worm"]["NMJ_DB"]["value"];
+NMJ_VB = j["Worm"]["NMJ_VB"]["value"];
 
 // Inhibitory VNC NMJ Weight
-NMJ_DD = j["Worm"]["NMJ_DD"];
-NMJ_VD = j["Worm"]["NMJ_VD"];
+NMJ_DD = j["Worm"]["NMJ_DD"]["value"];
+NMJ_VD = j["Worm"]["NMJ_VD"]["value"];
 
 AVA_output = 0.0;
 AVB_output = 0.0;
