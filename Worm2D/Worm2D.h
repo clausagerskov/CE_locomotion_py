@@ -43,12 +43,12 @@ class Worm2D {
     //virtual void DumpCurvature(ofstream &ofs, int skips) = 0;
 
     virtual void DumpActState(ofstream &ofs, int skips) = 0;
+    virtual void Step(double StepSize, double output) = 0;
+    virtual void InitializeState(RandomState &rs) = 0;
+
     void DumpBodyState(ofstream &ofs, int skips);
     void DumpCurvature(ofstream &ofs, int skips);
 
-    virtual void Step(double StepSize, double output) = 0;
-   
-    virtual void InitializeState(RandomState &rs) = 0;
 
     double CoMx();
     double CoMy();
@@ -78,13 +78,10 @@ class Worm2D {
 class WormIzq : public Worm2D
 {
 public:
-    //WormIzq(wormIzqParams par1_);
-    //WormIzq(wormIzqParams par1_, const NervousSystemBase & n);
-    //virtual void InitializeState(RandomState &rs) = 0;
+   
     
     void addParsToJson(json & j);
     void writeJsonFile(ofstream & json_out);
-    
     virtual void DumpParams(ofstream &ofs) = 0;
     
     
@@ -96,15 +93,11 @@ public:
     WormIzq(wormIzqParams par1);
    
 
-
-    // Body segment name conventions
     
     private:
-
-    //virtual void setUp();
+   
     
     virtual const vector<string> getCellNames() = 0;
     virtual void addExtraParsToJson(json & j) = 0;
-    //virtual Params<double> getWormParams() = 0;
     virtual vector<doubIntParamsHead> getWormParams() = 0;
 };
