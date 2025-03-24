@@ -2,16 +2,17 @@
 #include "WormRS18.h"
 #include "WormCE.h"
 #include "Worm21.h"
+#include "Worm2DCE.h"
 //#include "../argUtils.h"
 #include <iomanip>  // cout precision
 #include "EvolutionRS18.h"
 #include "EvolutionCE.h"
 #include "Evolution21.h"
-//#include "jsonUtils.h"
+#include "jsonUtils.h"
 
-//using json = nlohmann::json;
+using json = nlohmann::json;
 
-//SuppliedArgs2018 supArgs1;
+
 
 int main (int argc, const char* argv[])
 {
@@ -66,13 +67,15 @@ int main (int argc, const char* argv[])
     json j;
     w->addParsToJson(j);
     er->addParsToJson(j);
-    //ofstream json_out(supArgs1.rename_file("worm_data.json"));
-    //ofstream json_out("worm_data.json");
     json_out << std::setw(4) << j << std::endl;
 
     //w->writeJsonFile(json_out);
     json_out.close();
-    
+    if (model_name == "CE"){
+
+        Worm2DCE w(j);
+        
+    }
     delete er;
     delete w;
 

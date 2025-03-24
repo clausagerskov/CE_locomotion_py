@@ -6,7 +6,7 @@
 //  Copyright © 2015 Eduardo Izquierdo. All rights reserved.
 // Modified by Erick Olivares, Feb 2019
 // Added SR for class A motorneurons
-
+#pragma once
 #include "../VectorMatrix.h"
 #include "../random.h"
 #include <cmath>

@@ -7,6 +7,7 @@
 //#include <nlohmann/json.hpp>
 #include "jsonUtils.h"
 #include "../neuromlLocal/NSBaseForW2D.h"
+
 //using json = nlohmann::json;
 
 #define PI 3.14159265
@@ -40,6 +41,7 @@ class Worm2D {
     //virtual void InitializeState(RandomState &rs) = 0;
     //virtual void DumpBodyState(ofstream &ofs, int skips) = 0;
     //virtual void DumpCurvature(ofstream &ofs, int skips) = 0;
+
     virtual void DumpActState(ofstream &ofs, int skips) = 0;
     void DumpBodyState(ofstream &ofs, int skips);
 
@@ -53,7 +55,7 @@ class Worm2D {
     double Orientation();
     void AngleCurvature(TVector<double> &c);
 
-     ~Worm2D(){if (n_ptr) delete n_ptr;}
+    virtual ~Worm2D(){if (n_ptr) delete n_ptr;}
     protected:
 
     Worm2D(wormIzqParams par1_, NSForW2D * n_ptr_);
@@ -83,7 +85,7 @@ public:
     void writeJsonFile(ofstream & json_out);
     
     virtual void DumpParams(ofstream &ofs) = 0;
-
+    
     
    // ~WormIzq(){if (n_ptr) delete n_ptr;}
 

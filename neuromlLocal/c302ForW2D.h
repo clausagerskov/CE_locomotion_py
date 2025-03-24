@@ -23,7 +23,7 @@ class c302ForW2D : virtual public NSForW2D
 
     protected:
 
-    SignalSimulatorForWorm2D *simulation;
+    SignalSimulatorForWorm2D *simulation = nullptr;
     std::vector<float> output_value;
 
 };
