@@ -3,7 +3,7 @@ PYTHON_CONFIG ?= python3-config
 
 LIBS := $(shell $(PYTHON_CONFIG) --embed --libs)
 LDFLAGS := $(shell $(PYTHON_CONFIG) --embed --ldflags)
-CXXFLAGS := $(shell $(PYTHON_CONFIG) --cflags)
+CXXFLAGS := $(shell $(PYTHON_CONFIG) --includes)
 
 EXTRA_FLAGS :=   -fPIE -O3  -Iinc
 main: main.o c302ForW2D.o owSignalSimulator.o owSignalSimulatorForWorm2D.o Worm2DCE.o WormRS18.o Worm21.o WormCE.o Segment21.o Worm2D.o WormBody.o Evolution21.o Evolution.o EvolutionCE.o EvolutionRS18.o NervousSystem.o StretchReceptor18.o StretchReceptorCE.o Muscles.o TSearch.o random.o jsonUtils.o
@@ -23,8 +23,6 @@ jsonUtils.o: jsonUtils.cpp jsonUtils.h
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include  -flto jsonUtils.cpp	
 TSearch.o: ../TSearch.cpp ../TSearch.h
 	$(CC) -c -O3 -flto ../TSearch.cpp
-#argUtils.o: ../argUtils.cpp ../argUtils.h
-#	g++ -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto ../argUtils.cpp
 Worm2D.o: Worm2D.cpp Worm2D.h jsonUtils.h
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto Worm2D.cpp
 EvolutionRS18.o: EvolutionRS18.cpp EvolutionRS18.h 
