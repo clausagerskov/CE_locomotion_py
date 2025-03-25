@@ -32,7 +32,7 @@ using namespace std;
 //const int Head = 1;
 //const int Tail = N_segments;
 
-class Worm21 : public WormIzq {
+class Worm21 : public Worm2D {
 public:
     
     Worm21(TVector<double> &v);
@@ -49,11 +49,11 @@ public:
     void SetAVB(double value) {AVB = value;};
     
     
-    //NervousSystem & n;
+    NervousSystem & n;
 
     private:
     const vector<string> getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
-    void addExtraParsToJson(json & j){}
+    void addParsToJson(json & j){Worm2D::addParsToJson(j);}
     vector<doubIntParamsHead> getWormParams();
 
     // Neuromuscular junctions

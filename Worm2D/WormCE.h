@@ -79,7 +79,7 @@ public:
     void DumpVoltage(ofstream &ofs, int skips);
     void DumpParams(ofstream &ofs);
     NervousSystem & n;
-    
+    void addParsToJson(json & j);
     
     
     //double CoMx();

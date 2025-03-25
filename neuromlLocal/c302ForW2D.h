@@ -19,11 +19,11 @@ class c302ForW2D : virtual public NSForW2D
     void EulerStep(double );
     void SetPopStructure(const std::string & popStruct, int popSize);
 
-    ~c302ForW2D(){if (simulation!=nullptr) delete simulation;}
+    ~c302ForW2D(){if (simulation) delete simulation;}
 
     protected:
 
-    SignalSimulatorForWorm2D *simulation = nullptr;
+    SignalSimulatorForWorm2D *simulation = 0;
     std::vector<float> output_value;
 
 };

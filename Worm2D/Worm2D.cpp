@@ -6,6 +6,7 @@
 
 Worm2D::Worm2D(wormIzqParams par1_, NSForW2D * n_ptr_):par1(par1_),n_ptr(n_ptr_)
 {
+    //cout << "Worm2D const" << endl;
     setUp();
 }
 
@@ -222,8 +223,8 @@ void Worm2D::addParsToJson(json & j)
         appendToJson<long>(j[parvec[i].parInt.head],parvec[i].parInt);
         }
     
+    
     string nsHead = "Nervous system";
-    appendAllNSJson(j[nsHead], dynamic_cast<NervousSystem&>(*n_ptr));
     appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
 
    

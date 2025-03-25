@@ -25,7 +25,7 @@ bool headsr;
 bool vncsr;
 };
 
-class Worm18 : public WormIzq {
+class Worm18 : public Worm2D {
 public:
     
     Worm18(TVector<double> &v, double output);
@@ -41,15 +41,15 @@ public:
     
     private:
 
-    void addExtraParsToJson(json & j);
+    void addParsToJson(json & j);
     const vector<string> getCellNames() {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};}
     //Params<double> getWormParams();
 
     vector<doubIntParamsHead> getWormParams();
     
-    //WormBody b;
-    //Muscles m;
-    //NervousSystem & n;
+    
+
+    NervousSystem & n;
     StretchReceptor18 sr;
     NervousSystem h;
     

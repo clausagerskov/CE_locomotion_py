@@ -136,6 +136,13 @@ void WormCE::InitializeState(RandomState &rs)
 
 }
 
+void WormCE::addParsToJson(json & j)
+{
+
+  string nsHead = "Nervous system";
+  appendAllNSJson(j[nsHead], n);
+  Worm2DCE::addParsToJson(j);
+}
 
 void WormCE::DumpVoltage(ofstream &ofs, int skips)
 {

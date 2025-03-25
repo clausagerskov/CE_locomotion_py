@@ -2,7 +2,7 @@
 #include "WormRS18.h"
 #include "WormCE.h"
 #include "Worm21.h"
-#include "Worm2DCE.h"
+//#include "Worm2DCE.h"
 //#include "../argUtils.h"
 #include <iomanip>  // cout precision
 #include "EvolutionRS18.h"
@@ -49,19 +49,20 @@ int main (int argc, const char* argv[])
     BestIndividualFile >> bestVector;
     BestIndividualFile.close();
     
-    WormIzq* w = 0;
-    TVector<double> phenotype(1, er->itsEvoPars().VectSize);
-    er->GenPhenMapping(bestVector, phenotype);
-
-    if (model_name == "CE") w = new WormCE(phenotype,0);
-    if (model_name == "RS18") w = new Worm18(phenotype,0);
-    if (model_name == "Net21") w = new Worm21(phenotype);
-
+   
 
     // write worm_data.json if ran an evolution
     if (atoi(getParameter(argc,argv,"--doevol","0"))) {
 
-        
+        Worm2D* w = 0;
+        TVector<double> phenotype(1, er->itsEvoPars().VectSize);
+        er->GenPhenMapping(bestVector, phenotype);
+
+        if (model_name == "CE") w = new WormCE(phenotype,0);
+        if (model_name == "RS18") w = new Worm18(phenotype,0);
+        if (model_name == "Net21") w = new Worm21(phenotype);
+
+
         RandomState rs;
         rs.SetRandomSeed(er->itsEvoPars().randomseed);
         w->InitializeState(rs);
@@ -72,6 +73,7 @@ int main (int argc, const char* argv[])
         er->addParsToJson(j);
         json_out << std::setw(4) << j << std::endl;
         json_out.close();
+        delete w;
         
     }
 
@@ -88,9 +90,21 @@ int main (int argc, const char* argv[])
     if (!do_nml){
     
     er->RunSimulation(bestVector, rs);
+
+    Worm2D* w = 0;
+    TVector<double> phenotype(1, er->itsEvoPars().VectSize);
+    er->GenPhenMapping(bestVector, phenotype);
+
+    if (model_name == "CE") w = new WormCE(phenotype,0);
+    if (model_name == "RS18") w = new Worm18(phenotype,0);
+    if (model_name == "Net21") w = new Worm21(phenotype);
+
+
     w->InitializeState(rs);
     Simulation s1(er->itsEvoPars());
     s1.runSimulation(*w);
+    delete w;
+
     }
     else{
     if (model_name == "CE"){
@@ -103,18 +117,19 @@ int main (int argc, const char* argv[])
         er->RunSimulation(w, rs);
         }     
 
-        {Worm2DCE w(j);
+        
+        /* {Worm2DCE w(j);
         w.InitializeState(rs);
         Simulation s1(er->itsEvoPars());
         s1.runSimulation(w);}
-
+ */
 
         json_in.close();
     }
     }
 
     delete er;
-    delete w;
+    
 
     return 0;
 }

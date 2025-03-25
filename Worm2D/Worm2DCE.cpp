@@ -18,6 +18,7 @@ Worm2DCE::Worm2DCE(json & j):Worm2D(
     j["Worm"]["N_units"]["value"]
   }, new c302ForW2D())
 {
+  cout << "Worm2DCE const" << endl;
 
   AVA_act = 0;
   AVA_inact = 0;
@@ -40,6 +41,7 @@ NMJ_VD = j["Worm"]["NMJ_VD"]["value"];
 AVA_output = 0.0;
 AVB_output = 0.0;
 
+cout << "Worm2DCE const" << endl;
 
 }
 
@@ -200,10 +202,11 @@ vector<doubIntParamsHead> Worm2DCE::getWormParams(){
 
 }
 
-void Worm2DCE::addExtraParsToJson(json & j)
+void Worm2DCE::addParsToJson(json & j)
 {
     Params<double> par = sr.getStretchReceptorParams();
     appendToJson<double>(j["Stretch receptor"], par);
+    Worm2D::addParsToJson(j);
 }
 
 void Worm2DCE::DumpActState(ofstream &ofs, int skips)

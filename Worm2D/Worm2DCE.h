@@ -70,8 +70,8 @@ class Worm2DCE: public  Worm2D{
     void DumpActState(ofstream &ofs, int skips);
     void InitializeState(RandomState &rs);
     Worm2DCE(json & j);
-    void addExtraParsToJson(json & j);
-    Worm2DCE(wormIzqParams par1_, NSForW2D * n_ptr_):Worm2D(par1,n_ptr){}
+    void addParsToJson(json & j);
+    Worm2DCE(wormIzqParams par1_, NSForW2D * n_ptr_):Worm2D(par1_,n_ptr_){}
     const vector<string> getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
     vector<doubIntParamsHead> getWormParams();
     StretchReceptorCE sr;

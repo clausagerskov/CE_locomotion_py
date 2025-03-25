@@ -13,7 +13,8 @@
 //extern SuppliedArgs2021 supArgs1;
 
 // The constructor
-Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
+Worm21::Worm21(TVector<double> &v):Worm2D({7,24,0.1,7},new NervousSystem()),
+n(dynamic_cast<NervousSystem&>(*n_ptr))
 {
     // Muscles
    // m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
@@ -129,7 +130,7 @@ Worm21::Worm21(TVector<double> &v):WormIzq({7,24,0.1,7})
 
 void Worm21::InitializeState(RandomState &rs)
 {    
-    WormIzq::InitializeState(rs);
+    Worm2D::InitializeState(rs);
     n.RandomizeCircuitOutput(0.5, 0.5, rs); //fix this error!! adam (should be -0.5?)
     
 }

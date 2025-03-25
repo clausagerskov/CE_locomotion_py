@@ -29,8 +29,8 @@ return {headsr,vncsr};
 }
 
 // The constructor
-Worm18::Worm18(TVector<double> &v,double output):WormIzq({6,24,0.1,6}),
-rS18Macros(setMacros())
+Worm18::Worm18(TVector<double> &v,double output):Worm2D({6,24,0.1,6}, new NervousSystem()),
+rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
 {
     //supArgs1.writeMessage();
 
@@ -189,7 +189,7 @@ void Worm18::InitializeState(RandomState &rs)
     
     n.RandomizeCircuitState(-0.5, 0.5, rs);
     h.RandomizeCircuitState(-0.5, 0.5, rs);
-    WormIzq::InitializeState(rs);
+    Worm2D::InitializeState(rs);
 }
 
 void Worm18::HeadStep(double StepSize, double output)
@@ -310,7 +310,7 @@ if (rS18Macros.vncsr)
     t += StepSize;
 }
 
-void Worm18::addExtraParsToJson(json & j)
+void Worm18::addParsToJson(json & j)
 {
     string nsHead = "Head Nervous system";
     appendAllNSJson(j[nsHead], h);
@@ -318,6 +318,7 @@ void Worm18::addExtraParsToJson(json & j)
     appendCellNamesToJson(j[nsHead], cell_names, 1);
     Params<double> par = sr.getStretchReceptorParams();
     appendToJson<double>(j["Stretch receptor"], par);
+    Worm2D::addParsToJson(j);
 }
 
 
