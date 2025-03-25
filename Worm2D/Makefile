@@ -28,7 +28,7 @@ Worm2D.o: Worm2D.cpp Worm2D.h jsonUtils.h
 EvolutionRS18.o: EvolutionRS18.cpp EvolutionRS18.h 
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto EvolutionRS18.cpp
 Simulation.o: Simulation.cpp Simulation.h 
-	$(CC) -c -O3 -flto Simulation.cpp
+	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto Simulation.cpp
 EvolutionCE.o: EvolutionCE.cpp EvolutionCE.h 
 	$(CC) -c -O3 -std=c++11 -I/opt/homebrew/Cellar/nlohmann-json/3.11.3/include -flto EvolutionCE.cpp
 Evolution21.o: Evolution21.cpp Evolution21.h 
