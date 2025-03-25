@@ -48,7 +48,10 @@ class Worm2D {
 
     void DumpBodyState(ofstream &ofs, int skips);
     void DumpCurvature(ofstream &ofs, int skips);
+    void addParsToJson(json & j);
+    void writeJsonFile(ofstream & json_out);
 
+    virtual vector<doubIntParamsHead> getWormParams() = 0;
 
     double CoMx();
     double CoMy();
@@ -58,6 +61,10 @@ class Worm2D {
 
     virtual ~Worm2D(){if (n_ptr) delete n_ptr;}
     protected:
+
+    virtual const vector<string> getCellNames() = 0;
+    virtual void addExtraParsToJson(json & j) = 0;
+    virtual void DumpParams(ofstream &ofs) = 0;
 
     Worm2D(wormIzqParams par1_, NSForW2D * n_ptr_);
     int nn(int neuronNumber, int unitNumber);
@@ -75,14 +82,14 @@ class Worm2D {
 
 
 
-class WormIzq : public Worm2D
+class WormIzq //: public Worm2D
 {
 public:
    
     
-    void addParsToJson(json & j);
-    void writeJsonFile(ofstream & json_out);
-    virtual void DumpParams(ofstream &ofs) = 0;
+    //void addParsToJson(json & j);
+    //void writeJsonFile(ofstream & json_out);
+    
     
     
    // ~WormIzq(){if (n_ptr) delete n_ptr;}
@@ -90,14 +97,13 @@ public:
     NervousSystem & n;
 
     protected:
-    WormIzq(wormIzqParams par1);
-   
+    //WormIzq(wormIzqParams par1);
+    WormIzq(NervousSystem & n_):n(n_){}
 
     
     private:
    
     
-    virtual const vector<string> getCellNames() = 0;
-    virtual void addExtraParsToJson(json & j) = 0;
-    virtual vector<doubIntParamsHead> getWormParams() = 0;
+    
+   
 };

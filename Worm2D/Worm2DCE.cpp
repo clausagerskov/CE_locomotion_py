@@ -174,6 +174,38 @@ void Worm2DCE::Step(double StepSize, double output)
   t += StepSize;
 }
 
+vector<doubIntParamsHead> Worm2DCE::getWormParams(){
+
+  vector<doubIntParamsHead> parvec;
+  doubIntParamsHead var1;
+
+  var1.parDoub.head = "Worm";
+  var1.parDoub.names = {"NMJ_DA", "NMJ_DB", "NMJ_VD", "NMJ_VB", "NMJ_VA", "NMJ_DD"};
+  var1.parDoub.vals = {NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD};
+  append<string>(var1.parDoub.names,{"AVA_act", "AVA_inact", "AVB_act", "AVB_inact"});
+  append<string>(var1.parDoub.names,{"AVA_output", "AVB_output"});
+  append<double>(var1.parDoub.vals,{AVA_act, AVA_inact, AVB_act, AVB_inact});
+  append<double>(var1.parDoub.vals,{AVA_output, AVB_output});
+
+  var1.parInt.head = "Worm";
+  var1.parInt.vals = {N_stretchrec, NmusclePerNU};
+  var1.parInt.names = {"N_stretchrec", "NmusclePerNU"};
+  var1.parInt.messages = 
+  {"Number of stretch receptors", "All the way down to 24, in groups of 3 per unit"};
+  var1.parInt.messages_inds = {0,1};
+
+
+  parvec.push_back(var1);
+  return parvec;
+
+}
+
+void Worm2DCE::addExtraParsToJson(json & j)
+{
+    Params<double> par = sr.getStretchReceptorParams();
+    appendToJson<double>(j["Stretch receptor"], par);
+}
+
 void Worm2DCE::DumpActState(ofstream &ofs, int skips)
 {
   static int tt = skips;

@@ -15,7 +15,7 @@
 #include "StretchReceptorCE.h"
 //#include "NervousSystemBase.h"
 
-#include "Worm2D.h"
+#include "Worm2DCE.h"
 #include "jsonUtils.h"
 
 
@@ -63,7 +63,7 @@ using namespace std;
 using json = nlohmann::json;
 
 
-class WormCE : public WormIzq {
+class WormCE : public Worm2DCE {
 public:
 
     WormCE(TVector<double> &v, double output);
@@ -72,13 +72,13 @@ public:
 
     void InitializeState(RandomState &rs);
     //void HeadStep(double StepSize, double output);
-    void Step(double StepSize, double output);
+    //void Step(double StepSize, double output);
 
     //void DumpBodyState(ofstream &ofs, int skips);
-    void DumpActState(ofstream &ofs, int skips);
+    //void DumpActState(ofstream &ofs, int skips);
     void DumpVoltage(ofstream &ofs, int skips);
     void DumpParams(ofstream &ofs);
-    
+    NervousSystem & n;
     
     
     
@@ -88,42 +88,9 @@ public:
     //void AngleCurvature(TVector<double> &c);
     //double Orientation();
 
-    double AVA_output, AVB_output;
-    StretchReceptorCE sr;
-    double AVA_act, AVA_inact, AVB_act, AVB_inact;
-    private:
-
-    const vector<string> getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
-    void addExtraParsToJson(json & j);
-    //Params<double> getWormParams();
-    vector<doubIntParamsHead> getWormParams();
     
-    //NervousSystemBase *n_ptr;
-    //NervousSystem & n;
-   
-
-    //    double t; // Time
-
-    // Neuromuscular junctions
-    double NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD; //EEE
-    
-    
-
-    const int N_stretchrec = 10;            // N_units // Number of stretch receptors
-
-    const int NmusclePerNU = 4;             // All the way down to 24, in groups of 3 per unit
 
    
-    // Motoneuron name conventions
-    const int DA = 1;
-    const int DB = 2;
-    const int DD = 3;
-    const int VD = 4;
-    const int VA = 5;
-    const int VB = 6;
-
-    //const int Head = 1;
-    //const int Tail = N_segments;
 };
 
 //class wormForJson : public Worm<NervousSystem> {};

@@ -30,9 +30,9 @@ int Worm2D::nn(int neuronNumber, int unitNumber)
 }
 
 
-WormIzq::WormIzq(wormIzqParams par1_):Worm2D(par1_, new NervousSystem()),
-n(dynamic_cast<NervousSystem&>(*n_ptr))
-{}
+//WormIzq::WormIzq(wormIzqParams par1_):Worm2D(par1_, new NervousSystem()),
+//n(dynamic_cast<NervousSystem&>(*n_ptr))
+//{}
 
 
 /* WormIzq::WormIzq(wormIzqParams par1_, const NervousSystemBase & n):par1(par1_),n_ptr(n.clone())
@@ -192,7 +192,7 @@ void Worm2D::DumpBodyState(ofstream &ofs, int skips)
     }
 }
 
-void WormIzq::writeJsonFile(ofstream & json_out)
+void Worm2D::writeJsonFile(ofstream & json_out)
 {
 
     json j;
@@ -204,7 +204,7 @@ void WormIzq::writeJsonFile(ofstream & json_out)
 
 }
 
-void WormIzq::addParsToJson(json & j)
+void Worm2D::addParsToJson(json & j)
 {  
      // addwormIzqParams
     doubIntParamsHead par1pars = par1.getParams();
@@ -213,10 +213,7 @@ void WormIzq::addParsToJson(json & j)
 
     appendBodyToJson(j, b);
     appendMuscleToJson(j,m);
-    string nsHead = "Nervous system";
-    appendAllNSJson(j[nsHead], n);
-    appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
-
+    
     vector<doubIntParamsHead> parvec = getWormParams();
     for (size_t i=0;i<parvec.size(); i++) {
         if (strcmp(parvec[i].parDoub.head.c_str(),"NULL")!=0)
@@ -224,6 +221,11 @@ void WormIzq::addParsToJson(json & j)
         if (strcmp(parvec[i].parInt.head.c_str(),"NULL")!=0)
         appendToJson<long>(j[parvec[i].parInt.head],parvec[i].parInt);
         }
+    
+    string nsHead = "Nervous system";
+    appendAllNSJson(j[nsHead], dynamic_cast<NervousSystem&>(*n_ptr));
+    appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
 
-    addExtraParsToJson(j);
+   
+    //addExtraParsToJson(j);
 }

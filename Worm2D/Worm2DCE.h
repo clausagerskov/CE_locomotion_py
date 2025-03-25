@@ -70,7 +70,10 @@ class Worm2DCE: public  Worm2D{
     void DumpActState(ofstream &ofs, int skips);
     void InitializeState(RandomState &rs);
     Worm2DCE(json & j);
-
+    void addExtraParsToJson(json & j);
+    Worm2DCE(wormIzqParams par1_, NSForW2D * n_ptr_):Worm2D(par1,n_ptr){}
+    const vector<string> getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
+    vector<doubIntParamsHead> getWormParams();
     StretchReceptorCE sr;
     
 
@@ -80,7 +83,7 @@ class Worm2DCE: public  Worm2D{
     double AVA_output, AVB_output;
     double AVA_act, AVA_inact, AVB_act, AVB_inact;
 
-    private:
+    protected:
     const int N_stretchrec = 10;            // N_units // Number of stretch receptors
     const int NmusclePerNU = 4;             // All the way down to 24, in groups of 3 per unit
 
