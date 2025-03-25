@@ -208,14 +208,7 @@ void WormCE::DumpParams(ofstream &ofs) {
   "\n VB-VB+1: " << n.ElectricalSynapseWeight(VB, VB+par1.N_neuronsperunit) <<
   "\n VD-VD+1: " << n.ElectricalSynapseWeight(VD, VD+par1.N_neuronsperunit) << endl;
 
-  ofs << "Stretch Receptors Gains: \n A-class SR: " << sr.SR_A_gain <<
-  "\n B-class SR: " << sr.SR_B_gain <<  endl;
 
-  ofs << "NMJ weights: \n" <<
-  "\n DA: " << NMJ_DA <<
-  "\n DB: " << NMJ_DB <<
-  "\n DD: " << NMJ_DD <<
-  "\n VD: " << NMJ_VD <<
-  "\n VA: " << NMJ_VA <<
-  "\n VB: " << NMJ_VB <<  endl;
+  Worm2DCE::DumpParams(ofs);
+ 
 }

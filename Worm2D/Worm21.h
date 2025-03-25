@@ -53,7 +53,12 @@ public:
 
     private:
     const vector<string> getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
-    void addParsToJson(json & j){Worm2D::addParsToJson(j);}
+    
+    void addParsToJson(json & j){
+        string nsHead = "Nervous system";
+        appendAllNSJson(j[nsHead], n);
+        Worm2D::addParsToJson(j);}
+
     vector<doubIntParamsHead> getWormParams();
 
     // Neuromuscular junctions

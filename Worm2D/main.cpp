@@ -89,16 +89,21 @@ int main (int argc, const char* argv[])
 
     if (!do_nml){
     
-    er->RunSimulation(bestVector, rs);
+    //er->RunSimulation(bestVector, rs);
 
     Worm2D* w = 0;
     TVector<double> phenotype(1, er->itsEvoPars().VectSize);
     er->GenPhenMapping(bestVector, phenotype);
-
+    
     if (model_name == "CE") w = new WormCE(phenotype,0);
     if (model_name == "RS18") w = new Worm18(phenotype,0);
     if (model_name == "Net21") w = new Worm21(phenotype);
 
+    er->RunSimulation(*w, rs);
+
+    {ofstream phenfile(er->rename_file("phenotype.dat"));
+    w->DumpParams(phenfile);
+    phenfile.close();}
 
     w->InitializeState(rs);
     Simulation s1(er->itsEvoPars());
@@ -117,12 +122,12 @@ int main (int argc, const char* argv[])
         er->RunSimulation(w, rs);
         }     
 
-        
-        /* {Worm2DCE w(j);
+        /* 
+        {Worm2DCE w(j);
         w.InitializeState(rs);
         Simulation s1(er->itsEvoPars());
-        s1.runSimulation(w);}
- */
+        s1.runSimulation(w);} */
+ 
 
         json_in.close();
     }

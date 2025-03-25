@@ -202,6 +202,10 @@ vector<doubIntParamsHead> Worm2DCE::getWormParams(){
 
 }
 
+
+
+
+
 void Worm2DCE::addParsToJson(json & j)
 {
     Params<double> par = sr.getStretchReceptorParams();
@@ -239,3 +243,16 @@ void Worm2DCE::DumpActState(ofstream &ofs, int skips)
 }
 
 
+void Worm2DCE::DumpParams(ofstream &ofs) {
+  
+  ofs << "Stretch Receptors Gains: \n A-class SR: " << sr.SR_A_gain <<
+  "\n B-class SR: " << sr.SR_B_gain <<  endl;
+
+  ofs << "NMJ weights: \n" <<
+  "\n DA: " << NMJ_DA <<
+  "\n DB: " << NMJ_DB <<
+  "\n DD: " << NMJ_DD <<
+  "\n VD: " << NMJ_VD <<
+  "\n VA: " << NMJ_VA <<
+  "\n VB: " << NMJ_VB <<  endl;
+}

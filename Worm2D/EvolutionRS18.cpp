@@ -306,7 +306,7 @@ void EvolutionRS18::RunSimulation(Worm2D &w1, RandomState &rs)
     ofstream fitfile;
   
     const double & Duration = evoPars1.Duration;
-    const int & VectSize = evoPars1.VectSize;
+  
     const double & StepSize = evoPars1.StepSize;
     const int & N_curvs = evoPars1.N_curvs;
     const double & Transient = evoPars1.Transient;

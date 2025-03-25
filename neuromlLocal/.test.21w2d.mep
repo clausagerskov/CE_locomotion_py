@@ -1,0 +1,7 @@
+system: Test
+
+experiments:
+    state0:
+        expected:
+            spike times: [1.040000e-01]
+

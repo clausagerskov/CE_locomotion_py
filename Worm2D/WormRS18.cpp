@@ -318,6 +318,8 @@ void Worm18::addParsToJson(json & j)
     appendCellNamesToJson(j[nsHead], cell_names, 1);
     Params<double> par = sr.getStretchReceptorParams();
     appendToJson<double>(j["Stretch receptor"], par);
+    {string nsHead = "Nervous system";
+    appendAllNSJson(j[nsHead], n);}
     Worm2D::addParsToJson(j);
 }
 

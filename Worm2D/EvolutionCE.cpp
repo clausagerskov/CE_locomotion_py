@@ -242,7 +242,7 @@ void EvolutionCE::RunSimulation(Worm2D & w1, RandomState &rs){
   Worm2DCE & w = dynamic_cast<Worm2DCE&>(w1);
 
   const double & Duration = evoPars1.Duration;
-  const int & VectSize = evoPars1.VectSize;
+  
   const double & StepSize = evoPars1.StepSize;
   const double & Transient = evoPars1.Transient;
   const int & skip_steps = evoPars1.skip_steps;
@@ -255,7 +255,6 @@ void EvolutionCE::RunSimulation(Worm2D & w1, RandomState &rs){
 
   double sra = w.sr.SR_A_gain;
   double srb = w.sr.SR_B_gain;
-  
   
   
   w.InitializeState(rs);

@@ -75,7 +75,7 @@ class Worm2DCE: public  Worm2D{
     const vector<string> getCellNames() {return {"DA", "DB", "DD", "VD", "VA", "VB"};}
     vector<doubIntParamsHead> getWormParams();
     StretchReceptorCE sr;
-    
+    void DumpParams(ofstream &ofs);
 
     
 

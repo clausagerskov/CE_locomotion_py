@@ -50,6 +50,7 @@ class Worm2D {
     void DumpCurvature(ofstream &ofs, int skips);
     virtual void addParsToJson(json & j) = 0;
     void writeJsonFile(ofstream & json_out);
+    virtual void DumpParams(ofstream &ofs) = 0;
 
     virtual vector<doubIntParamsHead> getWormParams() = 0;
 
@@ -64,8 +65,7 @@ class Worm2D {
 
     virtual const vector<string> getCellNames() = 0;
     //virtual void addExtraParsToJson(json & j) = 0;
-    //virtual void DumpParams(ofstream &ofs) = 0;
-
+    
     Worm2D(wormIzqParams par1_, NSForW2D * n_ptr_);
     int nn(int neuronNumber, int unitNumber);
     void setUp();

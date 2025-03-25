@@ -87,7 +87,7 @@ void Evolution21::RunSimulation(TVector<double> &v, RandomState &rs)
     return;
 }
 
-void Evolution21::RunSimulation(Worm2D & w, RandomState &rs){}
+
 
 
 double Evolution21::EvaluationFunction(TVector<double> &v, RandomState &rs)
@@ -337,6 +337,66 @@ ofstream bodyfile, actfile, curvfile, paramsfile;
 //#endif
     return fitness_tr * FoDB * FoVB * (1 - FfDB) * (1 - FfVB);
 }
+
+void Evolution21::RunSimulation(Worm2D & w1, RandomState &rs){
+
+    cout << "running sim" << endl;
+  
+    Worm21 & w = dynamic_cast<Worm21&>(w1);
+
+    const double & Duration = evoPars1.Duration;
+    const int & VectSize = evoPars1.VectSize;
+    const double & StepSize = evoPars1.StepSize;
+    const int & N_curvs = evoPars1.N_curvs;
+    const double & Transient = evoPars1.Transient;
+    const int & skip_steps = evoPars1.skip_steps;
+
+ofstream bodyfile, actfile, curvfile, paramsfile;
+
+    bodyfile.open(rename_file("body.dat"));
+    actfile.open(rename_file("act.dat"));
+    curvfile.open(rename_file("curv.dat"));
+    paramsfile.open(rename_file("params.dat"));
+
+    w.DumpParams(paramsfile);
+    
+    w.InitializeState(rs);
+    
+    // Transient XXX
+    w.SetAVB(0.0);
+    w.SetAVA(0.0);
+    
+    for (double t = 0.0; t <= Transient; t += StepSize){
+        w.Step(StepSize);
+    }    
+
+    w.Step(StepSize); // determine sign of derivative
+
+   
+    // Time loop
+    for (double t = 0.0; t <= Duration; t += StepSize) {
+        // Step simulation
+        w.Step(StepSize); 
+
+    }
+
+
+        for (double t = 0.0; t <= 60; t += StepSize){
+            w.Step(StepSize);
+            w.DumpBodyState(bodyfile, skip_steps);
+            w.DumpActState(actfile, skip_steps);
+            w.DumpCurvature(curvfile, skip_steps);
+        }
+
+        
+        bodyfile.close();
+        actfile.close();
+        curvfile.close();
+           
+
+}
+
+
 
 double Evolution21::EvaluationFunction2(TVector<double> &v, RandomState &rs){
 
