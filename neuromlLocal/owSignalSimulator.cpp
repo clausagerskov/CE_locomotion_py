@@ -87,6 +87,7 @@ SignalSimulator::SignalSimulator(const std::string &simFileName,
   if (PyErr_Occurred())
     PyErr_Print();
 
+  Py_DECREF(pName);
 
   // Build the name of a callable class
   if (pModule != nullptr) {

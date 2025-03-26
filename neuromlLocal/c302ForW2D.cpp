@@ -15,6 +15,10 @@ c302ForW2D::c302ForW2D():
 simulation(new SignalSimulatorForWorm2D("main_sim",defaultSimClassName,"neuromlLocal",0.005))
 {SetPopStructure("DA DB DD VD VA VB", 10);}
 
+c302ForW2D::c302ForW2D(const std::string & popStruct, const int & popSize):
+simulation(new SignalSimulatorForWorm2D("main_sim",defaultSimClassName,"neuromlLocal",0.005))
+{SetPopStructure(popStruct, popSize);}
+
 c302ForW2D::c302ForW2D(const std::string & simFileName, 
 const std::string & simDirName):simulation(new SignalSimulatorForWorm2D(simFileName,
 defaultSimClassName,simDirName,0.005)){SetPopStructure("DA DB DD VD VA VB", 10);}

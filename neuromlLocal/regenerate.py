@@ -1,8 +1,10 @@
 from build_network import run as build_network_run
 from create_new_lems_file import run as create_new_lems_run
 import sys
+# import os
 
 folder_name = sys.argv[1]
+# current = os.path.dirname(os.path.realpath(__file__))
 json_file = "../" + folder_name + "/worm_data.json"
 
 population_structures = [

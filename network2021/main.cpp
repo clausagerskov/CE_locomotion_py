@@ -227,6 +227,7 @@ if (supArgs1.output){
     
     if (supArgs1.output){
     w.DumpParams(paramsfile);
+
     }
 
 /* #ifdef OUTPUT
@@ -235,6 +236,10 @@ if (supArgs1.output){
     
     w.InitializeState(rs);
     
+    ofstream nsdump(supArgs1.rename_file("NSdump.dat"));
+    nsdump << w.n;
+    nsdump.close();
+
     // Transient XXX
     w.SetAVB(0.0);
     w.SetAVA(0.0);

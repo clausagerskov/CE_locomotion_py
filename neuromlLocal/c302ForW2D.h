@@ -9,7 +9,7 @@ class c302ForW2D : virtual public NSForW2D
 {
 
     public:
-
+    c302ForW2D(const std::string & popStruct, const int & popSize);
     c302ForW2D(const std::string & simFileName);
     c302ForW2D();
     c302ForW2D(const std::string & simFileName, const std::string & simDirName);
@@ -19,7 +19,7 @@ class c302ForW2D : virtual public NSForW2D
     void EulerStep(double );
     void SetPopStructure(const std::string & popStruct, int popSize);
 
-    ~c302ForW2D(){if (simulation) delete simulation;}
+    virtual ~c302ForW2D(){if (simulation) delete simulation;}
 
     protected:
 

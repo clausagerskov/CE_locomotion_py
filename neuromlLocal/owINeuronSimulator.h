@@ -63,7 +63,18 @@ protected:
 	PyObject *pName, *pModule, *pDict, *pFunc, *pValue, *pClass, *pInstance, * nrn_sim;
 public:
 	virtual std::vector<float> run() = 0;
-	virtual ~owINeuronSimulator(){}
+	virtual ~owINeuronSimulator()
+	{
+		Py_DECREF(pName);
+		Py_DECREF(pModule);
+		Py_DECREF(pDict);
+		Py_DECREF(pFunc);
+		Py_DECREF(pValue);
+		Py_DECREF(pClass);
+		Py_DECREF(pInstance);
+		Py_DECREF(nrn_sim);
+		Py_FinalizeEx();
+	}
 };
 
 #endif /* INC_OWINEURONSIMULATOR_H_ */

@@ -43,20 +43,22 @@ int main (int argc, const char* argv[])
     }
 
     //get vector of best individual
-    ifstream BestIndividualFile;
+   
     TVector<double> bestVector(1, er->itsEvoPars().VectSize);
+
+    {ifstream BestIndividualFile;
     BestIndividualFile.open(er->rename_file("best.gen.dat"));
     BestIndividualFile >> bestVector;
-    BestIndividualFile.close();
+    BestIndividualFile.close();}
     
-   
+    TVector<double> phenotype(1, er->itsEvoPars().VectSize);
+    er->GenPhenMapping(bestVector, phenotype);
 
     // write worm_data.json if ran an evolution
     if (atoi(getParameter(argc,argv,"--doevol","0"))) {
 
         Worm2D* w = 0;
-        TVector<double> phenotype(1, er->itsEvoPars().VectSize);
-        er->GenPhenMapping(bestVector, phenotype);
+        
 
         if (model_name == "CE") w = new WormCE(phenotype,0);
         if (model_name == "RS18") w = new Worm18(phenotype,0);
@@ -65,9 +67,14 @@ int main (int argc, const char* argv[])
 
         RandomState rs;
         rs.SetRandomSeed(er->itsEvoPars().randomseed);
-        w->InitializeState(rs);
-        ofstream json_out(er->rename_file("worm_data.json"));
-    
+        w->InitializeState(rs); 
+
+        ofstream nsdump(er->rename_file("NSdump.dat"));
+        nsdump << dynamic_cast<NervousSystem&>(w->itsNS());
+        nsdump.close();
+
+
+        ofstream json_out(er->rename_file("worm_data.json"));    
         json j;
         w->addParsToJson(j);
         er->addParsToJson(j);
@@ -92,8 +99,7 @@ int main (int argc, const char* argv[])
     //er->RunSimulation(bestVector, rs);
 
     Worm2D* w = 0;
-    TVector<double> phenotype(1, er->itsEvoPars().VectSize);
-    er->GenPhenMapping(bestVector, phenotype);
+   
     
     if (model_name == "CE") w = new WormCE(phenotype,0);
     if (model_name == "RS18") w = new Worm18(phenotype,0);
@@ -112,25 +118,32 @@ int main (int argc, const char* argv[])
 
     }
     else{
-    if (model_name == "CE"){
 
         ifstream json_in(er->rename_file("worm_data.json"));
         json j;
         json_in >> j;
 
-        {Worm2DCE w(j);
-        er->RunSimulation(w, rs);
-        }     
 
-        /* 
+    if (model_name == "CE"){
         {Worm2DCE w(j);
+            er->RunSimulation(w, rs);
+        }
+       /*  {
+        Worm2DCE w(j);
         w.InitializeState(rs);
         Simulation s1(er->itsEvoPars());
-        s1.runSimulation(w);} */
- 
+        s1.runSimulation(w);}  */
 
-        json_in.close();
     }
+    if (model_name == "Net21"){
+        {
+            Worm2D21 w(j);
+            //Worm2D21 w(phenotype);
+            er->RunSimulation(w, rs);
+        }
+    }
+
+    json_in.close();
     }
 
     delete er;

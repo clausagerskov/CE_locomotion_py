@@ -232,6 +232,10 @@ ostream& operator<<(ostream& os, NervousSystem& c)
     for (int i = 1; i <= c.size; i++)
         os << c.gains[i] << " ";
     os << endl << endl;
+    // Write the states - apdp
+    for (int i = 1; i <= c.size; i++)
+        os << c.states[i] << " ";
+    os << endl << endl;
     // Write the chemical weights in sparse format (N from1 weight1 ... fromN weightN)
     for (int i = 1; i <= c.size; i++) {
         //cout << c.NumChemicalConns[i] << "  ";

@@ -11,7 +11,7 @@
 //#include "WormBody21.h"
 //#include "NervousSystem.h"
 //#include "Muscles.h"
-#include "Worm2D.h"
+#include "Worm2D21.h"
 
 #include <cmath>
 
@@ -32,63 +32,24 @@ using namespace std;
 //const int Head = 1;
 //const int Tail = N_segments;
 
-class Worm21 : public Worm2D {
+class Worm21 : public Worm2D21 {
 public:
     
     Worm21(TVector<double> &v);
     
     void InitializeState(RandomState &rs);
-    void Step(double StepSize);
-    void Step(double StepSize, double output){return Step(StepSize);}
-   
-    void DumpActState(ofstream &ofs, int skips);
-    void DumpCurvature(ofstream &ofs, int skips);
     void DumpParams(ofstream &ofs);
-    
-    void SetAVA(double value) {AVA = value;};
-    void SetAVB(double value) {AVB = value;};
     
     
     NervousSystem & n;
 
-    private:
-    const vector<string> getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
+    protected:
+  
     
     void addParsToJson(json & j){
         string nsHead = "Nervous system";
         appendAllNSJson(j[nsHead], n);
-        Worm2D::addParsToJson(j);}
-
-    vector<doubIntParamsHead> getWormParams();
-
-    // Neuromuscular junctions
-    double NMJ_AS, NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD;
-    double NMJ_Gain_Map;
-    
-    TVector<double> NMJ_Gain;
-    
-    // Command neuron input
-    
-    double wAVA_DA, wAVA_VA;
-    double wAVB_DB, wAVB_VB;
-    double AVA, AVB;
-
-    const int startingMuscleA = 1;       // XXX
-    const int NmusclePerNUA = 3;
-    const int startingMuscleB = 13;       // XXX
-    const int NmusclePerNUB = 4;
-    
-    
-    // Neuron name conventions
-    const int AS = 1;
-    const int DA = 2;
-    const int DB = 3;
-    const int DD = 4;
-    const int VD = 5;
-    const int VB = 6;
-    const int VA = 7;
+        Worm2D21::addParsToJson(j);}
 
     
-    //const int Head = 1;
-    //const int Tail = N_segments;
 };

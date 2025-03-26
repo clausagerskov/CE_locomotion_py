@@ -45,8 +45,8 @@ void NervousSystem::SetCircuitSize(int newsize, int newmaxchemconns, int newmaxe
     else maxelecconns = min(newmaxelecconns, maxchemconns);
     states.SetBounds(1,size);
     states.FillContents(0.0);
-    paststates.SetBounds(1,size);   /// XXX
-    paststates.FillContents(0.0);   /// XXX
+    paststates.SetBounds(1,size);  
+    paststates.FillContents(0.0);
     outputs.SetBounds(1,size);
     outputs.FillContents(0.0);
     biases.SetBounds(1,size);
@@ -218,7 +218,7 @@ ostream& operator<<(ostream& os, NervousSystem& c)
 {
     // Set the precision
     os << setprecision(32);
-    // Write the size, maxchemconns and maxelecconns
+    //write size, maxchemconns and maxelecconns
     os << c.size << " " << c.maxchemconns << " " << c.maxelecconns << endl << endl;
     // Write the time constants
     for (int i = 1; i <= c.size; i++)
@@ -232,9 +232,14 @@ ostream& operator<<(ostream& os, NervousSystem& c)
     for (int i = 1; i <= c.size; i++)
         os << c.gains[i] << " ";
     os << endl << endl;
+    // Write the states - apdp
+    for (int i = 1; i <= c.size; i++)
+        os << c.states[i] << " ";
+    os << endl << endl;
     // Write the chemical weights in sparse format (N from1 weight1 ... fromN weightN)
     for (int i = 1; i <= c.size; i++) {
-        cout << c.NumChemicalConns[i] << "  ";
+        //cout << c.NumChemicalConns[i] << "  ";
+        os << c.NumChemicalConns[i] << "  "; //fixed
         for (int j = 1; j <= c.NumChemicalConns[i]; j++)
             os << c.chemicalweights[i][j].from << " " << c.chemicalweights[i][j].weight << "  ";
         os << endl;
@@ -242,7 +247,8 @@ ostream& operator<<(ostream& os, NervousSystem& c)
     os << endl;
     // Write the electrical weights in sparse format (N from1 weight1 ... fromN weightN)
     for (int i = 1; i <= c.size; i++) {
-        cout << c.NumElectricalConns[i] << "  ";
+        //cout << c.NumElectricalConns[i] << "  ";
+        os << c.NumElectricalConns[i] << "  "; //fixed 
         for (int j = 1; j <= c.NumElectricalConns[i]; j++)
             os << c.electricalweights[i][j].from << " " << c.electricalweights[i][j].weight << "  ";
         os << endl;
@@ -292,7 +298,6 @@ istream& operator>>(istream& is, NervousSystem& c)
             c.NumElectricalConns[i]++;
         }
     }
-    // Return the istream		
+    // Return the istream
     return is;
-}		
-
+}

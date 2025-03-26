@@ -61,10 +61,14 @@ class Worm2D {
     void AngleCurvature(TVector<double> &c);
 
     virtual ~Worm2D(){if (n_ptr) delete n_ptr;}
+    NSForW2D & itsNS(){return *n_ptr;}
+
+
     protected:
 
     virtual const vector<string> getCellNames() = 0;
     //virtual void addExtraParsToJson(json & j) = 0;
+    
     
     Worm2D(wormIzqParams par1_, NSForW2D * n_ptr_);
     int nn(int neuronNumber, int unitNumber);

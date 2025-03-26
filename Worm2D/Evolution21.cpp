@@ -340,9 +340,9 @@ ofstream bodyfile, actfile, curvfile, paramsfile;
 
 void Evolution21::RunSimulation(Worm2D & w1, RandomState &rs){
 
-    cout << "running sim" << endl;
+    cout << "running evo21 sim" << endl;
   
-    Worm21 & w = dynamic_cast<Worm21&>(w1);
+    Worm2D21 & w = dynamic_cast<Worm2D21&>(w1);
 
     const double & Duration = evoPars1.Duration;
     const int & VectSize = evoPars1.VectSize;

@@ -43,7 +43,8 @@ if [ "$quick_test" == 0 ]; then
     rm -rf exampleRunCEW2D
     rm -rf exampleRun21W2D
     rm -rf exampleRunCEW2D_nml
-    
+    rm -rf exampleRun21W2D_nml
+
     omv test -V .test.2018W2D.omt
     omv test -V .test.2021W2D.omt
     omv test -V .test.CEW2D.omt
@@ -57,6 +58,13 @@ if [ "$quick_test" == 0 ]; then
     
     omv test -V .test.nmlNS.omt
     omv test -V .test.CEW2D_nml.omt
+
+    cd neuromlLocal
+    ./regenerate_21.sh # regenerated NML & runs omv all -V
+    cd ..
+
+    python test2021W2D_nml.py
+
 fi
 
 make tests2

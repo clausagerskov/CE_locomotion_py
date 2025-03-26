@@ -23,6 +23,7 @@ void Worm2D::InitializeState(RandomState &rs)
     t = 0.0;
     b.InitializeBodyState();
     m.InitializeMuscleState();
+    return;
 }
 
 int Worm2D::nn(int neuronNumber, int unitNumber)
