@@ -121,7 +121,7 @@ rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
             n.SetElectricalSynapseWeight(vbp, dbNext, v(13)); // Darker Gray
         }
     }
-    cout << "setting streatch" << endl;
+   // cout << "setting streatch" << endl;
 
     // Stretch receptor
     sr.SetStretchReceptorParams(N_segments, N_stretchrec, v(14), v(28));
@@ -169,7 +169,7 @@ rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
     n.SetElectricalSynapseWeight(SMDD, RMDD, v(26));
     n.SetElectricalSynapseWeight(SMDV, RMDV, v(26));
     n.SetElectricalSynapseWeight(RMDV, RMDD, v(27));
-    cout << "setting nmj" << endl;
+    //cout << "setting nmj" << endl;
     // NMJ Weights
     NMJ_SMDD = v(29);
     NMJ_SMDV = v(29);
@@ -311,6 +311,14 @@ if (rS18Macros.vncsr)
     t += StepSize;
 }
 
+const vector<string>  Worm18::getCellNames() 
+{
+    vector<string> v1 = getCellNamesAll({"DB", "DD", "VBA", "VDA", "VBP", "VDP"}, par1.N_units);
+    vector<string> v2 = {"SMDD", "RMDD", "SMDV", "RMDV"};
+    v1.insert(v1.end(),v2.begin(),v2.end());
+    return v1;
+}
+
 void Worm18::addParsToJson(json & j)
 {
     //string nsHead = "Head Nervous system";
@@ -320,9 +328,12 @@ void Worm18::addParsToJson(json & j)
 
     Params<double> par = sr.getStretchReceptorParams();
     appendToJson<double>(j["Stretch receptor"], par);
-    {string nsHead = "Nervous system";
-    appendAllNSJson(j[nsHead], n);}
+    string nsHead = "Nervous system";
+    appendAllNSJson(j[nsHead], n);
     Worm2D::addParsToJson(j);
+    //string nsHead = "Nervous system";
+    appendCellNamesToJson(j[nsHead], getCellNames(), 1);
+    //appendCellNamesToJson(j[nsHead], getHeadCellNames(), 1);
 }
 
 

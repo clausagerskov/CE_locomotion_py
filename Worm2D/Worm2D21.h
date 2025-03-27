@@ -54,14 +54,18 @@ public:
     //NervousSystem & n;
 
     protected:
+
     Worm2D21(wormIzqParams par1_, NSForW2D * n_ptr_):Worm2D(par1_,n_ptr_){}
-    void addParsToJson(json & j){Worm2D::addParsToJson(j);}
-
-
     
+    void addParsToJson(json & j){
+        Worm2D::addParsToJson(j);
+        string nsHead = "Nervous system";
+        appendCellNamesToJson(j[nsHead], getCellNames(), par1.N_units);
+    }
+
+
     const vector<string> getCellNames() {return {"AS", "DA", "DB", "DD", "VD", "VB", "VA" };}
-    
-    
+        
     vector<doubIntParamsHead> getWormParams();
 
     // Neuromuscular junctions

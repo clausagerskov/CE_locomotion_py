@@ -44,9 +44,13 @@ public:
     private:
 
     void addParsToJson(json & j);
-    const vector<string> getCellNames() 
-    {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP", "SMDD", "RMDD", "SMDV", "RMDV"};}
+    const vector<string> getCellNames() ;
+  
+
     //Params<double> getWormParams();
+    //const vector<string> getHeadCellNames() 
+    //{return {"SMDD", "RMDD", "SMDV", "RMDV"};}
+    
 
     vector<doubIntParamsHead> getWormParams();
     

@@ -48,6 +48,7 @@ void appendToJson(json & j, const Params<T> & par)
                
 }
 
+vector<string> getCellNamesAll(const vector<string> & cell_names, int n_units);
 void appendBodyToJson(json & j, WormBody& b);
 void appendMuscleToJson(json & j, Muscles & m);
 void appendAllNSJson(json & j, NervousSystem & n);

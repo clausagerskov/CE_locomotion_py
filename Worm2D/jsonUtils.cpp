@@ -195,13 +195,19 @@ appendNSToJson(j, n);
 
 }
 
+vector<string> getCellNamesAll(const vector<string> & cell_names, int n_units)
+{
+    vector<string> cell_names_all;
+    for (int i=0;i<n_units;i++) 
+    cell_names_all.insert(cell_names_all.end(),cell_names.begin(),cell_names.end());
+    return cell_names_all;
+}
+
 Params< vector<string> > getNervousSysCellNames(const vector<string> & cell_names, int n_units)
 {
 Params< vector<string> > par;
 par.names = {"Cell name"};
-vector<string> cell_names_all;
-for (int i=0;i<n_units;i++) cell_names_all.insert(cell_names_all.end(),cell_names.begin(),cell_names.end());
-par.vals = {cell_names_all};
+par.vals = {getCellNamesAll(cell_names,n_units)};
 return par;
 }
 
