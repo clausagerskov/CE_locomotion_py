@@ -25,6 +25,8 @@ bool headsr;
 bool vncsr;
 };
 
+
+
 class Worm18 : public Worm2D {
 public:
     
@@ -42,19 +44,20 @@ public:
     private:
 
     void addParsToJson(json & j);
-    const vector<string> getCellNames() {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP"};}
+    const vector<string> getCellNames() 
+    {return {"DB", "DD", "VBA", "VDA", "VBP", "VDP", "SMDD", "RMDD", "SMDV", "RMDV"};}
     //Params<double> getWormParams();
 
     vector<doubIntParamsHead> getWormParams();
     
-    
+  
 
     NervousSystem & n;
     StretchReceptor18 sr;
-    NervousSystem h;
+    //NervousSystem h;
     
     
-    
+   
     // Neuromuscular junctions
     double NMJ_DB, NMJ_VBa, NMJ_VBp, NMJ_DD, NMJ_VDa, NMJ_VDp;
     double NMJ_SMDD, NMJ_RMDD, NMJ_SMDV, NMJ_RMDV;
@@ -88,12 +91,13 @@ public:
     const int VDA = 4;
     const int VBP = 5;
     const int VDP = 6;
+    
 
     // Neuron name conventions
-    const int SMDD = 1;
-    const int RMDD = 2;
-    const int SMDV = 3;
-    const int RMDV = 4;
+    const int SMDD = 37;
+    const int RMDD = 38;
+    const int SMDV = 39;
+    const int RMDV = 40;
 
     //const int Head = 1;
     //const int Tail = N_segments;
@@ -102,3 +106,5 @@ public:
     RS18Macros setMacros();
 
 };
+
+

@@ -126,8 +126,8 @@ class Evolution
     void ResultsDisplay(TSearch &s);
     
     
-    Evolution(int argc, const char* argv[], evoPars ep1, int VectSize)
-    :evoPars1(setPars(argc,argv,ep1)),s(new TSearch(VectSize))
+    Evolution(int argc, const char* argv[], evoPars ep1, int VectSize_)
+    :evoPars1(setPars(argc,argv,ep1)),s(new TSearch(VectSize_))
     {
       evolfile.open(rename_file("fitness.dat"));
       evolfile << setprecision(10);

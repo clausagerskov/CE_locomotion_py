@@ -26,6 +26,8 @@ int main (int argc, const char* argv[])
     return 0;
     }
 
+    
+
     Evolution* er = 0;
     if (model_name == "CE") er = new EvolutionCE(argc,argv);
     if (model_name == "RS18") er = new EvolutionRS18(argc,argv);
@@ -100,11 +102,13 @@ int main (int argc, const char* argv[])
 
     Worm2D* w = 0;
    
-    
+    cout << "making worm" << endl;
+
     if (model_name == "CE") w = new WormCE(phenotype,0);
     if (model_name == "RS18") w = new Worm18(phenotype,0);
     if (model_name == "Net21") w = new Worm21(phenotype);
 
+    cout << "making simulation" << endl;
     er->RunSimulation(*w, rs);
 
     {ofstream phenfile(er->rename_file("phenotype.dat"));

@@ -371,7 +371,7 @@ def run(a=None, **kwargs):
             "seed.dat",
             "worm_data.json",
             "best.gen.dat",
-            "phenotype.dat",
+           # "phenotype.dat",
         ]
         for file in files:
             shutil.copyfile(

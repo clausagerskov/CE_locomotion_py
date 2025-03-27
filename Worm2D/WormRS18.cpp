@@ -36,10 +36,10 @@ rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
 
     // Muscles
    // m.SetMuscleParams(par1.N_muscles, par1.T_muscle);
-
+    
 
     // Nervous system // Ventral cord
-    n.SetCircuitSize(par1.N_units*par1.N_neuronsperunit, 4, 4);
+    n.SetCircuitSize((par1.N_units*par1.N_neuronsperunit) + 4, 4, 4);
 
     int db, dd, vba, vda, vbp, vdp;
     int ddNext, dbNext, vdaNext, vbaNext;
@@ -121,6 +121,7 @@ rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
             n.SetElectricalSynapseWeight(vbp, dbNext, v(13)); // Darker Gray
         }
     }
+    cout << "setting streatch" << endl;
 
     // Stretch receptor
     sr.SetStretchReceptorParams(N_segments, N_stretchrec, v(14), v(28));
@@ -134,41 +135,41 @@ rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
     NMJ_VDp = v(16);
 
     // Head Circuit
-    h.SetCircuitSize(4, 3, 2);
+    //h.SetCircuitSize(4, 3, 2);
 
     // Bias
-    h.SetNeuronBias(SMDD, v(17));
-    h.SetNeuronBias(SMDV, v(17));
-    h.SetNeuronBias(RMDD, v(18));
-    h.SetNeuronBias(RMDV, v(18));
+    n.SetNeuronBias(SMDD, v(17));
+    n.SetNeuronBias(SMDV, v(17));
+    n.SetNeuronBias(RMDD, v(18));
+    n.SetNeuronBias(RMDV, v(18));
 
     // Time-Constant
-    h.SetNeuronTimeConstant(SMDD, v(19));
-    h.SetNeuronTimeConstant(SMDV, v(19));
-    h.SetNeuronTimeConstant(RMDD, v(20));
-    h.SetNeuronTimeConstant(RMDV, v(20));
+    n.SetNeuronTimeConstant(SMDD, v(19));
+    n.SetNeuronTimeConstant(SMDV, v(19));
+    n.SetNeuronTimeConstant(RMDD, v(20));
+    n.SetNeuronTimeConstant(RMDV, v(20));
 
     // Self-Connection
-    h.SetChemicalSynapseWeight(SMDD, SMDD, v(21));
-    h.SetChemicalSynapseWeight(SMDV, SMDV, v(21));
-    h.SetChemicalSynapseWeight(RMDD, RMDD, v(22));
-    h.SetChemicalSynapseWeight(RMDV, RMDV, v(22));
+    n.SetChemicalSynapseWeight(SMDD, SMDD, v(21));
+    n.SetChemicalSynapseWeight(SMDV, SMDV, v(21));
+    n.SetChemicalSynapseWeight(RMDD, RMDD, v(22));
+    n.SetChemicalSynapseWeight(RMDV, RMDV, v(22));
 
     // Chemical Synxapses (ALL)
-    h.SetChemicalSynapseWeight(SMDD, SMDV, v(23));
-    h.SetChemicalSynapseWeight(SMDV, SMDD, v(23));
+    n.SetChemicalSynapseWeight(SMDD, SMDV, v(23));
+    n.SetChemicalSynapseWeight(SMDV, SMDD, v(23));
 
-    h.SetChemicalSynapseWeight(SMDD, RMDV, v(24));
-    h.SetChemicalSynapseWeight(SMDV, RMDD, v(24));
+    n.SetChemicalSynapseWeight(SMDD, RMDV, v(24));
+    n.SetChemicalSynapseWeight(SMDV, RMDD, v(24));
 
-    h.SetChemicalSynapseWeight(RMDD, RMDV, v(25));
-    h.SetChemicalSynapseWeight(RMDV, RMDD, v(25));
+    n.SetChemicalSynapseWeight(RMDD, RMDV, v(25));
+    n.SetChemicalSynapseWeight(RMDV, RMDD, v(25));
 
     // Gap Junctions
-    h.SetElectricalSynapseWeight(SMDD, RMDD, v(26));
-    h.SetElectricalSynapseWeight(SMDV, RMDV, v(26));
-    h.SetElectricalSynapseWeight(RMDV, RMDD, v(27));
-
+    n.SetElectricalSynapseWeight(SMDD, RMDD, v(26));
+    n.SetElectricalSynapseWeight(SMDV, RMDV, v(26));
+    n.SetElectricalSynapseWeight(RMDV, RMDD, v(27));
+    cout << "setting nmj" << endl;
     // NMJ Weights
     NMJ_SMDD = v(29);
     NMJ_SMDV = v(29);
@@ -188,18 +189,18 @@ void Worm18::InitializeState(RandomState &rs)
 {
     
     n.RandomizeCircuitState(-0.5, 0.5, rs);
-    h.RandomizeCircuitState(-0.5, 0.5, rs);
+    //h.RandomizeCircuitState(-0.5, 0.5, rs);
     Worm2D::InitializeState(rs);
 }
 
-void Worm18::HeadStep(double StepSize, double output)
+/* void Worm18::HeadStep(double StepSize, double output)
 {
     // Update Nervous System
     h.EulerStep(StepSize);
 
     // Time
     t += StepSize;
-}
+} */
 
 void Worm18::Step(double StepSize, double output)
 {
@@ -228,8 +229,8 @@ void Worm18::Step(double StepSize, double output)
 if (rS18Macros.headsr)
 {
     if (output == 1){
-        h.SetNeuronExternalInput(SMDD, sr.HeadDorsalOutput());    // Average of first
-        h.SetNeuronExternalInput(SMDV, sr.HeadVentralOutput());   // to segments
+        n.SetNeuronExternalInput(SMDD, sr.HeadDorsalOutput());    // Average of first
+        n.SetNeuronExternalInput(SMDV, sr.HeadVentralOutput());   // to segments
     }
 }
 //#endif
@@ -247,13 +248,13 @@ if (rS18Macros.vncsr)
 //#endif
 
     // Update Nervous System
-    h.EulerStep(StepSize);
+    //h.EulerStep(StepSize);
     n.EulerStep(StepSize);
 
     // Set input to Muscles
     //  Input from the head circuit
-    dorsalHeadInput = NMJ_SMDD*h.NeuronOutput(SMDD) + NMJ_RMDV*h.NeuronOutput(RMDD);
-    ventralHeadInput = NMJ_SMDV*h.NeuronOutput(SMDV) + NMJ_RMDD*h.NeuronOutput(RMDV);
+    dorsalHeadInput = NMJ_SMDD*n.NeuronOutput(SMDD) + NMJ_RMDV*n.NeuronOutput(RMDD);
+    ventralHeadInput = NMJ_SMDV*n.NeuronOutput(SMDV) + NMJ_RMDD*n.NeuronOutput(RMDV);
 
     for (int i = 1; i <= HeadMotorNeuronMuscles; i++){
         m.SetDorsalMuscleInput(i, NMJ_Gain(i)*dorsalHeadInput);
@@ -312,10 +313,11 @@ if (rS18Macros.vncsr)
 
 void Worm18::addParsToJson(json & j)
 {
-    string nsHead = "Head Nervous system";
-    appendAllNSJson(j[nsHead], h);
-    vector<string> cell_names = {"SMDD", "RMDD", "SMDV", "RMDV"};
-    appendCellNamesToJson(j[nsHead], cell_names, 1);
+    //string nsHead = "Head Nervous system";
+    //appendAllNSJson(j[nsHead], h);
+    //vector<string> cell_names = {"SMDD", "RMDD", "SMDV", "RMDV"};
+    //appendCellNamesToJson(j[nsHead], cell_names, 1);
+
     Params<double> par = sr.getStretchReceptorParams();
     appendToJson<double>(j["Stretch receptor"], par);
     {string nsHead = "Nervous system";
@@ -367,8 +369,9 @@ void Worm18::DumpActState(ofstream &ofs, int skips)
         }
         // Head Neurons
         //ofs << "\nH: ";
+        int offset = par1.N_units*par1.N_neuronsperunit;
         for (int i = 1; i <= 4; i++) {
-            ofs <<  " " << h.NeuronOutput(i);
+            ofs <<  " " << n.NeuronOutput(offset + i);
         }
         // Ventral Cord Motor Neurons
         //ofs << "\nV: ";
@@ -395,8 +398,9 @@ void Worm18::DumpVoltage(ofstream &ofs, int skips)
 
         ofs << t;
         // Head Neurons
+        int offset = par1.N_units*par1.N_neuronsperunit;
         for (int i = 1; i <= 4; i++) {
-            ofs <<  " " << h.NeuronState(i);
+            ofs <<  " " << n.NeuronState(offset + i);
         }
         // Ventral Cord Motor Neurons
         for (int i = 1; i <= par1.N_units; i++) {
@@ -419,12 +423,12 @@ void Worm18::DumpParams(ofstream &ofs)
     ofs << "Gap Juncs: \n DB-DB+1: " << n.ElectricalSynapseWeight(DB, DB+par1.N_neuronsperunit) << "\n VBA-VBP / VBP-VBP+1: " << n.ElectricalSynapseWeight(VBA, VBP) << " / " << n.ElectricalSynapseWeight(VBP, VBA+par1.N_neuronsperunit) << "\n VBP-DB+1: " << n.ElectricalSynapseWeight(VBP, DB+par1.N_neuronsperunit) << "\n DD-VDA/P: " << n.ElectricalSynapseWeight(DD, VDA) << " / " << n.ElectricalSynapseWeight(DD, VDP) << "\n DD-DD+1: " << n.ElectricalSynapseWeight(DD, DD+par1.N_neuronsperunit) << "\n VDA-VDP / VDP-VDP+1: " << n.ElectricalSynapseWeight(VDA, VDP) << " / " << n.ElectricalSynapseWeight(VDP, VDA+par1.N_neuronsperunit) <<  endl;
     ofs << "SR Gain (VNC and Head): " << sr.SRvncgain << " " << sr.SRheadgain << endl;
     ofs << "NMJ weights: \n B: " << NMJ_DB << " " << NMJ_VBa << " " << NMJ_VBp << "\n D: " <<  NMJ_DD << " " << NMJ_VDa << " " << NMJ_VDp << endl;
-    ofs << "Head: \nBiases: \n SMD(D/V): " << h.NeuronBias(SMDD) << " " << h.NeuronBias(SMDV) << "\n RMD(D/V): "<< h.NeuronBias(RMDD) << " "<< h.NeuronBias(RMDV) << endl;
-    ofs << "Time-constants: \n SMD(D/V): " << h.NeuronTimeConstant(SMDD) << " " << h.NeuronTimeConstant(SMDV) << "\n RMD(D/V): " << h.NeuronTimeConstant(RMDD) << " " << h.NeuronTimeConstant(RMDV) << endl;
-    ofs << "Self conns: \n SMD(D/V): " <<h.ChemicalSynapseWeight(SMDD,SMDD) << " " << h.ChemicalSynapseWeight(SMDV,SMDV) << "\n RMD(D/V): " << h.ChemicalSynapseWeight(RMDD,RMDD) << " "<< h.ChemicalSynapseWeight(RMDV,RMDV) << endl;
-    ofs << "Chem conns: " << "\n SMDD->RMDD: " << h.ChemicalSynapseWeight(SMDD, RMDD) << "\n SMDD->SMDV: " << h.ChemicalSynapseWeight(SMDD, SMDV) << "\n SMDD->RMDV: " << h.ChemicalSynapseWeight(SMDD, RMDV) << "\n RMDD->SMDD: " << h.ChemicalSynapseWeight(RMDD, SMDD) << "\n RMDD->SMDV: " << h.ChemicalSynapseWeight(RMDD, SMDV) << "\n RMDD->RMDV: " << h.ChemicalSynapseWeight(RMDD, RMDV) << "\n SMDV->SMDD: " << h.ChemicalSynapseWeight(SMDV, SMDD) << "\n SMDV->RMDD: " << h.ChemicalSynapseWeight(SMDV, RMDD) << "\n SMDV->RMDV: " << h.ChemicalSynapseWeight(SMDV, RMDV) << "\n RMDV->SMDD: " << h.ChemicalSynapseWeight(RMDV, SMDD) << "\n RMDV->RMDD: " << h.ChemicalSynapseWeight(RMDV, RMDD) << "\n RMDV->SMDV: " << h.ChemicalSynapseWeight(RMDV, SMDV) << endl;
-    ofs << "Gap Juncs: " << "\n SMD-RMD: " << h.ElectricalSynapseWeight(SMDD, RMDD)
-                         << "\n RMD-RMD: " << h.ElectricalSynapseWeight(RMDD, RMDV) << endl;
+    ofs << "Head: \nBiases: \n SMD(D/V): " << n.NeuronBias(SMDD) << " " << n.NeuronBias(SMDV) << "\n RMD(D/V): "<< n.NeuronBias(RMDD) << " "<< n.NeuronBias(RMDV) << endl;
+    ofs << "Time-constants: \n SMD(D/V): " << n.NeuronTimeConstant(SMDD) << " " << n.NeuronTimeConstant(SMDV) << "\n RMD(D/V): " << n.NeuronTimeConstant(RMDD) << " " << n.NeuronTimeConstant(RMDV) << endl;
+    ofs << "Self conns: \n SMD(D/V): " <<n.ChemicalSynapseWeight(SMDD,SMDD) << " " << n.ChemicalSynapseWeight(SMDV,SMDV) << "\n RMD(D/V): " << n.ChemicalSynapseWeight(RMDD,RMDD) << " "<< n.ChemicalSynapseWeight(RMDV,RMDV) << endl;
+    ofs << "Chem conns: " << "\n SMDD->RMDD: " << n.ChemicalSynapseWeight(SMDD, RMDD) << "\n SMDD->SMDV: " << n.ChemicalSynapseWeight(SMDD, SMDV) << "\n SMDD->RMDV: " << n.ChemicalSynapseWeight(SMDD, RMDV) << "\n RMDD->SMDD: " << n.ChemicalSynapseWeight(RMDD, SMDD) << "\n RMDD->SMDV: " << n.ChemicalSynapseWeight(RMDD, SMDV) << "\n RMDD->RMDV: " << n.ChemicalSynapseWeight(RMDD, RMDV) << "\n SMDV->SMDD: " << n.ChemicalSynapseWeight(SMDV, SMDD) << "\n SMDV->RMDD: " << n.ChemicalSynapseWeight(SMDV, RMDD) << "\n SMDV->RMDV: " << n.ChemicalSynapseWeight(SMDV, RMDV) << "\n RMDV->SMDD: " << n.ChemicalSynapseWeight(RMDV, SMDD) << "\n RMDV->RMDD: " << n.ChemicalSynapseWeight(RMDV, RMDD) << "\n RMDV->SMDV: " << n.ChemicalSynapseWeight(RMDV, SMDV) << endl;
+    ofs << "Gap Juncs: " << "\n SMD-RMD: " << n.ElectricalSynapseWeight(SMDD, RMDD)
+                         << "\n RMD-RMD: " << n.ElectricalSynapseWeight(RMDD, RMDV) << endl;
     ofs << "NMJ weights: \n SMD(D/V): " << NMJ_SMDD << " " << NMJ_SMDV << "\n RMD(D/V): " <<  NMJ_RMDD << " " << NMJ_RMDV << endl;
     ofs << "NMJ Gain: " << NMJ_Gain_Map << endl;
 }
