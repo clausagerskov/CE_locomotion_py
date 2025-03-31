@@ -45,12 +45,15 @@ class Worm2D {
     virtual void DumpActState(ofstream &ofs, int skips) = 0;
     virtual void Step(double StepSize, double output) = 0;
     virtual void InitializeState(RandomState &rs) = 0;
+    void Step(double StepSize) {Step(StepSize,1);}
 
+    void DumpVal(ofstream &ofs, int skips, double val);
     void DumpBodyState(ofstream &ofs, int skips);
     void DumpCurvature(ofstream &ofs, int skips);
     virtual void addParsToJson(json & j) = 0;
     void writeJsonFile(ofstream & json_out);
     virtual void DumpParams(ofstream &ofs) = 0;
+    double getVelocity();
 
     virtual vector<doubIntParamsHead> getWormParams() = 0;
 

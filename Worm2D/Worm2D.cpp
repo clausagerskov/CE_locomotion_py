@@ -176,6 +176,32 @@ void Worm2D::DumpCurvature(ofstream &ofs, int skips)
   }
 }
 
+double Worm2D::getVelocity()
+{
+   static double xtp =  CoMx();
+   static double ytp =  CoMy();
+
+    double xt = CoMx(); 
+    double yt = CoMy();
+    double vel = sqrt(pow(xt-xtp,2)+pow(yt-ytp,2));
+    xtp = xt;
+    ytp = yt;
+    return vel;
+
+}
+
+void Worm2D::DumpVal(ofstream &ofs, int skips, double val)
+{
+    static int tt = skips;
+
+    if (++tt >= skips) {
+        tt = 0;
+
+        ofs << t << " " << val;
+    
+        ofs << "\n";
+    }
+}
 
 void Worm2D::DumpBodyState(ofstream &ofs, int skips)
 {

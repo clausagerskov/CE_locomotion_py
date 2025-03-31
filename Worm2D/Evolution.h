@@ -99,6 +99,7 @@ class Evolution
     virtual double EvaluationFunction(TVector<double> &v, RandomState &rs) = 0;
     virtual void RunSimulation(TVector<double> &v, RandomState &rs) = 0;
     virtual void RunSimulation(Worm2D & w, RandomState &rs) = 0;
+    void RunStandardSimulation(Worm2D & w, RandomState &rs);
 
     void addParsToJson(json & j);
     

@@ -2,7 +2,7 @@ import subprocess
 import argparse
 import os
 import sys
-import helper_funcs as hf
+# import helper_funcs as hf
 # from importlib import import_module
 
 
@@ -181,6 +181,7 @@ def process_args():
         default=DEFAULTS["doRandInit"],
         help=("Use seed to initialize the simulation initial condition."),
     )
+
     parser.add_argument(
         "-o",
         "--overwrite",
@@ -371,7 +372,7 @@ def run(a=None, **kwargs):
             "seed.dat",
             "worm_data.json",
             "best.gen.dat",
-           # "phenotype.dat",
+            # "phenotype.dat",
         ]
         for file in files:
             shutil.copyfile(
@@ -416,7 +417,7 @@ def run(a=None, **kwargs):
     }
 
     defaults_base = defaults_bases[model_name]
-    plot_format = plot_formats[model_name]
+    plot_format = model_name
 
     evol_pars = ["Duration", "PopulationSize", "randomseed", "MaxGenerations"]
     evol_args = [a.duration, a.popSize, a.RandSeed, a.maxGens]
@@ -525,7 +526,7 @@ def run(a=None, **kwargs):
             print("Error:")
             print(result.stderr)
 
-    hf.dir_name = a.outputFolderName
+    # hf.dir_name = a.outputFolderName
 
     """     if a.modelFolder == ".":
         module_name = "load_data"
@@ -536,7 +537,10 @@ def run(a=None, **kwargs):
 
     from load_data import reload_single_run
 
-    reload_single_run(show_plot=False, plot_format=plot_format)
+    # reload_single_run(show_plot=False, plot_format=plot_format)
+    reload_single_run(
+        showPlot=False, folderName=a.outputFolderName, modelName=plot_format
+    )
 
 
 if __name__ == "__main__":

@@ -380,7 +380,14 @@ if __name__ == "__main__":
         "cell specific populations",
     ]
     population_structure = population_structures[2]
+    import os
+
+    current = os.path.dirname(os.path.realpath(__file__))
+    from pathlib import Path
+
+    parent_dir = Path(__file__).parent
     run(
         population_structure=population_structure,
         json_file="../exampleRun/worm_data.json",
+        # json_file = parent_dir + "/exampleRun/worm_data.json"
     )

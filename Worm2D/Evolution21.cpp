@@ -351,15 +351,17 @@ void Evolution21::RunSimulation(Worm2D & w1, RandomState &rs){
     const double & Transient = evoPars1.Transient;
     const int & skip_steps = evoPars1.skip_steps;
 
-ofstream bodyfile, actfile, curvfile, paramsfile;
+    ofstream bodyfile, actfile, curvfile, paramsfile, velfile;
 
     bodyfile.open(rename_file("body.dat"));
     actfile.open(rename_file("act.dat"));
     curvfile.open(rename_file("curv.dat"));
     paramsfile.open(rename_file("params.dat"));
+    velfile.open(rename_file("velocity.dat"));
 
     w.DumpParams(paramsfile);
-    
+    paramsfile.close();
+
     w.InitializeState(rs);
     
     // Transient XXX
@@ -372,27 +374,37 @@ ofstream bodyfile, actfile, curvfile, paramsfile;
 
     w.Step(StepSize); // determine sign of derivative
 
-   
+        
     // Time loop
     for (double t = 0.0; t <= Duration; t += StepSize) {
         // Step simulation
         w.Step(StepSize); 
 
     }
-
-
+        double xt = w.CoMx();
+        double yt = w.CoMy();
+   
         for (double t = 0.0; t <= 60; t += StepSize){
+            
+
+            double xtp = xt; 
+            double ytp = yt;
+            xt = w.CoMx(); yt = w.CoMy();
+
+            double vel = sqrt(pow(xt-xtp,2)+pow(yt-ytp,2))/StepSize;
+
             w.Step(StepSize);
             w.DumpBodyState(bodyfile, skip_steps);
             w.DumpActState(actfile, skip_steps);
             w.DumpCurvature(curvfile, skip_steps);
+            w.DumpVal(velfile, skip_steps, vel);
         }
 
         
         bodyfile.close();
         actfile.close();
         curvfile.close();
-           
+        velfile.close();
 
 }
 

@@ -111,12 +111,15 @@ int main (int argc, const char* argv[])
     cout << "making simulation" << endl;
     er->RunSimulation(*w, rs);
 
+
     {ofstream phenfile(er->rename_file("phenotype.dat"));
     w->DumpParams(phenfile);
     phenfile.close();}
 
     w->InitializeState(rs);
-    Simulation s1(er->itsEvoPars());
+    simPars sp1 = {er->itsEvoPars().directoryName,
+        er->itsEvoPars().skip_steps, 60, 50, er->itsEvoPars().StepSize};
+    Simulation s1(sp1);
     s1.runSimulation(*w);
     delete w;
 
