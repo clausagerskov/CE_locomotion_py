@@ -152,8 +152,6 @@ void EvolutionCE::RunSimulation(TVector<double> &v, RandomState &rs)
 }
 
 
-
-
 double EvolutionCE::save_traces(TVector<double> &v, RandomState &rs){
 
 

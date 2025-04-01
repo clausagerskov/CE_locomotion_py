@@ -375,12 +375,14 @@ void Worm18::DumpActState(ofstream &ofs, int skips)
         //ofs << "\nSR: ";
         // Stretch receptors
         ofs <<  " " << sr.HeadDorsalOutput() << " " << sr.HeadVentralOutput();
+        
         for (int i = 1; i <= N_stretchrec; i++) {
             ofs <<  " " << sr.VCDorsalOutput(i) << " " << sr.VCVentralAOutput(i) << " " << sr.VCVentralPOutput(i);;
         }
         // Head Neurons
         //ofs << "\nH: ";
         int offset = par1.N_units*par1.N_neuronsperunit;
+
         for (int i = 1; i <= 4; i++) {
             ofs <<  " " << n.NeuronOutput(offset + i);
         }

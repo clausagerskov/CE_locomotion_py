@@ -343,7 +343,11 @@ def run(a=None, **kwargs):
         )
         sys.exit(1)
 
-    if not do_evol and not os.path.isdir(a.outputFolderName):
+    if (
+        not do_evol
+        and not os.path.isdir(a.outputFolderName)
+        and a.inputFolderName is None
+    ):
         print("Setting doEvol to True since the output folder will be created.")
         do_evol = 1
 

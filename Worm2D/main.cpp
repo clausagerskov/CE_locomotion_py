@@ -88,7 +88,6 @@ int main (int argc, const char* argv[])
 
     bool do_nml =  atoi(getParameter(argc,argv,"--donml","0"));
 
-
     //run simulation with possibly different seed
     
     const int simrandseed =  atoi(getParameter(argc,argv,"-R","-1"));

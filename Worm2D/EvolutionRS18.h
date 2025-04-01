@@ -11,7 +11,7 @@ class EvolutionRS18:public Evolution
     EvolutionRS18(int argc, const char* argv[])
     :Evolution(argc,argv, {".", 42, RANK_BASED, GENETIC_ALGORITHM, 
         96, 1000, 0.1, 0.5, UNIFORM, 
-        1.1, 0.04, 1, 0, 1, 0, 50.0, 10.0, 0.01, 23, 30}, 30
+        1.1, 0.04, 1, 0, 1, 4, 50.0, 10.0, 0.01, 23, 30}, 30
     ),speedoutput(atoi(getParameter(argc,argv,"--speed_output", "0"))),
     evo_seed(atoi(getParameter(argc,argv,"--evo_seed", "0"))){}
 

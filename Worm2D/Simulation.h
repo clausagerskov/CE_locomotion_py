@@ -20,16 +20,18 @@ public:
         bodyfile.open(rename_file("sim_body.dat"));
         actfile.open(rename_file("sim_act.dat"));
         velfile.open(rename_file("sim_vel.dat"));
+        nsfile.open(rename_file("sim_ns.dat"));
 
     }
     void runSimulation(Worm2D & w);
 
 
-    ~Simulation(){actfile.close(); curvfile.close(); bodyfile.close(); velfile.close();}
+    ~Simulation(){actfile.close(); curvfile.close(); 
+        bodyfile.close(); velfile.close(); nsfile.close();}
     
 private:
 const simPars sp;
 string rename_file(string filename);
-ofstream actfile, curvfile, bodyfile, velfile;
+ofstream actfile, curvfile, bodyfile, velfile, nsfile;
 
 };

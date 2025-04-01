@@ -54,6 +54,8 @@ class Worm2D {
     void writeJsonFile(ofstream & json_out);
     virtual void DumpParams(ofstream &ofs) = 0;
     double getVelocity();
+    void DumpNSOrdered(ofstream &ofs, int skips);
+
 
     virtual vector<doubIntParamsHead> getWormParams() = 0;
 

@@ -40,11 +40,25 @@ def make_fig(plot_format):
 
     body = np.loadtxt(hf.rename_file("sim_body.dat"))  ## first 50 seconds of simulation
     curv = np.loadtxt(hf.rename_file("sim_curv.dat"))
-    act_data = np.loadtxt(hf.rename_file("sim_act.dat")).T
-    network_json_data = utils.getJsonFile(hf.rename_file("worm_data.json"))
+    act_data = np.loadtxt(hf.rename_file("sim_ns.dat")).T
 
-    pop_names = utils.getPopNames(network_json_data)
-    cell_names = network_json_data["Nervous system"]["Cell name"]["value"]
+    network_json_data = utils.getJsonFile(hf.rename_file("worm_data.json"))
+    # pop_names = utils.getPopNames(network_json_data)
+    pop_plot_names = plot_format["plot_cell_names"]
+    plot_col_divs = plot_format["plot_col_divs"]
+    cell_names = utils.getCellNames(network_json_data)
+    step_size = network_json_data["Evolutionary Optimization Parameters"]["StepSize"][
+        "value"
+    ]
+    skip_steps = network_json_data["Evolutionary Optimization Parameters"][
+        "skip_steps"
+    ]["value"]
+    plot_time = plot_format["plot_time"]
+    worm_plot_time = plot_format["worm_plot_time"]
+    AvgSpeed = (
+        network_json_data["Evolutionary Optimization Parameters"]["AvgSpeed"]["value"]
+        * 1000.0
+    )
 
     plot_velocity = True
     if plot_velocity:
@@ -74,7 +88,7 @@ def make_fig(plot_format):
         ax.text(
             -0.0004,
             0.0001,
-            "t = %.2f" % (k / 20.0),
+            "t = %.2f" % (k * (step_size * skip_steps)),
             ha="center",
             va="center",
             fontsize=26,
@@ -86,8 +100,8 @@ def make_fig(plot_format):
     r = (
         2 * 40 * 10**-6 * np.abs(np.sin(np.arccos((np.arange(51) - 25) / (25 + 0.2))))
     )  # body radius, from BBC model
-
-    for k, t in enumerate(np.linspace(0, 40, 6)):
+    worm_plot_period = worm_plot_time / (step_size * skip_steps)
+    for k, t in enumerate(np.linspace(0, worm_plot_period, 6)):
         print(t)
         plot_worm(ax0[k], int(t))
 
@@ -103,8 +117,9 @@ def make_fig(plot_format):
         vmax=10,
         origin="lower",
     )
-    ax1.set_xlim(0, 120)
-    ax1.set_xticks([0, 40, 80, 120])
+    ax1.set_xlim(0, int(plot_time / (step_size * skip_steps)))
+    # ax1.set_xticks([0, 40, 80, 120])
+    ax1.set_xticks(np.linspace(0, int(plot_time / (step_size * skip_steps)), 4))
     ax1.set_xticklabels([])
     ax1.set_yticks([1, 21])
     ax1.set_yticklabels(["", ""])
@@ -115,15 +130,17 @@ def make_fig(plot_format):
     ############ Velocity #######
     ###############################
     # s = np.where(np.array(sel) == 23)[0]
+
     plot_transient = 50.0
     if plot_velocity:
         # ax2.plot(np.linspace(0, 10, len(vel[s][0])), 1000*vel[s][0], 'k', linewidth = 3)
         ax2.plot(vel[0][1:] - plot_transient, 1000 * vel[1][1:], "k", linewidth=3)
-        ax2.axhline(y=0.22, linestyle="--", color="r")
-        ax2.set_ylim(0.05, 0.35)
+        ax2.axhline(y=AvgSpeed, linestyle="--", color="r")
+        ax2.set_ylim(AvgSpeed * 0.5, AvgSpeed * 1.5)
         ax2.set_xticklabels([])
-        ax2.set_xlim(0, 6)
-        ax2.set_yticks([0.1, 0.2, 0.3])
+        ax2.set_xlim(0, plot_time)
+        # ax2.set_yticks([0.1, 0.2, 0.3])
+        ax2.set_yticks(np.linspace(AvgSpeed * 0.5, AvgSpeed * 1.5, 3))
         ax2.set_ylabel("Velocity (mm/s)", fontsize=fzl, labelpad=24)
         # ax2.set_xlabel('Time (s)', fontsize = fzl, labelpad = 22)
     ###############################
@@ -132,17 +149,20 @@ def make_fig(plot_format):
     cols = ["k", "r", "b", "g", "c", "m", "y", "tab:orange", "tab:brown", "tab:gray"]
     # cell_list = ["AS", "DA", "DB", "DD"]
 
-    for ind, (cell, col) in enumerate(zip(pop_names[:4], cols)):
+    text_space = 0.03
+    for ind, (cell, col) in enumerate(
+        zip(pop_plot_names[: int(plot_col_divs[0])], cols)
+    ):
         ind1 = cell_names.index(cell)
         ax3.plot(act_data[0] - plot_transient, act_data[1 + ind1], col, linewidth=3)
-        ax3.set_xlim(0, 6)
+        ax3.set_xlim(0, plot_time)
         ax3.set_ylim(-0.1, 1.1)
         ax3.set_xticklabels([])
         # ax3.set_ylabel('Activity', fontsize = fzl, labelpad = 24)
         # ax3.set_xlabel('Time (s)', fontsize = fzl, labelpad = 22)
         plt.figtext(
-            0.047,
-            0.47 - ind * 0.05,
+            0.043,
+            0.47 - ind * text_space,
             cell,
             fontsize=fz,
             ha="center",
@@ -152,16 +172,21 @@ def make_fig(plot_format):
 
     # cols = ["red", "blue", "green"]
     # cell_list = ["VA", "VB", "VD"]
-    for ind, (cell, col) in enumerate(zip(pop_names[4:], cols[1:])):
+    for ind, (cell, col) in enumerate(
+        zip(
+            pop_plot_names[int(plot_col_divs[0]) :],
+            cols[int(plot_col_divs[0] - plot_col_divs[1]) :],
+        )
+    ):
         ind1 = cell_names.index(cell)
         ax4.plot(act_data[0] - plot_transient, act_data[1 + ind1], col, linewidth=3)
-        ax4.set_xlim(0, 6)
+        ax4.set_xlim(0, plot_time)
         ax4.set_ylim(-0.1, 1.1)
         # ax4.set_ylabel('Activity', fontsize = fzl, labelpad = 24)
         ax4.set_xlabel("Time (s)", fontsize=fzl, labelpad=22)
         plt.figtext(
-            0.047,
-            0.25 - ind * 0.05,
+            0.043,
+            0.25 - ind * text_space,
             cell,
             fontsize=fz,
             ha="center",
