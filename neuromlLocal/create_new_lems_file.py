@@ -59,9 +59,8 @@ def run(a=None, **kwargs):
     # ls.include_neuroml2_file("NML2_SingleCompHHCell.nml")
 
     ls.include_lems_file("cell_syn_X.xml")
-    ls.include_lems_file(output_folder_name + "/cell_syn_X_cells.xml")
-    ls.include_neuroml2_file(
-        output_folder_name + "/Worm2D.net.nml", include_included=False
+    ls.include_lems_file("cell_syn_X_cells.xml")
+    ls.include_neuroml2_file("Worm2D.net.nml", include_included=False
     )
 
     disp0 = "display0"
@@ -74,9 +73,9 @@ def run(a=None, **kwargs):
 
     cells_to_plot = 60
     of0 = "states_file"
-    ls.create_output_file(of0, output_folder_name + "/%s.states.dat" % sim_id)
+    ls.create_output_file(of0, "%s.states.dat" % sim_id)
     of1 = "outputs_file"
-    ls.create_output_file(of1, output_folder_name + "/%s.outputs.dat" % sim_id)
+    ls.create_output_file(of1, "%s.outputs.dat" % sim_id)
 
     for index, (cell_id, colour) in enumerate(
         zip(cell_ids[:cells_to_plot], colour_list)

@@ -4,7 +4,7 @@ Example to build a full network
 through libNeuroML, save it as XML and validate it
 
 """
-
+import shutil
 import neuroml.writers as writers
 from neuroml import (
     Network,
@@ -124,6 +124,9 @@ def run(a=None, **kwargs):
 
     cellX_filename = output_folder_name + "/cell_syn_X_cells.xml"
     utils.makeCellXml(network_json_data, cellX_filename)
+
+
+    shutil.copyfile("cell_syn_X.xml", output_folder_name + "/cell_syn_X.xml")
 
     nml_doc = NeuroMLDocument(id="Worm2D")
     # nml_doc.includes.append(IncludeType(href="cell_syn_X.xml"))
