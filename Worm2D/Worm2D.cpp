@@ -193,13 +193,13 @@ double Worm2D::getVelocity()
 void Worm2D::DumpNSOrdered(ofstream &ofs, int skips)
 {
 
-    const int NSsize = dynamic_cast<NervousSystem&>(*n_ptr).size;
+    //const int NSsize = dynamic_cast<NervousSystem&>(*n_ptr).size;
     static int tt = skips;
 
     if (++tt >= skips) {
         tt = 0;
         ofs << t;
-        for (int i = 1; i <= NSsize; i++) ofs <<  " " << n_ptr->NeuronOutput(i);
+        for (int i = 1; i <= par1.N_size; i++) ofs <<  " " << n_ptr->NeuronOutput(i);
         ofs << "\n";
     }
 }

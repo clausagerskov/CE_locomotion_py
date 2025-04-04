@@ -29,7 +29,7 @@ return {headsr,vncsr};
 }
 
 // The constructor
-Worm18::Worm18(TVector<double> &v,double output):Worm2D({6,24,0.1,6}, new NervousSystem()),
+Worm18::Worm18(TVector<double> &v,double output):Worm2D({6,24,0.1,6,40}, new NervousSystem()),
 rS18Macros(setMacros()),n(dynamic_cast<NervousSystem&>(*n_ptr))
 {
     //supArgs1.writeMessage();

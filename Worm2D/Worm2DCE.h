@@ -76,7 +76,7 @@ class Worm2DCE: public  Worm2D{
     vector<doubIntParamsHead> getWormParams();
     StretchReceptorCE sr;
     void DumpParams(ofstream &ofs);
-
+    virtual void initForSimulation();
     
 
     double NMJ_DA, NMJ_DB, NMJ_VD, NMJ_VB, NMJ_VA, NMJ_DD; //EEE

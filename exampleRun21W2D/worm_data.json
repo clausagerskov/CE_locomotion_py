@@ -1640,10 +1640,10 @@
     },
     "Worm": {
         "AVA": {
-            "value": 0.5015673915672854
+            "value": 0.0
         },
         "AVB": {
-            "value": 0.8091267129886075
+            "value": 0.0
         },
         "NMJ_AS": {
             "value": 0.045354840632245486
@@ -1674,6 +1674,9 @@
         },
         "N_neuronsperunit": {
             "value": 7
+        },
+        "N_size": {
+            "value": 49
         },
         "N_units": {
             "value": 7

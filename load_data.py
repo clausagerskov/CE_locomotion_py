@@ -8,6 +8,10 @@ from matplotlib import pyplot as plt
 import sys
 import argparse
 
+# import neuromlLocal.utils as utils
+import matplotlib as mpl
+
+
 sys.path.append("..")
 
 # import random
@@ -37,7 +41,7 @@ plot_formats["RS18"]["plot_cell_names"] = [
 ]
 plot_formats["RS18"]["plot_col_divs"] = [6, 4]
 plot_formats["RS18"]["plot_time"] = 20
-plot_formats["RS18"]["worm_plot_time"] = 10
+plot_formats["RS18"]["worm_plot_time"] = 12
 
 plot_formats["Net21"] = {}
 plot_formats["Net21"]["fig_titles"] = ["Neurons", "Muscles"]
@@ -56,7 +60,7 @@ plot_formats["CE"]["fig_labels"] = ["SR", "Neu", "Mu"]
 plot_formats["CE"]["plot_cell_names"] = ["DA", "DB", "DD", "VA", "VB", "VD"]
 plot_formats["CE"]["plot_col_divs"] = [3, 3]
 plot_formats["CE"]["plot_time"] = 10
-plot_formats["CE"]["worm_plot_time"] = 4
+plot_formats["CE"]["worm_plot_time"] = 5
 
 DEFAULTS = {"modelName": None, "showPlot": True, "folderName": None, "verbose": False}
 
@@ -148,6 +152,17 @@ def reload_single_run(a=None, **kwargs):
 
     hf.dir_name = a.folderName
 
+    # network_json_data = utils.getJsonFile(hf.rename_file("worm_data.json"))
+
+    """ step_size = network_json_data["Evolutionary Optimization Parameters"]["StepSize"][
+        "value"
+    ]
+    skip_steps = network_json_data["Evolutionary Optimization Parameters"][
+        "skip_steps"
+    ]["value"] """
+
+    # t_inc = step_size * skip_steps
+
     # N_muscles_perside = 24  # Number of muscles alongside the body
     # N_muscles = N_muscles_perside * 2
     # N_units = 10  # Number of neural units in VNC
@@ -162,7 +177,11 @@ def reload_single_run(a=None, **kwargs):
 
     # N_neurons = N_neuronsperunit * N_units
 
+    mpl.rcParams["xtick.labelsize"] = 12
+    mpl.rcParams["ytick.labelsize"] = 12
+
     act_data = np.loadtxt(hf.rename_file("act.dat")).T
+    t_data = act_data[0]
 
     def makeFigure(data_offset, data_size, title, label, plot_num):
         axs[plot_num, 0].set_title(title, fontsize=title_font_size)
@@ -170,28 +189,22 @@ def reload_single_run(a=None, **kwargs):
 
         for i in range(data_offset, data_size + data_offset):
             axs[plot_num, 0].plot(
-                act_data[0][data_seg],
+                t_data[data_seg],
                 act_data[i][data_seg],
                 label=label + " %i" % (i - offset),
                 linewidth=0.5,
             )
-            axs[plot_num, 0].xaxis.set_ticklabels([])
+            # axs[plot_num, 0].xaxis.set_ticklabels([])
         # plt.legend()
 
         data_list = act_data[data_offset : data_size + data_offset, data_seg]
         axs[plot_num, 1].imshow(data_list, aspect="auto", interpolation="nearest")
         axs[plot_num, 1].xaxis.set_ticklabels([])
 
-    t_data = act_data[0]
+    fig, axs = plt.subplots(len(plot_format["fig_titles"]) + 1, 2, figsize=(16, 10))
 
-    fig, axs = plt.subplots(4, 1, figsize=(16, 8))
-    t_start = 60
-    t_end = 70
-    data_seg = (t_data >= t_start) & (t_data < t_end)
-
-    fig, axs = plt.subplots(len(plot_format["fig_titles"]) + 1, 2, figsize=(16, 8))
-
-    title_font_size = 10
+    title_font_size = 16
+    label_font_size = 14
 
     ###  Worm neuron/muscle activation
 
@@ -205,16 +218,29 @@ def reload_single_run(a=None, **kwargs):
         plot_format["data_sizes"], plot_format["fig_titles"], plot_format["fig_labels"]
     ):
         makeFigure(offset, *val, count_num)
-        offset += val[0]
+        if count_num < len(plot_format["data_sizes"]) - 1:
+            axs[count_num, 0].xaxis.set_ticklabels([])
+        else:
+            axs[count_num, 0].set_xlabel("Time (s)", fontsize=label_font_size)
         count_num += 1
+        offset += val[0]
 
     ###  Worm body curvature
 
-    curv_data = np.loadtxt(hf.rename_file("curv.dat"))
-    curv_data_less_time = curv_data.T[1:, :]
+    curv_data = np.loadtxt(hf.rename_file("curv.dat")).T
+    t_data = curv_data[0]
+    data_seg = (t_data >= t_start) & (t_data < t_end)
+    curv_data_less_time = curv_data[1:, data_seg]
+    t_data = t_data[data_seg]
 
     axs[count_num, 1].set_title("Body curvature", fontsize=title_font_size)
     axs[count_num, 1].imshow(curv_data_less_time, aspect="auto")
+    axs[count_num, 1].set_xticks(np.linspace(0, len(data_seg), 8))
+    # axs[count_num, 1].set_xticks(np.linspace(t_data[0]/t_inc,t_data[-1]/t_inc, 8))
+    axs[count_num, 1].xaxis.set_ticklabels(
+        np.around(np.linspace(t_data[0], t_data[-1], 8), 2)
+    )
+    axs[count_num, 1].set_xlabel("Time (s)", fontsize=label_font_size)
 
     ###  Body position
 
@@ -225,7 +251,17 @@ def reload_single_run(a=None, **kwargs):
         tmax = body_data.shape[1]
     num = 60.0
 
-    axs[count_num, 0].set_title("2D worm motion", fontsize=title_font_size)
+    # title = axs[count_num, 0].set_title("2D worm motion", fontsize=title_font_size, loc='right')
+    axs[count_num, 0].set_title(
+        "2D worm \n motion", fontsize=title_font_size, y=0.5, x=1.1
+    )
+
+    box = axs[count_num, 0].get_position()
+    box.x0 = box.x0 - 0.1
+    box.x1 = box.x1 - 0.1
+    axs[count_num, 0].set_position(box)
+    # offset = np.array([-0.15, 0.0])
+    # title.set_position(axs[count_num, 0].get_position() + offset)
 
     for t in range(1, tmax, int(tmax / num)):
         f = float(t) / tmax
@@ -252,6 +288,9 @@ def reload_single_run(a=None, **kwargs):
             # plt.plot([x],[y1],'.',color=color)
 
     axs[count_num, 0].set_aspect("equal")
+
+    fig.tight_layout()
+    # fig.subplots_adjust(hspace=0.5)
 
     filename = hf.rename_file("ExampleActivity.png")
     plt.savefig(filename, bbox_inches="tight", dpi=300)

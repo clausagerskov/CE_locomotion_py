@@ -15,7 +15,7 @@
 
 
 // The constructor
-Worm21::Worm21(TVector<double> &v):Worm2D21({7,24,0.1,7},new NervousSystem()),
+Worm21::Worm21(TVector<double> &v):Worm2D21({7,24,0.1,7,49},new NervousSystem()),
 n(dynamic_cast<NervousSystem&>(*n_ptr))
 {
     // Muscles
@@ -110,7 +110,10 @@ n(dynamic_cast<NervousSystem&>(*n_ptr))
     // Interneuron inputs (AVB)
     wAVA_DA = 1;
     wAVA_VA = 1;
-    
+
+    //initialize these to zero, adam
+    AVA = 0; 
+    AVB = 0; 
     
     // NMJ Weight
     NMJ_AS = v(32);
@@ -133,8 +136,8 @@ n(dynamic_cast<NervousSystem&>(*n_ptr))
 void Worm21::InitializeState(RandomState &rs)
 {    
     Worm2D21::InitializeState(rs);
-    n.RandomizeCircuitOutput(0.5, 0.5, rs); //fix this error!! adam (should be -0.5?)
-    cout << "Worm21 init state" << endl;
+    n.RandomizeCircuitOutput(0.5, 0.5, rs); //fix this error?? adam (should be -0.5?)
+    //cout << "Worm21 init state" << endl;
     return;
 }
 

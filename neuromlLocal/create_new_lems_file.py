@@ -29,6 +29,8 @@ def run(a=None, **kwargs):
     a = utils.build_namespace(utils.DEFAULTS, a, **kwargs)
 
     network_json_data = utils.getJsonFile(a.json_file)
+    output_folder_name = a.output_folder
+
     cell_names = utils.getCellNames(network_json_data)
     pop_names = utils.getPopNames(network_json_data)
 
@@ -57,8 +59,10 @@ def run(a=None, **kwargs):
     # ls.include_neuroml2_file("NML2_SingleCompHHCell.nml")
 
     ls.include_lems_file("cell_syn_X.xml")
-    ls.include_lems_file("cell_syn_X_cells.xml")
-    ls.include_neuroml2_file("Worm2D.net.nml", include_included=False)
+    ls.include_lems_file(output_folder_name + "/cell_syn_X_cells.xml")
+    ls.include_neuroml2_file(
+        output_folder_name + "/Worm2D.net.nml", include_included=False
+    )
 
     disp0 = "display0"
     ls.create_display(disp0, "States", "-15", "10", timeScale="1ms")
@@ -70,9 +74,9 @@ def run(a=None, **kwargs):
 
     cells_to_plot = 60
     of0 = "states_file"
-    ls.create_output_file(of0, "%s.states.dat" % sim_id)
+    ls.create_output_file(of0, output_folder_name + "/%s.states.dat" % sim_id)
     of1 = "outputs_file"
-    ls.create_output_file(of1, "%s.outputs.dat" % sim_id)
+    ls.create_output_file(of1, output_folder_name + "/%s.outputs.dat" % sim_id)
 
     for index, (cell_id, colour) in enumerate(
         zip(cell_ids[:cells_to_plot], colour_list)
@@ -121,7 +125,7 @@ def run(a=None, **kwargs):
     print("\nLEMS: ")
     # print(ls.to_xml())
 
-    ls.save_to_file()
+    ls.save_to_file(output_folder_name + "/LEMS_%s.xml" % sim_id)
     assert os.path.isfile("LEMS_%s.xml" % sim_id)
 
     """
@@ -190,4 +194,5 @@ if __name__ == "__main__":
     run(
         population_structure=population_structure,
         json_file="../exampleRun/worm_data.json",
+        output_folder=".",
     )

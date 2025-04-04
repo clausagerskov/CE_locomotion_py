@@ -13,7 +13,7 @@
 //extern SuppliedArgs2021 supArgs1;
 
 
-Worm2D21::Worm2D21(TVector<double> &v):Worm2D({7,24,0.1,7}
+Worm2D21::Worm2D21(TVector<double> &v):Worm2D({7,24,0.1,7,49}
    , new c302ForW2D("AS DA DB DD VD VB VA",7))
 {
    // Interneuron inputs (AVB)
@@ -23,7 +23,9 @@ Worm2D21::Worm2D21(TVector<double> &v):Worm2D({7,24,0.1,7}
    wAVA_DA = 1;
    wAVA_VA = 1;
    
-   
+   AVA = 0; 
+   AVB = 0; 
+
    // NMJ Weight
    NMJ_AS = v(32);
    NMJ_DA = v(33);
@@ -47,7 +49,8 @@ Worm2D21::Worm2D21(json & j):Worm2D(
     {j["Worm"]["N_neuronsperunit"]["value"], 
       j["Worm"]["N_muscles"]["value"], 
       j["Worm"]["T_muscle"]["value"],
-      j["Worm"]["N_units"]["value"]
+      j["Worm"]["N_units"]["value"],
+      j["Nervous system"]["size"]["value"]
     }, new c302ForW2D("AS DA DB DD VD VB VA",7))
 {
 
@@ -58,6 +61,9 @@ wAVB_VB = 1;
 wAVA_DA = 1;
 wAVA_VA = 1;
 
+//initialize these to zero, adam
+AVA = 0; 
+AVB = 0; 
 
 // NMJ Weight
 NMJ_AS = j["Worm"]["NMJ_AS"]["value"];
@@ -78,6 +84,12 @@ for (int i=1; i<=par1.N_muscles; i++)
 
 }
 
+void Worm2D21::initForSimulation()
+{
+
+    SetAVB(0.0);
+    SetAVA(0.0);
+}
 
 void Worm2D21::InitializeState(RandomState &rs)
 {    

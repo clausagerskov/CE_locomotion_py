@@ -376,12 +376,13 @@ def run(a=None, **kwargs):
             "seed.dat",
             "worm_data.json",
             "best.gen.dat",
-            # "phenotype.dat",
+            "phenotype.dat",
         ]
+
         for file in files:
-            shutil.copyfile(
-                a.inputFolderName + "/" + file, a.outputFolderName + "/" + file
-            )
+            input_path = a.inputFolderName + "/" + file
+            if os.path.isfile(input_path):
+                shutil.copyfile(input_path, a.outputFolderName + "/" + file)
 
     sim_par_file = a.outputFolderName + "/simulation_pars.json"
     if os.path.isfile(sim_par_file):
@@ -403,7 +404,7 @@ def run(a=None, **kwargs):
     model_names = {".": "CE", "RoyalSociety2018": "RS18", "network2021": "Net21"}
 
     model_name = None
-    if a.modelFolder == "Worm2D":
+    if a.modelFolder == "Worm2D" or a.modelFolder == "../Worm2D":
         if a.modelName is None:
             print(
                 "'modelName' parameter is required if `Worm2D' is the model folder.\n"
@@ -450,10 +451,10 @@ def run(a=None, **kwargs):
             evol_data = json.load(f)
 
     same_vals = True
-    if do_evol:
-        for par, arg, default in zip(evol_pars, evol_args, evol_defaults):
-            if not setDict(evol_data, par, arg, default):
-                same_vals = False
+    # if do_evol:
+    for par, arg, default in zip(evol_pars, evol_args, evol_defaults):
+        if not setDict(evol_data, par, arg, default):
+            same_vals = False
     if do_evol and same_vals:
         print(
             "Evolution not needed as evolution parameters are the same as the existing ones."

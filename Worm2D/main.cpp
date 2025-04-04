@@ -35,7 +35,9 @@ int main (int argc, const char* argv[])
 
     
     InitializeBodyConstants();
-    if (atoi(getParameter(argc,argv,"--doevol","0"))) 
+
+    bool do_evol = atoi(getParameter(argc,argv,"--doevol","0"));
+    if (do_evol) 
     {
         er->configure();
         ofstream seedfile;
@@ -56,8 +58,10 @@ int main (int argc, const char* argv[])
     TVector<double> phenotype(1, er->itsEvoPars().VectSize);
     er->GenPhenMapping(bestVector, phenotype);
 
+    bool do_json = 1;
+
     // write worm_data.json if ran an evolution
-    if (atoi(getParameter(argc,argv,"--doevol","0"))) {
+    if (do_json) {
 
         Worm2D* w = 0;
         
@@ -92,14 +96,14 @@ int main (int argc, const char* argv[])
     
     const int simrandseed =  atoi(getParameter(argc,argv,"-R","-1"));
     if (simrandseed == -1) {cout << "Seed not set properly. Exiting." << endl; return 0;}
-    RandomState rs;
-    rs.SetRandomSeed(simrandseed);
+    
 
     if (!do_nml){
     
     //er->RunSimulation(bestVector, rs);
 
     Worm2D* w = 0;
+
    
     cout << "making worm" << endl;
 
@@ -108,47 +112,51 @@ int main (int argc, const char* argv[])
     if (model_name == "Net21") w = new Worm21(phenotype);
 
     cout << "making simulation" << endl;
-    er->RunSimulation(*w, rs);
-
+    {RandomState rs;
+    rs.SetRandomSeed(simrandseed);
+    er->RunSimulation(*w, rs);}
 
     {ofstream phenfile(er->rename_file("phenotype.dat"));
     w->DumpParams(phenfile);
     phenfile.close();}
 
-    w->InitializeState(rs);
+    {RandomState rs;
+    rs.SetRandomSeed(simrandseed);
+    w->InitializeState(rs);}
+    w->initForSimulation();
     simPars sp1 = {er->itsEvoPars().directoryName,
         er->itsEvoPars().skip_steps, 60, 50, er->itsEvoPars().StepSize};
     Simulation s1(sp1);
     s1.runSimulation(*w);
+
     delete w;
+
 
     }
     else{
 
-        ifstream json_in(er->rename_file("worm_data.json"));
-        json j;
-        json_in >> j;
+    ifstream json_in(er->rename_file("worm_data.json"));
+    json j;
+    json_in >> j;
 
+    Worm2D* w = 0;
+    if (model_name == "CE") w = new Worm2DCE(j);
+    if (model_name == "Net21") w = new Worm2D21(j);
 
-    if (model_name == "CE"){
-        {Worm2DCE w(j);
-            er->RunSimulation(w, rs);
-        }
-       /*  {
-        Worm2DCE w(j);
-        w.InitializeState(rs);
-        Simulation s1(er->itsEvoPars());
-        s1.runSimulation(w);}  */
+    {RandomState rs;
+    rs.SetRandomSeed(simrandseed);
+    er->RunSimulation(*w, rs);}
 
-    }
-    if (model_name == "Net21"){
-        {
-            Worm2D21 w(j);
-            //Worm2D21 w(phenotype);
-            er->RunSimulation(w, rs);
-        }
-    }
+    {RandomState rs;
+    rs.SetRandomSeed(simrandseed);
+    w->InitializeState(rs);
+    w->initForSimulation();
+    simPars sp1 = {er->itsEvoPars().directoryName,
+        er->itsEvoPars().skip_steps, 60, 50, er->itsEvoPars().StepSize};
+    Simulation s1(sp1);
+    s1.runSimulation(*w);}
 
+    delete w;
     json_in.close();
     }
 

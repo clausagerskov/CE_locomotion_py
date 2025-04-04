@@ -18,6 +18,7 @@ struct wormIzqParams
     int N_muscles;
     double T_muscle;
     int N_units;
+    int N_size;
 
     const doubIntParamsHead getParams() const
     {
@@ -26,8 +27,8 @@ struct wormIzqParams
         var1.parInt.head = "Worm";
         var1.parDoub.names = {"T_muscle"};
         var1.parDoub.vals = {T_muscle};
-        var1.parInt.names = {"N_neuronsperunit", "N_muscles", "N_units"};
-        var1.parInt.vals = {N_neuronsperunit, N_muscles, N_units};
+        var1.parInt.names = {"N_neuronsperunit", "N_muscles", "N_units", "N_size"};
+        var1.parInt.vals = {N_neuronsperunit, N_muscles, N_units, N_size};
         return var1;
     }
 
@@ -55,6 +56,7 @@ class Worm2D {
     virtual void DumpParams(ofstream &ofs) = 0;
     double getVelocity();
     void DumpNSOrdered(ofstream &ofs, int skips);
+    virtual void initForSimulation() =  0;
 
 
     virtual vector<doubIntParamsHead> getWormParams() = 0;

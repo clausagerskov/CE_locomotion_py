@@ -39,7 +39,7 @@ public:
     void DumpActState(ofstream &ofs, int skips);
     void DumpVoltage(ofstream &ofs, int skips);
     void DumpParams(ofstream &ofs);
-    
+    void initForSimulation(){}
     
     private:
 

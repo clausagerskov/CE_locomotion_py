@@ -15,7 +15,8 @@ Worm2DCE::Worm2DCE(json & j):Worm2D(
   {j["Worm"]["N_neuronsperunit"]["value"], 
     j["Worm"]["N_muscles"]["value"], 
     j["Worm"]["T_muscle"]["value"],
-    j["Worm"]["N_units"]["value"]
+    j["Worm"]["N_units"]["value"],
+    j["Nervous system"]["size"]["value"]
   }, new c302ForW2D())
 {
   cout << "Worm2DCE const" << endl;
@@ -45,6 +46,19 @@ cout << "Worm2DCE const" << endl;
 
 }
 
+void Worm2DCE::initForSimulation()
+{
+
+  cout << "initForSimulation" << endl;
+  cout << sr.SR_A_gain << " " << sr.SR_B_gain 
+  << " " << AVA_output << " " << AVB_output << " " << AVA_inact << " " << AVB_act << endl;
+
+  sr.SR_A_gain = 0.0;
+  AVA_output =  AVA_inact;
+  AVB_output =  AVB_act;
+
+ 
+}
 
 void Worm2DCE::InitializeState(RandomState &rs)
 {
@@ -105,7 +119,8 @@ void Worm2DCE::Step(double StepSize, double output)
 
   // Update Nervous System
   n_ptr->EulerStep(StepSize);
-
+  //cout << "step " << t << endl;
+   
   // Set input to Muscles
   //  Each motor neuron innervates four muscles, overlap in muscles 4, 6-19 and 21)
   // Load motorneuron activity

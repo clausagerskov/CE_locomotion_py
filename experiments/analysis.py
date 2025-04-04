@@ -11,6 +11,21 @@ sys.path.append("..")
 from run_main import make_directory
 
 
+wormPhenoPars = {}
+
+wormPhenoPars["Net21"] = [
+    "NMJ_AS",
+    "NMJ_DA",
+    "NMJ_DB",
+    "NMJ_DD",
+    "NMJ_VD",
+    "NMJ_VB",
+    "NMJ_VANMJ_Gain_Map",
+]
+
+wormPhenoPars["CE"] = ["NMJ_DA", "NMJ_DB", "NMJ_VD", "NMJ_VB", "NMJ_VA", "NMJ_DD"]
+
+
 def getCellNames(network_json_data):
     return network_json_data["Nervous system"]["Cell name"]["value"]
 
@@ -19,9 +34,9 @@ def getNervousSystemVal(network_json_data, val):
     return network_json_data["Nervous system"][val]["value"]
 
 
-def getPopNamesUnsorted(network_json_data, pop_num=6):
+""" def getPopNamesUnsorted(network_json_data, pop_num=6):
     cell_names = getCellNames(network_json_data)
-    return cell_names[:pop_num]
+    return cell_names[:pop_num] """
 
 
 def check_equal(list):
@@ -36,10 +51,11 @@ def getWeight(weights, pre_cell_ind, post_cell_ind):
     ][0]
 
 
-def getParsDict(vals):
+def getParsDict(vals, wormPhenoPars):
     new_vals = {}
     for key, val in vals.items():
-        new_vals[key] = val["value"]
+        if key in wormPhenoPars:
+            new_vals[key] = val["value"]
     return new_vals
 
 
@@ -58,6 +74,7 @@ def getValsDict(vals, cell_names):
 
 def getWeightsDict(weights, cell_names):
     new_weights = {}
+    # kk_inds = {}
     for weight in weights:
         kk = cell_names[weight["from"] - 1] + cell_names[weight["to"] - 1]
         if kk in new_weights:
@@ -77,8 +94,10 @@ def getUniques(list1):
     return result1
 
 
+model_name = "Net21"
 path_list = []
-outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1", "varyEvolSeeds2", "varyEvolSeeds3"]
+# outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1", "varyEvolSeeds2", "varyEvolSeeds3"]
+outFolderBases = ["varyEvolSeedsNet21_1"]
 current = os.path.dirname(os.path.realpath(__file__))  # location of this file!
 for outFolderBase in outFolderBases:
     path = current + "/" + outFolderBase
@@ -88,22 +107,13 @@ for outFolderBase in outFolderBases:
 print(len(path_list))
 # sys.exit(1)
 
-""" con_list = [
-DA->VD: 15.0622
- DB->VD: 6.38036
- VD->VA: -4.39552
- VD->VB: -10.1964
- VA->DD: 15.0622
- VA->VD: 0
- VB->DD: 6.38036
- VB->VD: 0
-] """
 
 fitness_keys = ["Best", "Average", "Variance"]
 weights_list = []
 elec_weights_list = []
 fitness_list = []
 biases_list = []
+taus_list = []
 worm_vals_list = []
 for dir in path_list:
     json_file = dir + "/worm_data.json"
@@ -120,9 +130,13 @@ for dir in path_list:
     elec_weights_list.append(getWeightsDict(elec_weights, cell_names))
     biases = getNervousSystemVal(worm_data, "biases")
     biases_list.append(getValsDict(biases, cell_names))
-    worm_vals = getParsDict(worm_data["Worm"])
-    worm_vals["SR_A_gain"] = worm_data["Stretch receptor"]["SR_A_gain"]["value"]
-    worm_vals["SR_B_gain"] = worm_data["Stretch receptor"]["SR_B_gain"]["value"]
+    taus = getNervousSystemVal(worm_data, "taus")
+    taus_list.append(getValsDict(taus, cell_names))
+    worm_vals = getParsDict(worm_data["Worm"], wormPhenoPars[model_name])
+    if model_name == "CE":
+        worm_vals["SR_A_gain"] = worm_data["Stretch receptor"]["SR_A_gain"]["value"]
+        worm_vals["SR_B_gain"] = worm_data["Stretch receptor"]["SR_B_gain"]["value"]
+
     worm_vals_list.append(worm_vals)
     ol1 = None
     with open(dir + "/fitness.dat", "r") as file:
@@ -161,19 +175,26 @@ print(all_fitnesses)
 
 # sys.exit(1)
 
-if not make_directory("results", overwrite=True):
+out_dir_name = "results21"
+if not make_directory(out_dir_name, overwrite=True):
     sys.exit(1)
-fit_level = 0.95
+fit_level = 0.9
 
-results_titles = ["ChemWei", "ElectWei", "Bias", "Worm"]
-data_results_list = [weights_list, elec_weights_list, biases_list, worm_vals_list]
+results_titles = ["ChemWei", "ElectWei", "Bias", "Tau", "Worm"]
+data_results_list = [
+    weights_list,
+    elec_weights_list,
+    biases_list,
+    taus_list,
+    worm_vals_list,
+]
 
 for title, data_result in zip(results_titles, data_results_list):
     res1 = getUniques(data_result)
     for key, val in res1.items():
         sns.displot(val, bins=10, kde=True)
         title_str = title + "_" + key + ".png"
-        plt.savefig("results/" + title_str)
+        plt.savefig(out_dir_name + "/" + title_str)
         plt.close()
         best_fit = [
             val1
@@ -181,5 +202,5 @@ for title, data_result in zip(results_titles, data_results_list):
             if fitness > fit_level
         ]
         sns.displot(best_fit, bins=10, kde=True)
-        plt.savefig("results/best_fit_" + title_str)
+        plt.savefig(out_dir_name + "/best_fit_" + title_str)
         plt.close()

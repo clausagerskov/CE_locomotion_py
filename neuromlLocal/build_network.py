@@ -108,6 +108,7 @@ def run(a=None, **kwargs):
     population_structure = a.population_structure
 
     network_json_data = utils.getJsonFile(a.json_file)
+    output_folder_name = a.output_folder
 
     chemical_weights = network_json_data["Nervous system"]["Chemical weights"]["value"]
     electrical_weights = network_json_data["Nervous system"]["Electrical weights"][
@@ -121,7 +122,7 @@ def run(a=None, **kwargs):
     cell_names = utils.getCellNames(network_json_data)
     pop_cell_names = utils.getPopNames(network_json_data)
 
-    cellX_filename = "cell_syn_X_cells.xml"
+    cellX_filename = output_folder_name + "/cell_syn_X_cells.xml"
     utils.makeCellXml(network_json_data, cellX_filename)
 
     nml_doc = NeuroMLDocument(id="Worm2D")
@@ -356,7 +357,7 @@ def run(a=None, **kwargs):
 
                 input_list.input_ws.append(input_w)
 
-    nml_file = "Worm2D.net.nml"
+    nml_file = output_folder_name + "/Worm2D.net.nml"
     writers.NeuroMLWriter.write(nml_doc, nml_file)
 
     print("Written network file to: " + nml_file)
@@ -389,5 +390,6 @@ if __name__ == "__main__":
     run(
         population_structure=population_structure,
         json_file="../exampleRun/worm_data.json",
+        output_folder_name="../exampleRun",
         # json_file = parent_dir + "/exampleRun/worm_data.json"
     )

@@ -49,7 +49,7 @@ public:
     
     void SetAVA(double value) {AVA = value;};
     void SetAVB(double value) {AVB = value;};
-    
+    void initForSimulation();
     
     //NervousSystem & n;
 

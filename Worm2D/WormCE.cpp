@@ -21,7 +21,7 @@ return new c302NervousSystem();
  */
 
 
-WormCE::WormCE(TVector<double> &v,double output):Worm2DCE({6,24,0.1,10},
+WormCE::WormCE(TVector<double> &v,double output):Worm2DCE({6,24,0.1,10,60},
 new NervousSystem()),n(dynamic_cast<NervousSystem&>(*n_ptr))
 {
 

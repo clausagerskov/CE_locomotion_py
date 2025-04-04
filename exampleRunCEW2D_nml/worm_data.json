@@ -2009,6 +2009,9 @@
         "N_neuronsperunit": {
             "value": 6
         },
+        "N_size": {
+            "value": 60
+        },
         "N_stretchrec": {
             "message": "Number of stretch receptors",
             "value": 10
