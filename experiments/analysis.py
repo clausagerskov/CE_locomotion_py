@@ -25,9 +25,17 @@ wormPhenoPars["Net21"] = [
 
 wormPhenoPars["CE"] = ["NMJ_DA", "NMJ_DB", "NMJ_VD", "NMJ_VB", "NMJ_VA", "NMJ_DD"]
 
+def getCellIndices(cell_names, cell_name):
+    return [i for i, val in enumerate(cell_names) if val == cell_name]
 
 def getCellNames(network_json_data):
     return network_json_data["Nervous system"]["Cell name"]["value"]
+
+def getCellNameRep(cell_names, cell_ind):
+    cell_name = cell_names[cell_ind]
+    indslist = getCellIndices(cell_names, cell_name)
+    return cell_name, indslist.index(cell_ind)
+    
 
 
 def getNervousSystemVal(network_json_data, val):
@@ -76,7 +84,9 @@ def getWeightsDict(weights, cell_names):
     new_weights = {}
     # kk_inds = {}
     for weight in weights:
-        kk = cell_names[weight["from"] - 1] + cell_names[weight["to"] - 1]
+        name_from, ind_from = getCellNameRep(cell_names, weight["from"] - 1)
+        name_to, ind_to = getCellNameRep(cell_names, weight["to"] - 1)
+        kk = name_from + name_to + str(ind_to-ind_from)
         if kk in new_weights:
             if new_weights[kk] != weight["weight"]:
                 print("Weights not equal!")
@@ -97,7 +107,8 @@ def getUniques(list1):
 model_name = "Net21"
 path_list = []
 # outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1", "varyEvolSeeds2", "varyEvolSeeds3"]
-outFolderBases = ["varyEvolSeedsNet21_1"]
+outFolderBases = ["varyEvolSeedsNet21_2"]
+outFolderBases = ["izq_runs_nets"]
 current = os.path.dirname(os.path.realpath(__file__))  # location of this file!
 for outFolderBase in outFolderBases:
     path = current + "/" + outFolderBase
@@ -115,6 +126,7 @@ fitness_list = []
 biases_list = []
 taus_list = []
 worm_vals_list = []
+do_fitness = True
 for dir in path_list:
     json_file = dir + "/worm_data.json"
     if not os.path.isfile(json_file):
@@ -155,7 +167,7 @@ for dir in path_list:
         fitness_list.append(d1)
     else:
         print("No fitness")
-        sys.exit(1)
+        do_fitness = False
 
 
 """ print(fitness_list)
@@ -167,15 +179,15 @@ sys.exit(1)
 # sys.exit(1)
 
 # all_weights = getUniques(weights_list)
-all_fitnesses = getUniques(fitness_list)
-
-# print(all_weights)
-print(all_fitnesses)
+if do_fitness:
+    all_fitnesses = getUniques(fitness_list)
+    # print(all_weights)
+    print(all_fitnesses)
 
 
 # sys.exit(1)
 
-out_dir_name = "results21"
+out_dir_name = "resultsIzq"
 if not make_directory(out_dir_name, overwrite=True):
     sys.exit(1)
 fit_level = 0.9
@@ -196,11 +208,12 @@ for title, data_result in zip(results_titles, data_results_list):
         title_str = title + "_" + key + ".png"
         plt.savefig(out_dir_name + "/" + title_str)
         plt.close()
-        best_fit = [
-            val1
-            for val1, fitness in zip(val, all_fitnesses["Best"])
-            if fitness > fit_level
-        ]
-        sns.displot(best_fit, bins=10, kde=True)
-        plt.savefig(out_dir_name + "/best_fit_" + title_str)
-        plt.close()
+        if do_fitness:
+            best_fit = [
+                val1
+                for val1, fitness in zip(val, all_fitnesses["Best"])
+                if fitness > fit_level
+            ]
+            sns.displot(best_fit, bins=10, kde=True)
+            plt.savefig(out_dir_name + "/best_fit_" + title_str)
+            plt.close()
