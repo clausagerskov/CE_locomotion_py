@@ -5,12 +5,12 @@ sys.path.append("..")
 from run_main import run
 from run_main import make_directory
 
-outFolderBase = "varyEvolSeedsNet21_3"
+outFolderBase = "varyEvolSeedsNet21_4"
 # popSize = 10
 if not make_directory(outFolderBase):
     sys.exit(1)
 
-for ind in range(50):
+for ind in range(100):
     outputFolderName = outFolderBase + "/run_" + str(ind)
     run(
         outputFolderName=outputFolderName,

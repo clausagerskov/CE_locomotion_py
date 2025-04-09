@@ -125,8 +125,8 @@ def run(a=None, **kwargs):
     cellX_filename = output_folder_name + "/cell_syn_X_cells.xml"
     utils.makeCellXml(network_json_data, cellX_filename)
 
-
-    shutil.copyfile("cell_syn_X.xml", output_folder_name + "/cell_syn_X.xml")
+    if not output_folder_name == ".":
+        shutil.copyfile("cell_syn_X.xml", output_folder_name + "/cell_syn_X.xml")
 
     nml_doc = NeuroMLDocument(id="Worm2D")
     # nml_doc.includes.append(IncludeType(href="cell_syn_X.xml"))
