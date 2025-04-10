@@ -5,7 +5,7 @@ sys.path.append("..")
 from run_main import run
 from run_main import make_directory
 
-outFolderBase = "varyEvolSeedsNet21_5"
+outFolderBase = "varyEvolSeedsNet21_6"
 # popSize = 10
 if not make_directory(outFolderBase):
     sys.exit(1)
