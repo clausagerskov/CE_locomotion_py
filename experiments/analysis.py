@@ -107,7 +107,7 @@ def getUniques(list1):
 model_name = "Net21"
 path_list = []
 # outFolderBases = ["varyEvolSeeds", "varyEvolSeeds1", "varyEvolSeeds2", "varyEvolSeeds3"]
-outFolderBases = ["varyEvolSeedsNet21_4"]
+outFolderBases = ["varyEvolSeedsNet21_4","varyEvolSeedsNet21_5", "varyEvolSeedsNet21_6"]
 #outFolderBases = ["izq_runs_nets"]
 current = os.path.dirname(os.path.realpath(__file__))  # location of this file!
 for outFolderBase in outFolderBases:
