@@ -7,3 +7,5 @@
 /fitness.dat
 /phenotype.dat
 /seed.dat
+.venv
+__pycache__
