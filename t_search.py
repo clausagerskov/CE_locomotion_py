@@ -10,6 +10,7 @@ from typing import List, Callable, Optional, Any, Tuple, Union
 from loguru import logger
 # Import TVector from the other file
 from vector_matrix import TVector
+from random_state_legacy import RandomState
 
 # Constants from C++
 MIN_SEARCH_VALUE = -1.0
@@ -64,7 +65,7 @@ class PopRangeSpec:
 # --- TSearch Class ---
 
 # Define type hints for the function pointers
-EvaluationFuncType = Callable[[TVector[float], random.Random], float]
+EvaluationFuncType = Callable[[TVector[float], RandomState], float]
 BestActionFuncType = Callable[[int, TVector[float]], None]
 PopStatsDisplayFuncType = Callable[[int, float, float, float], None]
 SearchTerminateFuncType = Callable[[int, float, float, float], bool]
@@ -73,8 +74,8 @@ SearchResultsDisplayFuncType = Callable[["TSearch"], None] # Forward ref
 class TSearch:
     def __init__(self, vectorSize: int = 0, EvalFn: Optional[EvaluationFuncType] = None):
         # Internal State
-        self.rs = random.Random() # Master random state
-        self.RandomStates: TVector[random.Random] = TVector(1, 0) # Per-individual random states
+        self.rs = RandomState() # Master random state
+        self.RandomStates: TVector[RandomState] = TVector(1, 0) # Per-individual random states
         self.Gen: int = 0
         self.SearchInitialized: bool = False
         self.Population: TVector[TVector[float]] = TVector(1, 0)
@@ -160,7 +161,7 @@ class TSearch:
         # Also re-seed individual random states if they exist
         for i in range(1, self.RandomStates.Size() + 1):
             # Generate seeds deterministically from the main seed for reproducibility
-             individual_seed = self.rs.randint(0, 2**32 - 1)
+             individual_seed = self.rs.UniformRandomInteger(0, 2**32 - 1)
              self.RandomStates[i].seed(individual_seed)
         # Reset main generator after seeding individuals
         self.rs.seed(seed)
@@ -201,15 +202,15 @@ class TSearch:
 
         # Resize and initialize RandomStates
         old_rs_size = self.RandomStates.Size()
-        new_rs = TVector[random.Random](1, NewSize)
+        new_rs = TVector[RandomState](1, NewSize)
         # Preserve old random states if possible
         for i in range(1, NewSize + 1):
             if i <= old_rs_size:
                 new_rs[i] = self.RandomStates[i]
             else:
                 # Seed new random states deterministically
-                individual_seed = self.rs.randint(0, 2**32 - 1)
-                new_rs[i] = random.Random(individual_seed)
+                individual_seed = self.rs.UniformRandomInteger(0, 2**32 - 1)
+                new_rs[i] = RandomState(individual_seed)
         self.RandomStates = new_rs
 
 
@@ -500,7 +501,7 @@ class TSearch:
     def RandomizeVector(self, v: TVector[float]):
         """Fills a vector with random values in the search range."""
         for i in range(v.LowerBound(), v.UpperBound() + 1):
-            v[i] = self.rs.uniform(MIN_SEARCH_VALUE, MAX_SEARCH_VALUE)
+            v[i] = self.rs.UniformRandom(MIN_SEARCH_VALUE, MAX_SEARCH_VALUE)
 
     def RandomizePopulation(self):
         """Randomizes all individuals in the population."""
@@ -508,7 +509,7 @@ class TSearch:
             logger.info(f"Randomize Vector {i}/{self.Population.Size()}")
             self.RandomizeVector(self.Population[i])
 
-    def EvaluateVector(self, Vector: TVector[float], ind_rs: random.Random) -> float:
+    def EvaluateVector(self, Vector: TVector[float], ind_rs: RandomState) -> float:
         """Evaluates a single individual's vector."""
         if self.EvaluationFunction is None:
             raise ValueError("Evaluation function not set.")
@@ -597,7 +598,7 @@ class TSearch:
         sorted_pop = TVector[TVector[float]](1, pop_size)
         sorted_perf = TVector[float](1, pop_size)
         # Keep track of original random states to move them accordingly
-        sorted_rs = TVector[random.Random](1, pop_size)
+        sorted_rs = TVector[RandomState](1, pop_size)
 
         for new_idx, (_, old_idx) in enumerate(perf_index_pairs, start=1):
             sorted_pop[new_idx] = self.Population[old_idx]
@@ -705,7 +706,7 @@ class TSearch:
         if num_to_select == 0 : return [] # Handle edge case
 
         step_size = 1.0 / num_to_select
-        start_pointer = self.rs.uniform(0.0, step_size)
+        start_pointer = self.rs.UniformRandom(0.0, step_size)
         pointers = [start_pointer + i * step_size for i in range(num_to_select)] # i = 0, 1, ... num_to_select-1
 
         cumulative_fitness = 0.0
@@ -760,7 +761,7 @@ class TSearch:
         # We just need a copy of the current population and performance
         ParentPopulation = TVector[TVector[float]](1, pop_size)
         ParentPerf = TVector[float](1, pop_size)
-        ParentRS = TVector[random.Random](1, pop_size) # Keep track of random states
+        ParentRS = TVector[RandomState](1, pop_size) # Keep track of random states
         for i in range(1, pop_size + 1):
              # Use deep copies for vectors
              ParentPopulation[i] = TVector(self.Population[i].LowerBound(), self.Population[i].UpperBound(), self.Population[i].to_list())
@@ -815,7 +816,7 @@ class TSearch:
         ElitePop = int(round(self.EFraction * pop_size))
         NewPopulation = TVector[TVector[float]](1, pop_size)
         NewPerf = TVector[float](1, pop_size)
-        NewRS = TVector[random.Random](1, pop_size) # Track random states too
+        NewRS = TVector[RandomState](1, pop_size) # Track random states too
 
         logger.info(f"Selecting {ElitePop} elite individuals...")
         for i in range(1, ElitePop + 1):
@@ -841,7 +842,17 @@ class TSearch:
                      })
 
             # Shuffle the parent pool for random pairing in crossover
-            self.rs.shuffle(parent_pool)
+            # --- Manual Shuffle using self.rs (Fisher-Yates) ---
+            # Replace self.rs.shuffle(parent_pool) with this:
+            if self.CrossProb > 0 and len(parent_pool) > 1: # Only shuffle if crossover possible and more than 1 parent
+                 print("Shuffling non-elite parents...")
+                 n = len(parent_pool)
+                 for i in range(n - 1, 0, -1): # Iterate from n-1 down to 1
+                      # Choose random index j from [0, i] inclusive
+                      j = self.rs.UniformRandomInteger(0, i) # Use our custom generator
+                      # Swap elements at i and j
+                      parent_pool[i], parent_pool[j] = parent_pool[j], parent_pool[i]
+            # --- End of Manual Shuffle ---
 
             # Perform Crossover and Mutation
             child_idx = ElitePop + 1
@@ -853,8 +864,8 @@ class TSearch:
                      # Fill remaining spots with mutations of random parents? Or elites?
                      # Let's mutate a random parent from the pool
                      if not parent_pool: # Should not happen if num_parents_needed > 0
-                         rand_parent_vec = self.Population[self.rs.randint(1, ElitePop)] if ElitePop > 0 else TVector(1, self.VectorSize())
-                         rand_parent_rs = self.RandomStates[self.rs.randint(1, ElitePop)] if ElitePop > 0 else random.Random()
+                         rand_parent_vec = self.Population[self.rs.UniformRandomInteger(1, ElitePop)] if ElitePop > 0 else TVector(1, self.VectorSize())
+                         rand_parent_rs = self.RandomStates[self.rs.UniformRandomInteger(1, ElitePop)] if ElitePop > 0 else RandomState()
                      else:
                          rand_parent_data = self.rs.choice(parent_pool)
                          rand_parent_vec = rand_parent_data['vector']
@@ -868,7 +879,7 @@ class TSearch:
 
 
                 # Check for crossover
-                if self.rs.random() < self.CrossProb and parent_idx + 1 < len(parent_pool):
+                if self.rs.ran1() < self.CrossProb and parent_idx + 1 < len(parent_pool):
                     # Perform crossover
                     p1_data = parent_pool[parent_idx]
                     p2_data = parent_pool[parent_idx + 1]
@@ -936,10 +947,10 @@ class TSearch:
 
         # GaussianRandom(mean, stddev) -> MutationVar is variance in C++
         std_dev = math.sqrt(self.MutationVar)
-        magnitude = self.rs.gauss(0.0, std_dev)
+        magnitude = self.rs.GaussianRandom(0.0, std_dev)
 
         # Random unit vector (simplified: generate components and normalize)
-        temp_vector = [self.rs.gauss(0.0, 1.0) for _ in range(self._vectorSize)]
+        temp_vector = [self.rs.GaussianRandom(0.0, 1.0) for _ in range(self._vectorSize)]
         norm = math.sqrt(sum(x*x for x in temp_vector))
         if norm == 0: norm = 1.0 # Avoid division by zero
 
@@ -964,7 +975,7 @@ class TSearch:
             # End index is start of next point - 1, or vector end if last module
             end_gene_idx = self.crossPoints[module_idx + 1] - 1 if module_idx < num_modules else self._vectorSize
 
-            if self.rs.random() < 0.5: # Swap this module
+            if self.rs.ran1() < 0.5: # Swap this module
                 for j in range(start_gene_idx, end_gene_idx + 1):
                     # Swap elements using Python's tuple unpacking
                     v1[j], v2[j] = v2[j], v1[j]
@@ -976,10 +987,10 @@ class TSearch:
         if num_modules < 2: return # Need at least two points to define a segment
 
         # Choose two distinct module indices (1-based)
-        i1 = self.rs.randint(1, num_modules)
+        i1 = self.rs.UniformRandomInteger(1, num_modules)
         i2 = i1
         while i2 == i1:
-            i2 = self.rs.randint(1, num_modules)
+            i2 = self.rs.UniformRandomInteger(1, num_modules)
 
         # Ensure i1 < i2
         if i1 > i2:

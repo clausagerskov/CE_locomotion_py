@@ -1,5 +1,4 @@
 import math
-import random
 import time
 import sys
 import os
@@ -13,7 +12,7 @@ from t_search import (
 )
 from loguru import logger
 from worm import Worm
-
+from random_state_legacy import RandomState
 from worm_body import WormBody, InitializeBodyConstants
 
 # --- Constants ---
@@ -99,7 +98,7 @@ def GenPhenMapping(gen: TVector[float], phen: TVector[float]):
 
 
 # --- Fitness Function ---
-def Evaluation(v_genotype: TVector[float], rs: random.Random, direction: int) -> float:
+def Evaluation(v_genotype: TVector[float], rs: RandomState, direction: int) -> float:
     """Evaluates a genotype for forward (1) or backward (-1) locomotion."""
     distancetravelled = 0.0
     xt = 0.0
@@ -200,7 +199,7 @@ def Evaluation(v_genotype: TVector[float], rs: random.Random, direction: int) ->
     return fitB
 
 
-def EvaluationFunction(v: TVector[float], rs: random.Random) -> float:
+def EvaluationFunction(v: TVector[float], rs: RandomState) -> float:
     """
     The main evaluation function called by TSearch.
     Handles modifications to the genotype for directed evaluation.
@@ -231,7 +230,7 @@ def EvaluationFunction(v: TVector[float], rs: random.Random) -> float:
 
 
 # --- Plotting / Saving Traces ---
-def save_traces(v_genotype: TVector[float], rs: random.Random):
+def save_traces(v_genotype: TVector[float], rs: RandomState):
     """Simulates the best genotype and saves traces to files."""
     logger.info("\nGenerating traces for the best individual...")
 
@@ -447,7 +446,7 @@ if __name__ == "__main__":
     # --- Post-Evolution: Save Traces ---
     # Re-seed a random generator for trace generation consistency if needed,
     # or just use a new one. C++ used a new time-based seed.
-    trace_rs = random.Random()
+    trace_rs = RandomState()
     trace_seed = int(time.time())
     trace_rs.seed(trace_seed)
     logger.info(f"\nUsing new random seed {trace_seed} for trace generation.")

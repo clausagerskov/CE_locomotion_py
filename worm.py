@@ -7,6 +7,8 @@ from vector_matrix import TVector
 from stretch_receptor import StretchReceptor
 
 from worm_body import WormBody, N_SEGMENTS, N_RODS
+from muscles import Muscles
+from nervous_system import NervousSystem
 from loguru import logger
 # --- Constants (mirrored from C++) ---
 # PI defined using math.pi later where needed
@@ -33,41 +35,6 @@ VB = 6
 # Body segment name conventions (1-based indices)
 HEAD = 1
 TAIL = N_SEGMENTS # Depends on the actual N_SEGMENTS
-
-class PlaceholderMuscles:
-    def __init__(self):
-        self.dorsal_output = TVector(1, N_MUSCLES, [0.0] * N_MUSCLES)
-        self.ventral_output = TVector(1, N_MUSCLES, [0.0] * N_MUSCLES)
-
-    def SetMuscleParams(self, n_muscles, t_muscle):
-        print(f"PlaceholderMuscles: SetMuscleParams({n_muscles}, {t_muscle}) called")
-        pass
-
-    def InitializeMuscleState(self):
-        print("PlaceholderMuscles: InitializeMuscleState called")
-        self.dorsal_output.FillContents(0.0)
-        self.ventral_output.FillContents(0.0)
-        pass
-
-    def SetVentralMuscleInput(self, i, input_val):
-        # Placeholder: just store last input maybe?
-        pass
-
-    def SetDorsalMuscleInput(self, i, input_val):
-        pass
-
-    def EulerStep(self, StepSize):
-        # Simulate some minimal activity
-        for i in range(1, N_MUSCLES + 1):
-             self.dorsal_output[i] = max(0, min(1, self.dorsal_output[i] + random.gauss(0, 0.1) * StepSize))
-             self.ventral_output[i] = max(0, min(1, self.ventral_output[i] + random.gauss(0, 0.1) * StepSize))
-        pass
-
-    def DorsalMuscleOutput(self, i):
-        return self.dorsal_output[i] # Return placeholder value
-
-    def VentralMuscleOutput(self, i):
-        return self.ventral_output[i] # Return placeholder value
 
 class PlaceholderNervousSystem:
     def __init__(self):
@@ -163,8 +130,8 @@ class Worm:
         """
         # Instantiate components (using placeholders for now)
         self.b = WormBody()
-        self.m = PlaceholderMuscles()
-        self.n = PlaceholderNervousSystem()
+        self.m = Muscles()
+        self.n = NervousSystem()
         self.sr = StretchReceptor()
 
         self.t = 0.0 # Simulation time
